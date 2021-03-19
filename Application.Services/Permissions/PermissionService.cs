@@ -8,12 +8,23 @@ using Application.Services.Users;
 
 namespace Application.Services.Permissions
 {
-    public class PermissionService
+    public class PermissionService : IPermissionService
     {
         #region Fields
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
         private readonly IRepository<PermissionRecordUserRoleMapping> _permissionRecordUserRoleMappingRepository;
-        private readonly UsersService _userService;
+        private readonly IUsersService _userService;
+
+        #endregion
+
+        #region ctor
+
+        public PermissionService(IRepository<PermissionRecord> permissionRecordRepository, IRepository<PermissionRecordUserRoleMapping> permissionRecordUserRoleMappingRepository, IUsersService userService)
+        {
+            _permissionRecordRepository = permissionRecordRepository;
+            _permissionRecordUserRoleMappingRepository = permissionRecordUserRoleMappingRepository;
+            _userService = userService;
+        }
 
         #endregion
 
@@ -208,15 +219,15 @@ namespace Application.Services.Permissions
         /// <param name="permission">Permission record</param>
         /// <param name="user">User</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(PermissionRecord permission, User user)
+        public virtual bool Authorize(PermissionRecord permission, string userName)
         {
             if (permission == null)
                 return false;
 
-            if (user == null)
+            if (userName == null)
                 return false;
 
-            return Authorize(permission.SystemName, user);
+            return Authorize(permission.SystemName, userName: userName);
         }
 
         /// <summary>
@@ -225,7 +236,7 @@ namespace Application.Services.Permissions
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="user">User</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(string permissionRecordSystemName, User user)
+        public virtual bool AuthorizeByUserName(string permissionRecordSystemName, string user)
         {
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
@@ -240,13 +251,27 @@ namespace Application.Services.Permissions
             return false;
         }
 
+        public virtual bool Authorize(string permissionRecordSystemName, string userName = null,
+            string userRoleId = null)
+        {
+            if (string.IsNullOrEmpty(permissionRecordSystemName))
+                return false;
+            if (!string.IsNullOrEmpty(userName))
+            {
+                return AuthorizeByUserName(permissionRecordSystemName, userName);
+            }
+            return AuthorizeByRoleId(permissionRecordSystemName, userRoleId);
+
+        }
+
+
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="userRoleId">User role identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(string permissionRecordSystemName, string userRoleId)
+        public virtual bool AuthorizeByRoleId(string permissionRecordSystemName, string userRoleId)
         {
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;

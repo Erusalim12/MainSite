@@ -13,7 +13,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.Birthday;
+using Application.Services.Permissions;
 using Application.Services.Settings;
+using Application.Services.Users;
+using MainSite.Areas.Admin.Factories;
 using Microsoft.AspNetCore.Routing;
 
 namespace MainSite
@@ -57,6 +60,10 @@ namespace MainSite
 
             services.AddTransient<INewsService, NewsService>();
             services.AddTransient<IBirthdayService, BirthdayService>();
+            services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IPermissionService, PermissionService>();
+            services.AddTransient<ISecurityModelFactory, SecurityModelFactory>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Application.Dal;
 using Application.Dal.Domain.Users;
 
 namespace Application.Services.Users
 {
-    public class UsersService
+    public class UsersService : IUsersService
     {
         private readonly IRepository<UserUserRoleMapping> _userUserRoleMappingRepository;
         private readonly IRepository<UserRole> _userRoleRepository;
@@ -37,15 +38,15 @@ namespace Application.Services.Users
         /// </summary>
         /// <param name="user">User</param>
         /// <param name="role">User role</param>
-        public void RemoveUserRoleMapping(User user, UserRole role)
+        public void RemoveUserRoleMapping(string userName, UserRole role)
         {
-            if (user is null)
-                throw new ArgumentNullException(nameof(user));
+            if (userName is null)
+                throw new ArgumentNullException(nameof(userName));
 
             if (role is null)
                 throw new ArgumentNullException(nameof(role));
 
-            var mapping = _userUserRoleMappingRepository.GetAll().SingleOrDefault(ccrm => ccrm.UserId == user.Id && ccrm.UserRoleId == role.Id);
+            var mapping = _userUserRoleMappingRepository.GetAll().SingleOrDefault(ccrm => ccrm.UserName == userName && ccrm.UserRoleId == role.Id);
 
             if (mapping != null)
             {
@@ -113,14 +114,14 @@ namespace Application.Services.Users
         /// <param name="user">User</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
         /// <returns>User role identifiers</returns>
-        public virtual string[] GetUserRoleIds(User user, bool showHidden = false)
+        public virtual string[] GetUserRoleIds(string userName, bool showHidden = false)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            if (userName == null)
+                throw new ArgumentNullException(nameof(userName));
 
             var query = from cr in _userRoleRepository.GetAll()
                         join crm in _userUserRoleMappingRepository.GetAll() on cr.Id equals crm.UserRoleId
-                        where crm.UserId == user.Id &&
+                        where crm.UserName == userName &&
                         (showHidden || cr.Active)
                         select cr.Id;
 
@@ -134,16 +135,16 @@ namespace Application.Services.Users
         /// <param name="user">User</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
         /// <returns>Result</returns>
-        public virtual IList<UserRole> GetUserRoles(User user, bool showHidden = false)
+        public virtual IList<UserRole> GetUserRoles(string userName, bool showHidden = false)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            if (userName == null)
+                throw new ArgumentNullException(nameof(userName));
 
-            var query = from cr in _userRoleRepository.GetAll()
-                        join crm in _userUserRoleMappingRepository.GetAll() on cr.Id equals crm.UserRoleId
-                        where crm.UserId == user.Id &&
-                        (showHidden || cr.Active)
-                        select cr;
+            var query = from ur in _userRoleRepository.GetAll()
+                        join urm in _userUserRoleMappingRepository.GetAll() on ur.Id equals urm.UserRoleId
+                        where urm.UserName == userName &&
+                              (showHidden || ur.Active)
+                        select ur;
 
             return query.ToList();
         }
@@ -188,7 +189,7 @@ namespace Application.Services.Users
         /// <param name="userRoleSystemName">User role system name</param>
         /// <param name="onlyActiveUserRoles">A value indicating whether we should look only in active user roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsInUserRole(User user,
+        public virtual bool IsInUserRole(string user,
             string userRoleSystemName, bool onlyActiveUserRoles = true)
         {
             if (user == null)
@@ -208,7 +209,7 @@ namespace Application.Services.Users
         /// <param name="user">User</param>
         /// <param name="onlyActiveUserRoles">A value indicating whether we should look only in active user roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsAdmin(User user, bool onlyActiveUserRoles = true)
+        public virtual bool IsAdmin(string user, bool onlyActiveUserRoles = true)
         {
             return IsInUserRole(user, AppUserDefaults.AdministratorsRoleName, onlyActiveUserRoles);
         }
@@ -219,7 +220,7 @@ namespace Application.Services.Users
         /// <param name="user">User</param>
         /// <param name="onlyActiveUserRoles">A value indicating whether we should look only in active user roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsForumModerator(User user, bool onlyActiveUserRoles = true)
+        public virtual bool IsForumModerator(string user, bool onlyActiveUserRoles = true)
         {
             return IsInUserRole(user, AppUserDefaults.ForumModeratorsRoleName, onlyActiveUserRoles);
         }
@@ -230,7 +231,7 @@ namespace Application.Services.Users
         /// <param name="user">User</param>
         /// <param name="onlyActiveUserRoles">A value indicating whether we should look only in active user roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsRegistered(User user, bool onlyActiveUserRoles = true)
+        public virtual bool IsRegistered(string user, bool onlyActiveUserRoles = true)
         {
             return IsInUserRole(user, AppUserDefaults.RegisteredRoleName, onlyActiveUserRoles);
         }

@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public string UserId { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// Gets or sets the customer role identifier

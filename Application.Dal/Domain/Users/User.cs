@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 
 namespace Application.Dal.Domain.Users
 {
