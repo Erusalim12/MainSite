@@ -23,7 +23,11 @@ namespace MainSite.Areas.Admin.Factories
 
         #region Ctor
 
-
+        public SecurityModelFactory(IUsersService customerService, IPermissionService permissionService)
+        {
+            _customerService = customerService;
+            _permissionService = permissionService;
+        }
 
         #endregion
 

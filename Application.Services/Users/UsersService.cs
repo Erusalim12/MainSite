@@ -156,7 +156,6 @@ namespace Application.Services.Users
         /// <returns>User roles</returns>
         public virtual IList<UserRole> GetAllUserRoles(bool showHidden = false)
         {
-
             var query = from cr in _userRoleRepository.GetAll()
                         orderby cr.Name
                         where showHidden || cr.Active

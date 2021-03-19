@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MainSite.Controllers
 {
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
 
         #region Security
@@ -15,13 +15,9 @@ namespace MainSite.Controllers
         /// Access denied view
         /// </summary>
         /// <returns>Accexzss denied view</returns>
-        protected virtual IActionResult AccessDeniedView()
-        {
+        internal ActionResult AccessDeniedView() 
+            => RedirectToAction("AccessDenied", "Security", new { pageUrl = GetRawUrl(Request) });
 
-
-            //return Challenge();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = GetRawUrl(Request) });
-        }
 
         /// <summary>
         /// Access denied JSON data for DataTables
@@ -63,7 +59,7 @@ namespace MainSite.Controllers
         }
 
         #endregion
-        
+
         [NonAction]
         public virtual string GetRawUrl(HttpRequest request)
         {

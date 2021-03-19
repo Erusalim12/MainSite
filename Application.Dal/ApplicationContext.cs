@@ -2,7 +2,9 @@
 using Application.Dal.Domain.Files;
 using Application.Dal.Domain.Menu;
 using Application.Dal.Domain.News;
+using Application.Dal.Domain.Permissions;
 using Application.Dal.Domain.Settings;
+using Application.Dal.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Dal
@@ -15,6 +17,13 @@ namespace Application.Dal
         public DbSet<NewsItem> NewsItems { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
+
+        public DbSet<UserRole> Roles { get; set; }
+        public DbSet<PermissionRecord> Permissions { get; set; }
+        public DbSet<User> UserInfo { get; set; }
+
+        public DbSet<PermissionRecordUserRoleMapping> PRURM { get; set; }
+
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

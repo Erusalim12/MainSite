@@ -18,6 +18,8 @@ using Application.Services.Settings;
 using Application.Services.Users;
 using MainSite.Areas.Admin.Factories;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Server.HttpSys;
+using Microsoft.AspNetCore.Server.IISIntegration;
 
 namespace MainSite
 {
@@ -40,6 +42,7 @@ namespace MainSite
                 options.UseSqlServer(connection));
 
             services.AddControllersWithViews();
+            services.AddAuthentication(HttpSysDefaults.AuthenticationScheme);
 
             services.AddControllersWithViews(mvcOtions =>
             {
@@ -83,6 +86,8 @@ namespace MainSite
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthorization();
+            app.UseAuthentication();
+
 
             //app.UseStaticFiles(new StaticFileOptions
             //{
@@ -92,12 +97,14 @@ namespace MainSite
             app.UseRouting();
             app.UseMvc(routes =>
             {
-
+                routes.MapRoute(
+                    name: "Admin",
+                    template: "Admin/{controller}/{action}/{id}");
                 routes.MapRoute(
                     name: "default",
                     template: "{category?}",
                     defaults: new {controller = "Home", action = "Index"});
-
+      
             });
         }
     }
