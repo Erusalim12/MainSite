@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using Application.Dal.Domain.Birthday;
+using Application.Dal.Domain.Counters;
 using Application.Dal.Domain.Files;
 using Application.Dal.Domain.Menu;
 using Application.Dal.Domain.News;
@@ -31,7 +32,7 @@ namespace Application.Dal
         public DbSet<PermissionRecord> Permissions { get; set; }
         public DbSet<User> UserInfo { get; set; }
         public DbSet<Birtday> Birtdays { get; set; }
-
+        public DbSet<VisitorsCounter> VisitiorCounter { get; set; }
         /// <summary>
         /// маппер USER-UserRole
         /// </summary>

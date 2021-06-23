@@ -1,11 +1,11 @@
-﻿using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Application.Dal;
-using Application.Dal.Infrastructure;
+using Application.Dal.Domain.Counters;
+using Application.Dal.Infrastructure; 
 using Application.Services.Files;
 using Application.Services.Menu;
 using Application.Services.News;
@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.Birthday;
+using Application.Services.Counters;
 using Application.Services.Permissions;
 using Application.Services.Settings;
 using MainSite.Models;
@@ -20,6 +21,7 @@ using Application.Services.Users;
 using MainSite.Areas.Admin.Factories;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Application.Services.PlanCalendar;
+using MainSite.Middleware;
 
 namespace MainSite
 {
@@ -32,6 +34,7 @@ namespace MainSite
 
         public IConfiguration Configuration { get; }
 
+        private CountersService _counterService;
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -77,12 +80,10 @@ namespace MainSite
             services.AddTransient<PlanCalendarRepository>();
             services.AddTransient<NewsItemRepository>();
 
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime hostLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -100,7 +101,7 @@ namespace MainSite
             app.UseAuthorization();
             app.UseAuthentication();
 
-
+            app.UseMiddleware(typeof(SiteViewMiddleware));
             //app.UseStaticFiles(new StaticFileOptions
             //{
             //    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Content")),
@@ -109,13 +110,15 @@ namespace MainSite
             app.UseRouting();
             app.UseMvc(routes =>
             {
-         
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}",
-                    defaults: new {controller = "Home", action = "Index"});
+                    defaults: new { controller = "Home", action = "Index" });
             });
-
+          
         }
+ 
+
     }
 }
