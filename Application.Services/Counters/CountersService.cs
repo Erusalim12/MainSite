@@ -15,10 +15,12 @@ namespace Application.Services.Counters
         private static int _totalCounter { get; set; }
         private static DateTime _currentDate { get; set; }
         private readonly IRepository<VisitorsCounter> _context;
-        private readonly IHostApplicationLifetime _appLifetime;
+
         public CountersService(IRepository<VisitorsCounter> context )
         {
             _context = context;
+
+            LoadCounters();
         }
         /// <summary>
         /// Возвращает новый экземпляр модели счетчиков
@@ -75,9 +77,20 @@ namespace Application.Services.Counters
         {
 
             var storedData = _context.GetAll.FirstOrDefault();
+            if (storedData == null)
+            {
+                storedData = new VisitorsCounter();
+                storedData.LastDate = _currentDate;
+                storedData.TodayCount = _todayCounter;
+                storedData.TotalCount = _totalCounter;
+
+                _context.Add(storedData);
+                return;
+            }
             storedData.LastDate = _currentDate;
             storedData.TodayCount = _todayCounter;
             storedData.TotalCount = _totalCounter;
+
 
             _context.Update(storedData);
         }
@@ -91,7 +104,7 @@ namespace Application.Services.Counters
             _todayCounter = storedData.TodayCount;
             _totalCounter = storedData.TotalCount;
             _currentDate = storedData.LastDate;
-
+            Console.WriteLine("visitor's counter was been loaded");
         }
     }
 }

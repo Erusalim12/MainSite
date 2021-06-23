@@ -42,7 +42,7 @@ namespace Application.Dal
         /// </summary>
         public DbSet<PermissionRecordUserRoleMapping> PRURM { get; set; }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        public ApplicationContext(DbContextOptions options)
             : base(options)
         {
             Database.EnsureCreated();

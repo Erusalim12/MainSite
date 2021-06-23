@@ -5,7 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Application.Dal;
 using Application.Dal.Domain.Counters;
-using Application.Dal.Infrastructure; 
+using Application.Dal.Infrastructure;
+using Application.Services.BackgroundTask;
 using Application.Services.Files;
 using Application.Services.Menu;
 using Application.Services.News;
@@ -34,7 +35,7 @@ namespace MainSite
 
         public IConfiguration Configuration { get; }
 
-        private CountersService _counterService;
+ 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -79,6 +80,10 @@ namespace MainSite
 
             services.AddTransient<PlanCalendarRepository>();
             services.AddTransient<NewsItemRepository>();
+
+            services.AddTransient<CountersService>();
+
+            services.AddHostedService<UpdateCountersInDb>();
 
         }
 
