@@ -4,11 +4,7 @@
 <input asp-for="Id" type="hidden" />
 
 <div class="col input-field  m12">
-    @Html.EditorFor(model => model.Name, new { type = "text", @class = "validate" })
-    <label class="active" for="first_name2">Наименование</label>
+    @Html.EditorFor(model => model.Name, new { type = "text", @class = "validate required" })
+    <label for="Name">Наименование</label>
 </div>
-
-<div class="col input-field  m12">
-    @Html.EditorFor(model => model.SystemName, new { type = "text", @class = "validate" })
-    <label class="active" for="first_name2">Системное имя</label>
-</div>
+ 

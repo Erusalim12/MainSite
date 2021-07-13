@@ -23,10 +23,7 @@ namespace MainSite.Areas.Admin.Models.Users
 
         [Display(Name = "User.IsSystemRole")]
         public bool IsSystemRole { get; set; }
-
-        [Display(Name = "User.SystemName")]
-        public string SystemName { get; set; }
-
+ 
         [Display(Name = "User.ActualPermissions")]
         public IEnumerable<string> PermissionNames { get; set; }
 
