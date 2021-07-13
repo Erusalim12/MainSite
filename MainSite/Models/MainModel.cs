@@ -251,6 +251,16 @@ namespace MainSite.Models
             };
         }
 
+
+        public byte[] GetDownloadFileByteArray(string fileId)
+        {
+            var download = _downloadService.GetDownloadByIdOrName(fileId);
+            var filePath = _downloadService.GetFileLocalPath(download.DownloadUrl);
+            var fileBytes = !StoreInDb ? _fileProvider.ReadAllBytes(filePath) : download.DownloadBinary;
+
+            return fileBytes;
+        }
+
         private IList<NewsItemViewModel> GetNewsItemsViewModel(IEnumerable<NewsItem> newsItems)
         {
             var result = new List<NewsItemViewModel>();
