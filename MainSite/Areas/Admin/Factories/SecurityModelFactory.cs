@@ -104,7 +104,7 @@ namespace MainSite.Areas.Admin.Factories
         {
             return CreatePermissionRecord(
                 "Редактировать " + menuItem.Name,
-                new TranslitMethods.Translitter().Translit(menuItem.Name, TranslitMethods.TranslitType.Gost)
+        new TranslitMethods.Translitter().Translit(menuItem.Name.Replace(',', ' '), TranslitMethods.TranslitType.Gost)
                 , nameof(MenuItem));
         }
         #endregion
