@@ -99,6 +99,8 @@ namespace MainSite.Areas.Admin.Controllers
 
                 if (entity != null)
                 {
+                    var permission = _permissionService.GetPermissionRecordBySystemName(entity.Name);
+
                     entity.Name = model.Name;
                     entity.IsActive = model.IsActive;
                     entity.ParentId = model.ParentId;
@@ -106,6 +108,11 @@ namespace MainSite.Areas.Admin.Controllers
                     if (!String.IsNullOrWhiteSpace(model.UrlIcone)) entity.UrlIcone = model.UrlIcone;
 
                     _menuService.UpdateItem(entity);
+
+                    permission.Name = model.Name;
+                    permission.SystemName = new TranslitMethods.Translitter().Translit(model.Name.Replace(',', ' '),
+                        TranslitMethods.TranslitType.Gost);
+                    _permissionService.UpdatePermissionRecord(permission);
                 }
                 else
                 {
