@@ -20,6 +20,7 @@ using Application.Services.Users;
 using MainSite.Areas.Admin.Factories;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Application.Services.PlanCalendar;
+using Microsoft.OpenApi.Models;
 
 namespace MainSite
 {
@@ -35,7 +36,10 @@ namespace MainSite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MainSiteApi", Version = "v1" });
+            });
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationContext>(options =>
