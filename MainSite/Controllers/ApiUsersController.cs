@@ -50,6 +50,7 @@ namespace MainSite.Controllers
         }
 
         [Route("IsPermission")]
+        [HttpGet]
         public bool IsPermissionForCategory(string categoryId)
         {
             bool result = true;
