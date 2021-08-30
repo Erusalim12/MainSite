@@ -22,6 +22,7 @@ namespace MainSite.Areas.Admin.Controllers
 
         // GET: SettingsController
         [Route("Admin/Settings")]
+        [HttpGet]
         public ActionResult Index()
         {
 #if RELEASE
@@ -35,6 +36,7 @@ namespace MainSite.Areas.Admin.Controllers
         }
 
         [Route("Admin/Settings/Create")]
+        [HttpGet]
         public ActionResult Create()
         {
 #if RELEASE
@@ -93,6 +95,7 @@ namespace MainSite.Areas.Admin.Controllers
         }
 
         [Route("Admin/Settings/CreateIndex")]
+        [HttpGet]
         public IActionResult CreateIndex()
         {
             _configDbService.CreateIndex();

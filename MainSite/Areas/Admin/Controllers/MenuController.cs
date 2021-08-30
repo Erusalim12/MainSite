@@ -28,6 +28,7 @@ namespace MainSite.Areas.Admin.Controllers
         // GET: MenuService
 
         [Route("Admin/Menu")]
+        [HttpGet]
         public IActionResult Index()
         {
 #if RELEASE

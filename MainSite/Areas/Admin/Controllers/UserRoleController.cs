@@ -31,11 +31,13 @@ namespace MainSite.Areas.Admin.Controllers
         #endregion
       
         [Route("Admin/UserRoles/Index")]
+        [HttpGet]
         public virtual IActionResult Index()
         {
             return RedirectToAction(nameof(List));
         }
         [Route("Admin/UserRoles/List")]
+        [HttpGet]
         public virtual IActionResult List()
         {
 #if RELEASE
@@ -54,6 +56,7 @@ namespace MainSite.Areas.Admin.Controllers
 
 
         [Route("Admin/UserRoles/Create")]
+        [HttpGet]
         public virtual IActionResult Create()
         {
 #if RELEASE
@@ -103,7 +106,9 @@ namespace MainSite.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             return View(model);
         }
+      
         [Route("Admin/UserRoles/Edit")]
+        [HttpGet]
         public virtual IActionResult Edit(string id)
         {
 #if RELEASE
@@ -122,6 +127,7 @@ namespace MainSite.Areas.Admin.Controllers
 
             return View(model);
         }
+      
         [Route("Admin/UserRoles/Edit")]
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult Edit(UserRoleModel model, bool continueEditing)

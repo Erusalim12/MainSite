@@ -103,8 +103,11 @@ namespace MainSite
             app.UseStaticFiles();
             app.UseAuthorization();
             app.UseAuthentication();
-
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
             //app.UseStaticFiles(new StaticFileOptions
             //{
             //    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Content")),

@@ -18,6 +18,7 @@ namespace MainSite.Controllers
         }
 
         [Route("Search/Index")]
+        [HttpGet]
         public IActionResult Index(string textSearch)
         {
             return View(_mainModel.GetManySearchResultNewsItemViewModel(textSearch));

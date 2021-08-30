@@ -34,11 +34,13 @@ namespace MainSite.Areas.Admin.Controllers
 
         #region Users
         [Route("Admin/Users/Index")]
+        [HttpGet]
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
         }
         [Route("Admin/Users/List")]
+        [HttpGet]
         public virtual IActionResult List()
         {
 #if RELEASE

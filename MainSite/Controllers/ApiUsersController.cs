@@ -21,6 +21,7 @@ namespace MainSite.Controllers
         }
 
         [Route("GetBirthdayUsers")]
+        [HttpGet]
         public string GetBirthdayUsers()
         {
             string path = null;
@@ -38,6 +39,7 @@ namespace MainSite.Controllers
             return "[]";
         }
         [Route("InfoCurrentUser")]
+        [HttpGet]
         public string GetInfoCurrentUser()
         {
             var model = new

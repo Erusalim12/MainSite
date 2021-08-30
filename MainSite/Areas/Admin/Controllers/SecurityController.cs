@@ -34,6 +34,7 @@ namespace MainSite.Areas.Admin.Controllers
         #endregion
 
         [Route("/Security/AccessDenied")]
+        [HttpGet,HttpPost]
         public virtual IActionResult AccessDenied(string pageUrl)
         {
             var user = _userService.GetUserBySystemName(User.Identity.Name);
@@ -112,6 +113,7 @@ namespace MainSite.Areas.Admin.Controllers
 
 
         [Route("Admin/InstallPermissions")]
+        [HttpGet,HttpPost]
         public IActionResult InstallPermissions()
         {
             _permissionService.InstallPermissions(new StandardPermissionProvider());

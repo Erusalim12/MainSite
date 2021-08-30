@@ -19,6 +19,7 @@ namespace MainSite.Controllers
             _service = menuService;
         }
         [Route("categories")]
+        [HttpGet]
         public string MenuTreeGenerate(string categoryId = null)
         {
             var result = new List<MenuItemViewModel>();
@@ -31,6 +32,7 @@ namespace MainSite.Controllers
         }
 
         [Route("breadcrumbs")]
+        [HttpGet]
         public IEnumerable<MenuItemViewModel> GetCategoresByBreadCrumbs(string categoryId = null)
         {
             var listNames = new List<MenuItemViewModel>();
