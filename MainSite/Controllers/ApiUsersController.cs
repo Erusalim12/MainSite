@@ -26,6 +26,7 @@ namespace MainSite.Controllers
         }
 
         [Route("GetBirthdayUsers")]
+        [HttpGet]
         public string GetBirthdayUsers()
         {
             var model = _birthdayService.GetTodayBirth().ToList();
@@ -36,6 +37,7 @@ namespace MainSite.Controllers
             return "[]";
         }
         [Route("InfoCurrentUser")]
+        [HttpGet]
         public string GetInfoCurrentUser()
         {
             var model = new
