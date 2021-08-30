@@ -63,6 +63,9 @@
         },
         beforeDestroy() {
             this.DELETE_CURRENT_NEWS();
+        },
+        updated() {
+            M.Materialbox.init(document.querySelectorAll(`#newsComponent img`), {})  
         }
     };
 </script>
