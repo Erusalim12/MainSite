@@ -107,10 +107,11 @@ namespace MainSite.Models
         {
 
             var entity = _newsService.GetNewsItem(model.Id);
+            ReplaceImg(model);
 
             entity.Header = model.Header;
             entity.LastChangeDate = DateTime.Now;
-            entity.AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";
+            entity.AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";           
             entity.Description = model.Description;
             List<IFormFile> httpPostedFile = new List<IFormFile>();
             List<IFormFile> httpCurrentFile = new List<IFormFile>();
@@ -119,16 +120,17 @@ namespace MainSite.Models
             {
                 var element = model.UploadedFiles.FirstOrDefault(s => s.Name.Contains(file.Name));
 
-                if (element != null) {
+                if (element != null)
+                {
                     httpCurrentFile.Add(element);
-                    continue; 
+                    continue;
                 }
 
                 _fileProvider.DeleteFile(file.DownloadUrl);
                 _downloadService.DeleteDownload(file);
 
             }
-
+         
             _newsService.UpdateNews(entity);
 
             foreach (var file in model.UploadedFiles.ToList())
@@ -146,12 +148,15 @@ namespace MainSite.Models
             {
                 Id = Guid.NewGuid().ToString(),
                 Header = newsItemViewModel.Header,
-                Description = newsItemViewModel.Description,
+               
                 AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан",
                 CreatedDate = DateTime.Now,
                 Category = newsItemViewModel.CategoryId,
                 IsAdvancedEditor = newsItemViewModel.IsAdvancedEditor
             };
+            ReplaceImg(newsItemViewModel);
+            entity.Description = newsItemViewModel.Description;
+
             _newsService.CreateNews(entity);
             newsItemViewModel.Id = entity.Id;
 
