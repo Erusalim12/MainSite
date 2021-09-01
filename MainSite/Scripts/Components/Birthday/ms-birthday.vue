@@ -1,5 +1,5 @@
 ﻿<template>
-    <div class="card-panel card_birthday">
+    <div v-if="users && users.length" class="card-panel card_birthday">
         <div class="card_birthday-title bold">
             C днём рождения!
         </div>
@@ -29,7 +29,7 @@
                     method: 'GET'
                 })
                 .then(responce => {
-                    this.users = responce.data;
+                    this.users = responce.data;       
                 });
             },
             getSubDivision(subDivision) {
