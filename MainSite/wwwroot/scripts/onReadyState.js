@@ -25,7 +25,7 @@ function aligmentWidthChildsBirthdayBlock() {
 function eventClickMobileIconMenu() {
     //выбираем нужные элементы
     var el = document.getElementById('openMenu');
-    el.onclick = function (e) {
+    el.onClick = function (e) {
         var secondMenuHtml = document.querySelector('.secondMenu-infoUser').innerHTML + document.querySelector('.secondMenu-settingsUser').innerHTML;
         var secondMenuBlock = document.querySelector('.secondMenuBlock');
         secondMenuBlock.innerHTML = secondMenuHtml;
@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var elems = document.querySelectorAll('select');
     var instances = M.FormSelect.init(elems);
 });
+  
 
 eventClickMobileIconMenu();
 aligmentWidthChildsBirthdayBlock()

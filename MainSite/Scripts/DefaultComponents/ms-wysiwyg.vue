@@ -180,10 +180,8 @@
 
                                 elementImg.onload = () => resolve(elementImg)
                                 elementImg.setAttribute('id', unicId);
-                                elementImg.classList.add('materialboxed')
+                                //elementImg.classList.add('materialboxed')
                                 elementImg.src = e.target.result;
-                                //elementImg.setAttribute('full_url', e.target.result);
-                                //vm.fileList.push({ Id: unicId, FormFile: file });
                             });
 
                             let imgWidth = img.width;
@@ -191,16 +189,6 @@
                             let scale = imgWidth / imgHeight;
                             let tempHeight = vm.editor.offsetHeight * 3 / 5 - 30
                             let tempWidth = tempHeight * scale
-
-                            /*
-                            var cnvs = document.createElement('canvas')
-                            cnvs.width = tempWidth;
-                            cnvs.height = tempHeight;
-                            var ctx = cnvs.getContext('2d');
-                            ctx.drawImage(img, 0, 0, tempWidth, tempHeight);
-                            var uri = cnvs.toDataURL('image/jpeg', 0.3);
-                            img.src = uri
-                            */
                       
                             img.width = tempWidth;                        
                             img.height = tempHeight;
