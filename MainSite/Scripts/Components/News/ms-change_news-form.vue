@@ -6,6 +6,7 @@
 
     <div class="s12 m12">
       <div class="bold">Введите заголовок объявления:</div>
+      <div class="error" style="font-size:14px;" v-if="isErrorHeader">Вы должны вести заголовок сообщения</div>
       <input v-model="model.header" name="Header" id="TextHeader" class="inputTextMainSite" type="text" />
     </div>
     <ms-wysiwyg v-model="textEditor"
@@ -49,7 +50,8 @@
       return {
         model: {},
         textEditor: '',
-        fileList: []
+        fileList: [],
+        isErrorHeader: false
       }
     },
     computed: {
@@ -80,6 +82,12 @@
       },
       submit(e) {
         e.preventDefault();
+
+        if(!this.model.header || this.model.header.trim() === '') {
+          this.isErrorHeader = true;
+          return;
+        }
+
         this.model.CategoryId = this.CategoryId;
 
         let formData = new FormData(this.$refs.formCreateNews);
