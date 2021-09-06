@@ -32,10 +32,11 @@ namespace MainSite.Areas.Admin.Factories
             var customers = _userService.GetAllUsers(customerRoleIds: searchModel.SelectedRoleIds,
                 username: searchModel.UserName,
                 ipAddress: searchModel.IpAddress,
-                pageIndex: searchModel.PageNum - 1, pageSize: searchModel.Pagesize);
+                pageIndex: searchModel.PageNum - 1,
+                pageSize: searchModel.Pagesize);
 
 
-            return customers.Select(c => PrepareModel(c));
+            return customers.Select(c => PrepareModel(c)).OrderBy(c=>c.LastVisitDate);
 
         }
 
@@ -49,9 +50,9 @@ namespace MainSite.Areas.Admin.Factories
                 UserName = user.Name,
                 IPAddress = user.LastIpAddress,
                 UserRoles = _userService.GetUserRoles(user)
-                    .Select(s => _userRoleModelFactory.PrepareUserRoleModel(null, s).Name)
-
-
+                    .Select(s => _userRoleModelFactory.PrepareUserRoleModel(null, s).Name),
+                MessagesCount = -1,
+                LastVisitDate = user.LastActivityDate
             };
 
             return model;
