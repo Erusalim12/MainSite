@@ -12,7 +12,7 @@ namespace MainSite.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Permission mapping model</param>
         /// <returns>Permission mapping model</returns>
-        PermissionMappingModel PreparePermissionMappingModel(PermissionMappingModel model);
+        PermissionMappingModel PreparePermissionMappingModel(PermissionMappingModel model,string[] roles);
 
         /// <summary>
         /// Return new example of permission record

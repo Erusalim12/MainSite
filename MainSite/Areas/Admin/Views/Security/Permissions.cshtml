@@ -10,7 +10,7 @@
 <div class="card-panel">
     <form asp-controller="Security" asp-action="Permissions" method="post">
         <div class="content-header clearfix">
-      
+            @Html.Hidden("roles", Model.AvailableUserRoles.Select(s => s.Id))
             <div class="pull-right">
                 <button type="submit" name="save" class="btn btn-defaultMainSite">
                     <i class="fa fa-floppy-o"></i>
@@ -66,7 +66,7 @@
                                                     <th scope="col">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input type="checkbox" id="selectall-@(cr.Id)" @(allowed == 0 ? " checked=checked" : null)  class="selectAllCheckbox"/>
+                                                                <input type="checkbox" id="selectall-@(cr.Id)" @(allowed == 0 ? " checked=checked" : null) class="selectAllCheckbox" />
                                                                 <span>@cr.Name</span>
                                                             </label>
                                                         </div>

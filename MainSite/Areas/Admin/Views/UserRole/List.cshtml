@@ -51,7 +51,7 @@
                         </ul>
                     </td>
                     <td>
-                        <a class="btn btn-defaultMainSite" href="@Url.Action("Edit", "UserRole", new {id = item.Id})">Изменить</a>
+                        <a class="btn btn-defaultMainSite"  href="@Url.Action("Permissions", "Security", new {roles = item.Id})">Изменить</a>
                     </td>
                 </tr>
             }
