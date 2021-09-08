@@ -13,22 +13,20 @@
                             ></span>
                         </a>
                         <a id="openMenu" data-target="mobile-demo" class="sidenav-trigger" style="float: right;cursor:pointer;"><i class="material-icons">menu</i></a>
-                        <ul class="hide-on-med-and-down col m12 s12 l9 secondMenu">
-                            <li>
-                                <div class="secondMenu-search">
-                                    <span class="bold">Поиск:</span>
-                                    <input v-model="searchText" style="flex-grow:1" class="inputTextMainSite inputSearch" type="text" />
-                                    <button style="flex-grow:0" class="btn btn-default" @click="searchNews">Найти</button>
-                                </div>
+                        <ul class="hide-on-med-and-down col m12 s12 l9 headerMenu" style="padding:0;">
+                            <li class="headerMenu-search">
+                                    <span style="margin-right:5px;" class="bold">Поиск:</span>
+                                    <input style="margin-right:5px;" v-model="searchText" class="inputTextMainSite inputSearch" type="text" />
+                                    <button style="margin-right:5px;" class="btn btn-default" @click="searchNews">Найти</button>
                             </li>
-                            <li style="display:flex; align-items:center;">
-                                <div class="secondMenu-user">
+                            <li>
+                                <div class="headerMenu-user">
                                     <a data-target='dropdown1' class="dropdown-trigger valign-wrapper" style="padding: 0px;">
-                                        <span class="secondMenu-infoUser" style="padding-right:10px;">{{currentUser.Name}}</span>
+                                        <span class="headerMenu-user__info">{{currentUser.Name}}</span>
                                         <img src="/images/layout_icons/userLogout.svg" alt="" />
                                         <!--<i class="material-icons">keyboard_arrow_down</i>-->
                                     </a>
-                                    <ul id='dropdown1' class='dropdown-content secondMenu-settingsUser'>
+                                    <ul id='dropdown1' class='dropdown-content headerMenu-user__settings'>
                                         <li><a href="#!"><i class="material-icons">home</i>Личный кабинет</a></li>
                                         <li><a href="#!"><i class="material-icons">cloud</i>Управление сервисами</a></li>
                                     </ul>
@@ -126,7 +124,7 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .isActive {
         display:block;
     }
@@ -140,6 +138,40 @@
             display: flex;
             align-items: center;
             margin-left: auto;
+        }
+    }
+
+    .headerMenu {
+        display: flex;
+        padding: 0px;
+
+        &-search {
+            display: flex;
+            align-items: center;    
+            flex-basis: 45%;  
+            & .inputSearch {
+                width: 50% !important;
+            }  
+        }
+
+        & > li {
+
+            &:last-child {
+                margin-left: auto;
+            }
+
+        }
+
+        &-user {
+            padding:0;
+            &__info {
+                font-size:18px;
+                padding-right:10px;
+            }
+            
+            &__settings {
+
+            }
         }
     }
 </style>

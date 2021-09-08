@@ -1,8 +1,8 @@
 ﻿<template>
-    <div>
+    <main role="main" class="col m12 s12 l9" id="mainBlock">
       <ms-modal-wrapper />      
       <router-view />
-    </div>
+    </main>
 
 </template>
 

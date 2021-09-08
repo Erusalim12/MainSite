@@ -35,12 +35,12 @@
   font-weight: normal;
   font-style: normal; }
 
-@font-face {
-  font-family: 'helveticaneuecyritalic';
-  src: url("helveticaneuecyr-italic-webfont.woff2") format("woff2"), url("helveticaneuecyr-italic-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal; }
-
+/*@font-face {
+    font-family: 'helveticaneuecyritalic';
+    src: url('helveticaneuecyr-italic-webfont.woff2') format('woff2'), url('helveticaneuecyr-italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}*/
 @font-face {
   font-family: 'helveticaneuecyrlight';
   src: url("helveticaneuecyr-light-webfont.woff2") format("woff2"), url("helveticaneuecyr-light-webfont.woff") format("woff");
@@ -76,7 +76,7 @@ html {
   overflow-x: hidden;
   position: relative;
   min-height: 100%; }
-  @media (max-width: 1400px) {
+  @media (max-width: 900px) {
     html .container {
       width: 95%; } }
   html .rectangle {
@@ -139,7 +139,7 @@ html {
     height: 100%; } }
 
 #menuBlock {
-  background-color: #eeeeee;
+  background-color: transparent;
   margin: 0.5rem 0 60px 0;
   padding: 0px;
   padding-right: 15px;

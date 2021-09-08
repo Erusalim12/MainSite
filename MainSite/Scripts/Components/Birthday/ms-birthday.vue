@@ -54,7 +54,7 @@
         transform: translateX(110%);
         width: 25%;
 
-        @media (max-width: 1400px) {
+        @media (max-width: 900px) {
             margin: 0.5rem 0 1rem 0;
             transform: translateX(0px);
             position: inherit;
