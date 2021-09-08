@@ -53,6 +53,7 @@
     import msPopup from "./ms-popup.vue"
     import msSelect from './ms-select.vue'
     import msLoaderFiles from './ms-loader-files.vue'
+    import ResizeService from '../Services/ResizeService.js'
     export default {
         name: "ms-wysiwyg",
         props: {
@@ -99,6 +100,9 @@
             changeTextEditor() {
                 this.$emit('input', this.editor.innerHTML);
             },
+            changeResizeEditor(editor) {
+                this.$emit('input', editor);
+            },
             loadIframe() { 
                 this.editor = document.getElementById(this.GUUID);
                 if (this.parentTextEditor !== '') this.$emit('input', this.parentTextEditor);
@@ -106,41 +110,22 @@
 
                 this.editor.addEventListener('click', function (e) {
                     e.preventDefault();
-                    if (e.target.tagName === 'IMG' && !e.target.getAttribute('_moz_resizing')) {
-                        if (Object.keys(vm.currentImage).length == 0) {
-                            let blockImg = document.createElement('div');
-                            blockImg.classList.add('resize');
-                            blockImg.setAttribute('contentEditable', false);
-                            blockImg.style.width = e.target.style.width;
-                            blockImg.style.height = e.target.style.height;
-
-                            e.target.style.width = '';
-                            e.target.style.height = '';
-                            e.target.style.margin = '';
-
-                            blockImg.appendChild(e.target.cloneNode());
-                            if ("replaceNode" in e.target) {
-                                // for IE
-                                e.target.replaceNode(blockImg);
+                    if (e.target.tagName == 'IMG') {
+                        if(e.target.getAttribute('_moz_resizing')) {
+                            function mouseUp() {
+                                if(vm.editor.clientWidth < this.clientWidth) {
+                                    this.setAttribute('width', vm.editor.clientWidth - 20);
+                                    vm.$emit('input', vm.editor.innerHTML);
+                                }
                             }
-                            else {
-                                // for other browsers
-                                e.target.parentNode.replaceChild(blockImg, e.target);
-                            }
-                            vm.currentImage.data = blockImg;
+                            document.addEventListener('mouseup', mouseUp.bind(e.target));
                         }
                         else {
-                            let newImg = vm.currentImage.data.querySelector('img').cloneNode();
-                            newImg.style.width = vm.currentImage.data.style.width;
-                            newImg.style.height = vm.currentImage.data.style.height;
-
-                            vm.currentImage.data.parentNode.replaceChild(newImg, vm.currentImage.data);
-                            vm.currentImage = {};
+                         document.execCommand('enableObjectResizing', false, 'false');
+                         let t = new ResizeService(e.target, vm);
+                         
                         }
-
-                        return false;
                     }
-
                     return false;
                 }, false);
             },
@@ -178,20 +163,24 @@
                                 let elementImg = document.createElement('img')
                                 let unicId = 'image_' + Date.now().toString();
 
-                                elementImg.onload = () => resolve(elementImg)
-                                elementImg.setAttribute('id', unicId);
-                                //elementImg.classList.add('materialboxed')
-                                elementImg.src = e.target.result;
-                            });
 
-                            let imgWidth = img.width;
-                            let imgHeight = img.height;
-                            let scale = imgWidth / imgHeight;
-                            let tempHeight = vm.editor.offsetHeight * 3 / 5 - 30
-                            let tempWidth = tempHeight * scale
-                      
-                            img.width = tempWidth;                        
-                            img.height = tempHeight;
+                                elementImg.setAttribute('id', unicId);
+                                //elementImg.classList.add('materialboxed');
+                                elementImg.src = e.target.result;
+
+                                elementImg.onload =  function() {
+                                    let imgWidth = elementImg.width;
+                                    let imgHeight = elementImg.height;
+                                    let scale = imgWidth / imgHeight;
+                                    let tempHeight = vm.editor.offsetHeight * 3 / 5 - 30
+                                    let tempWidth = tempHeight * scale
+                            
+                                    elementImg.width = tempWidth;                        
+                                    elementImg.height = tempHeight;
+
+                                    return resolve(elementImg);
+                                };
+                            });
 
                             let focus = vm.setFocus();
                             if(focus != null && focus.getAttribute('name') == 'wysiwyg') {
@@ -287,21 +276,6 @@
         }
     }
 
-    .resize {
-        position: relative;
-        resize: both;
-        overflow: hidden;
-        width: 25px;
-        height: 25px;
-        display: inline-block;
-        border: 1px solid black;
-    }
-
-    .resize > img {
-        width: 100%;
-        height: 100%;
-    }
-
     .wysiwyg {
         padding: 15px;
         border: 1px solid #9e9e9e;
@@ -311,6 +285,7 @@
         height:400px;
         margin-bottom: 15px;
         overflow-y:scroll;
+        overflow-x: hidden;
         &:focus {
            background-color: white;
         }

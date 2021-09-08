@@ -35,7 +35,7 @@ namespace Application.Services.Birthday
         private string ShortName(string fio)
         {
             string[] str = fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (str.Length != 3) throw new ArgumentException("ФИО задано в неверно формате");
+            if (str.Length < 3) return $"{str[0]} {str[1][0]}.";
             return $"{str[0]} {str[1][0]}. {str[2][0]}.";
         }
 
