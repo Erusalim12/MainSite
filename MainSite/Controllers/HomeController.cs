@@ -48,10 +48,10 @@ namespace MainSite.Controllers
             if (ModelState.IsValid)
             {
                 model.UploadedFiles = Request.Form.Files.ToList();
-                if (model.IsAdvancedEditor)
-                {
-                    _mainMode.InsertAdvancedNewsItem(model);
-                }
+                //if (model.IsAdvancedEditor)
+                //{
+                //    _mainMode.InsertAdvancedNewsItem(model);
+                //}
 
                 _mainMode.CreateNewNewsItem(model, User);
             }
@@ -66,10 +66,10 @@ namespace MainSite.Controllers
             if (ModelState.IsValid)
             {
                 model.UploadedFiles = Request.Form.Files.ToList();
-                if (model.IsAdvancedEditor)
-                {
-                    _mainMode.InsertAdvancedNewsItem(model);
-                }
+                //if (model.IsAdvancedEditor)
+                //{
+                //    _mainMode.InsertAdvancedNewsItem(model);
+                //}
 
                 _mainMode.EditNewNewsItem(model, User);
 

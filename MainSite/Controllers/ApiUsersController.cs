@@ -26,6 +26,7 @@ namespace MainSite.Controllers
         }
 
         [Route("GetBirthdayUsers")]
+        [HttpGet]
         public string GetBirthdayUsers()
         {
             var model = _birthdayService.GetTodayBirth().ToList();
@@ -36,6 +37,7 @@ namespace MainSite.Controllers
             return "[]";
         }
         [Route("InfoCurrentUser")]
+        [HttpGet]
         public string GetInfoCurrentUser()
         {
             var model = new
@@ -48,6 +50,7 @@ namespace MainSite.Controllers
         }
 
         [Route("IsPermission")]
+        [HttpGet]
         public bool IsPermissionForCategory(string categoryId)
         {
             bool result = true;
