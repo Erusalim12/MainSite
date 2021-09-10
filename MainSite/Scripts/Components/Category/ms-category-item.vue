@@ -65,7 +65,10 @@
     .ms-category-item {
         overflow: hidden;
         height: 240px;
-        width: 47%;
+        width: 46%;
+        @media (max-width: 900px) {
+            width: 100%;
+        }
         position: relative;
         margin: 10px 10px;
         cursor: pointer;
