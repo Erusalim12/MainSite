@@ -73,10 +73,10 @@
                 isInfoPopupVisible: false,
                 actionLoad: '',
                 isImage: false,
-                formatBlockList: [{ name: "Обычный текст", value: "span" }, { name: "Название темы", value: "h1" },
+                formatBlockList: [{ name: "Обычный текст", value: "p" }, { name: "Название темы", value: "h1" },
                  { name: "Название раздела", value: "h2" }, { name: "Название подраздела", value: "h3" }
                 ],
-                formatBlockSelected: { name: "Обычный текст", value: "span" },
+                formatBlockSelected: { name: "Обычный текст", value: "p" },
                 fileListDropDownSelected: { name: "Список файлов &#129131;", value: "" },
                 currentImage: {}
             }
@@ -121,9 +121,8 @@
                             document.addEventListener('mouseup', mouseUp.bind(e.target));
                         }
                         else {
-                         document.execCommand('enableObjectResizing', false, 'false');
-                         let t = new ResizeService(e.target, vm);
-                         
+                            document.execCommand('enableObjectResizing', false, 'false');
+                            let t = new ResizeService(e.target, vm);
                         }
                     }
                     return false;
@@ -134,20 +133,8 @@
                 this.editor.focus();
             },
             changeSelectFormatBlock(selectDropDownElement) {                       
-                this.formatBlockSelected = selectDropDownElement;
-                var div = document.createElement('div');
-                let text = window.getSelection().toString()
-                if( selectDropDownElement.value === 'span') {
-                    let checkContainsHeader = 
-                        document.getSelection().anchorNode.parentElement.getAttribute('name') != 'wysiwyg' &&
-                        document.getSelection().anchorNode.parentElement.tagName != 'SPAN'
-                    if(checkContainsHeader) {
-                        window.getSelection().anchorNode.parentElement.remove()
-                    }
-                }
-                
-                div.innerHTML = "<" + selectDropDownElement.value + ">" + text + "</" + selectDropDownElement.value + ">";
-                this.formatDoc("insertHTML", div.innerHTML);
+                this.formatBlockSelected = selectDropDownElement;     
+                document.execCommand('formatBlock', false, selectDropDownElement.value)
             },
             addFileForBody(file) {
                 if (file) {
@@ -288,6 +275,10 @@
         overflow-x: hidden;
         &:focus {
            background-color: white;
+        }
+
+        p {
+            margin: 0;
         }
     }
 
