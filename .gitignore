@@ -13,8 +13,6 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-/MainSite/appsettings.json
-/MainSite/appsettings.Development.json
 
 # Build results
 [Dd]ebug/
@@ -346,3 +344,6 @@ healthchecksdb
 /MainSite/wwwroot/images
 *.png
 *.jpeg
+
+appsettings.json
+appsettings.Development.json
