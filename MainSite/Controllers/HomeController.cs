@@ -19,7 +19,7 @@ namespace MainSite.Controllers
     {
         private readonly MainModel _mainMode;
         private readonly IMenuService _menuService;
-        private readonly IPictureService _uploadService;
+        private readonly IPictureService _pictureService;
         private readonly IPermissionService _permissionService;
         private readonly ISecurityModelFactory _securityModelFactory;
         private readonly IUsersService _userService;
@@ -29,7 +29,7 @@ namespace MainSite.Controllers
         {
             _mainMode = mainMode;
             _menuService = menuService;
-            _uploadService = uploadService;
+            _pictureService = uploadService;
             _permissionService = permissionService;
             _securityModelFactory = securityModelFactory;
             _userService = userService;
@@ -97,10 +97,11 @@ namespace MainSite.Controllers
                 if (fileForm != null)
                 {
 
-                    var file = _uploadService.InsertPicture(fileForm);
-                    _uploadService.GetPictureUrl(file.Id);
+                    var file = _pictureService.InsertPicture(fileForm);
+                 
+                    _pictureService.GetPictureUrl(file.Id);
 
-                    model.UrlIcone = _uploadService.GetPictureUrl(file.Id);
+                    model.UrlIcone = _pictureService.GetPictureUrl(file.Id);
                 }
 
                 _menuService.InsertItem(model);

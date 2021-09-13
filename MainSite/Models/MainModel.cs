@@ -37,6 +37,7 @@ namespace MainSite.Models
         private readonly IAppFileProvider _fileProvider;
         private readonly bool StoreInDb = false;
         private readonly IPermissionService _permissionService;
+        private readonly IPictureService _pictureService;
 
         public MainModel(
             INewsService newsService,
@@ -46,7 +47,8 @@ namespace MainSite.Models
             IUsersService usersService,
             PinNewsService pinNewsService,
             IAppFileProvider fileProvider,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IPictureService pictureService)
         {
             _newsService = newsService;
             _downloadService = downloadService;
@@ -56,6 +58,7 @@ namespace MainSite.Models
             _pinNewsService = pinNewsService;
             _fileProvider = fileProvider;
             _permissionService = permissionService;
+            _pictureService = pictureService;
 
         }
 
@@ -210,12 +213,12 @@ namespace MainSite.Models
         {
             var imgRegex = new Regex("<img [^>]+>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             var base64Regex = new Regex("data:[^/]+/(?<ext>[a-z]+);base64,(?<base64>.+)", RegexOptions.IgnoreCase);
-
+            byte i = 0;//постфикс наименования для изображения
             foreach (Match? match in imgRegex.Matches(item.Description))
             {
 
                 var doc = new XmlDocument();
-
+                
                 var matchValue = match.Value.EndsWith("/>") ? match.Value : match.Value.Replace(">", "/>");
 
                 doc.LoadXml($"<root>{matchValue}</root>");
@@ -234,12 +237,14 @@ namespace MainSite.Models
                 if (base64Match.Success)
                 {
                     var bytes = Convert.FromBase64String(base64Match.Groups["base64"].Value);
-                    var file = _downloadService.SaveFileInFileSystem(bytes, img.Attributes["id"].Value + fileExt, AppMediaDefaults.PathToNewsMedia);
-
-                    srcNode.Value = _fileProvider.GetVirtualPath(file);
+                 //   var file = _downloadService.SaveFileInFileSystem(bytes, img.Attributes["id"].Value + fileExt, AppMediaDefaults.PathToNewsMedia);
+                    var picture = _pictureService.InsertPicture(bytes,mime,item.Header+i,null,item.Header+"_"+i,true);
+                
+                    srcNode.Value = _fileProvider.GetVirtualPath(picture.VirtualPath);
 
                     item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 }
+                i++;
             }
         }
 
