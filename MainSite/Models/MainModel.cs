@@ -18,6 +18,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Application.Dal.Domain.Files;
 using Application.Dal.Repositories.Infrastructure;
 using Application.Services.Permissions;
 using Application.Services.Utils;
@@ -114,7 +115,7 @@ namespace MainSite.Models
 
             entity.Header = model.Header;
             entity.LastChangeDate = DateTime.Now;
-            entity.AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";           
+            entity.AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";
             entity.Description = model.Description;
             List<IFormFile> httpPostedFile = new List<IFormFile>();
             List<IFormFile> httpCurrentFile = new List<IFormFile>();
@@ -133,7 +134,7 @@ namespace MainSite.Models
                 _downloadService.DeleteDownload(file);
 
             }
-         
+
             _newsService.UpdateNews(entity);
 
             foreach (var file in model.UploadedFiles.ToList())
@@ -151,7 +152,7 @@ namespace MainSite.Models
             {
                 Id = Guid.NewGuid().ToString(),
                 Header = newsItemViewModel.Header,
-               
+
                 AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан",
                 CreatedDate = DateTime.Now,
                 Category = newsItemViewModel.CategoryId,
@@ -218,13 +219,19 @@ namespace MainSite.Models
             {
 
                 var doc = new XmlDocument();
-                
+
                 var matchValue = match.Value.EndsWith("/>") ? match.Value : match.Value.Replace(">", "/>");
 
                 doc.LoadXml($"<root>{matchValue}</root>");
 
                 var img = doc.FirstChild.FirstChild;
                 var srcNode = img.Attributes["src"];
+
+                var height = int.Parse(img.Attributes["height"].InnerText);
+                var width = int.Parse(img.Attributes["width"].InnerText);
+
+                
+
                 string mime = MimeTypes.ImageJpeg;
                 try
                 {
@@ -232,15 +239,24 @@ namespace MainSite.Models
                 }
                 catch { }
 
-                var fileExt = GetDefaultExtension(mime);
                 var base64Match = base64Regex.Match(srcNode.Value);
                 if (base64Match.Success)
                 {
                     var bytes = Convert.FromBase64String(base64Match.Groups["base64"].Value);
-                 //   var file = _downloadService.SaveFileInFileSystem(bytes, img.Attributes["id"].Value + fileExt, AppMediaDefaults.PathToNewsMedia);
-                    var picture = _pictureService.InsertPicture(bytes,mime,item.Header+i,null,item.Header+"_"+i,true);
-                
-                    srcNode.Value = _fileProvider.GetVirtualPath(picture.VirtualPath);
+                    // var filepath = _downloadService.SaveFileInFileSystem(bytes, img.Attributes["id"].Value + fileExt, AppMediaDefaults.PathToNewsMedia);
+                    var storedPicture = _pictureService.InsertPicture(bytes, mime, item.Header + i, null, item.Header + "_" + i, true);
+
+                    //если высота больше ширины, значит портретное изображение
+                    if (height > width)
+                    {
+                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, height,true,PictureType.Avatar);
+                    }
+                    else//иначе альбомное изображение
+                    {
+                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, width,true,PictureType.Entity);
+
+                    }
+                    srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, 300);
 
                     item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 }
