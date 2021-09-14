@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
@@ -227,10 +228,10 @@ namespace MainSite.Models
                 var img = doc.FirstChild.FirstChild;
                 var srcNode = img.Attributes["src"];
 
-                var height = int.Parse(img.Attributes["height"].InnerText);
-                var width = int.Parse(img.Attributes["width"].InnerText);
+                var height = (int)Double.Parse(img.Attributes["height"].InnerText, CultureInfo.InvariantCulture);
+                var width = (int)Double.Parse(img.Attributes["width"].InnerText, CultureInfo.InvariantCulture);
 
-                
+
 
                 string mime = MimeTypes.ImageJpeg;
                 try
@@ -243,20 +244,21 @@ namespace MainSite.Models
                 if (base64Match.Success)
                 {
                     var bytes = Convert.FromBase64String(base64Match.Groups["base64"].Value);
-                    // var filepath = _downloadService.SaveFileInFileSystem(bytes, img.Attributes["id"].Value + fileExt, AppMediaDefaults.PathToNewsMedia);
-                    var storedPicture = _pictureService.InsertPicture(bytes, mime, item.Header + i, null, item.Header + "_" + i, true);
+                    //Сохранили изображение
+                    var storedPicture = _pictureService.InsertPicture(bytes, mime, item.Header + "_" + i, null, item.Header + "_" + i, true);
 
+                    //получить ссылку на изображение
                     //если высота больше ширины, значит портретное изображение
                     if (height > width)
                     {
-                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, height,true,PictureType.Avatar);
+
+                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, height, true, PictureType.Avatar);
                     }
                     else//иначе альбомное изображение
                     {
-                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, width,true,PictureType.Entity);
+                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, width, true, PictureType.Entity);
 
                     }
-                    srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, 300);
 
                     item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 }
