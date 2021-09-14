@@ -412,7 +412,38 @@ namespace MainSite.Models
                     _downloadService.DeleteDownload(file);
                 }
             }
+
+            DeleteImagesFromNews(item.Description);
             _newsService.DeleteNews(item);
+        }
+
+
+        private void DeleteImagesFromNews(string newsDescription)
+        {
+            var imgRegex = new Regex("<img [^>]+>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+            foreach (Match? match in imgRegex.Matches(newsDescription))
+            {
+
+                var doc = new XmlDocument();
+
+                var matchValue = match.Value.EndsWith("/>") ? match.Value : match.Value.Replace(">", "/>");
+
+                doc.LoadXml($"<root>{matchValue}</root>");
+
+                var img = doc.FirstChild.FirstChild;
+                //путь к файлу в папке \images\thumbs\
+                var scrPath = img.Attributes["src"].Value;
+                // получить имя файла из описания
+
+                var fileId = _fileProvider.GetFileNameWithoutExtension(scrPath);
+                var picture = _pictureService.GetPictureById(fileId);
+                _pictureService.DeletePicture(picture);
+
+
+
+            }
+
         }
 
         #region Pined news
