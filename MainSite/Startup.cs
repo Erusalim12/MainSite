@@ -20,6 +20,7 @@ using Application.Services.Users;
 using MainSite.Areas.Admin.Factories;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Application.Services.PlanCalendar;
+using Microsoft.OpenApi.Models;
 using MainSite.Middleware;
 
 namespace MainSite
@@ -36,7 +37,10 @@ namespace MainSite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MainSiteApi", Version = "v1" });
+            });
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<ApplicationContext>(options =>
@@ -101,6 +105,11 @@ namespace MainSite
             app.UseStaticFiles();
             app.UseAuthorization();
             app.UseAuthentication();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
             app.UseMiddleware<UserAreCreateMiddleware>();
 
             //app.UseStaticFiles(new StaticFileOptions
