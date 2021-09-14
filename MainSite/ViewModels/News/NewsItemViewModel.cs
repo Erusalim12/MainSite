@@ -49,6 +49,9 @@ namespace MainSite.ViewModels.News
 
         public ICollection<FileViewModel> Files { get; set; }
 
+ 
+        
+
         [JsonIgnore]
         public ICollection<IFormFile> UploadedFiles { get; set; }
 

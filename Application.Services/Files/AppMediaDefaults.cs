@@ -15,18 +15,18 @@
         /// <summary>
         /// Gets a default avatar file name
         /// </summary>
-        public static string DefaultAvatarFileName => "default-avatar.jpg";
+        public static string DefaultAvatarFileName => @"images\layout_icons\user.png";
 
         /// <summary>
         /// Gets a default image file name
         /// </summary>
-        public static string DefaultImageFileName => "default-image.png";
+        public static string DefaultImageFileName => @"\images\layout_icons\education.jpg";
 
         /// <summary>
         /// Gets a path to the files
         /// </summary>
         public static string DefaultPathToFileCatalog => @"files\";
 
-        public static string PathToNewsMedia => "files/news";
+        public static string PathToNewsMedia => @"files\news";
     }
 }
