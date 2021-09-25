@@ -55,7 +55,8 @@
     import msChangeNewsForm from './ms-change_news-form.vue';
     import { mapActions } from 'vuex';
     import msSimpleModal from '../../DefaultComponents/Modal/templates/ms-simple-modal'
-
+    import msImageModal from '../../DefaultComponents/Modal/templates/ms-image-modal'
+    import {ImageCalendarService, ImageGlobalService} from '../../Services/ImageModalService.js'
     export default {
         name: "ms-news-item",
         props: {
@@ -75,9 +76,11 @@
         data: () => {
             return {
                 isEditer: false,
-                modalOptions: {
-                    body: `Это действие невозможно будет отменить, и все приложенные изображения и другие ресурсы так же будут удалены. Удалить запись?`
-                }
+                modalOptionsDelete: {
+                    body: 'Это действие невозможно будет отменить, и все приложенные изображения и другие ресурсы так же будут удалены. Удалить запись?',
+                    header: 'Вы действительно хотите удалить запись?'
+                },
+                imageService: new  ImageCalendarService()
             }
         },
         components: {
@@ -129,8 +132,8 @@
                     let vm = this;
 
                     this.$modals.open({
-                        title: 'Вы действительно хотите удалить запись?',
-                        bodyInfo: 'Это действие невозможно будет отменить, и все приложенные изображения и другие ресурсы так же будут удалены. Удалить запись?',
+                        title: this.modalOptionsDelete.header,
+                        bodyInfo: this.modalOptionsDelete.body,
                         component: msSimpleModal,
                         onClose(data) {
                             if(data.ended) return false
@@ -150,9 +153,41 @@
             },
             async getInfoByPermission() {
                 return await this.GET_PERMISSION_BY_CATEGORY(this.news_item.categoryId);
+            },
+            showImageSlider() {
+                let vm = this;
+
+                function showModal() {
+                    vm.imageService.setCurrentItemId(this.getAttribute('id'));
+                    let currentImg = this;
+                    ImageGlobalService.setCurrentImageCalendarService(vm.imageService);
+                    vm.$modals.open({
+                        component: msImageModal,
+                        className:'vu-modal__cmp--is-img-slider',
+                        bodyPadding: false,
+                        center: true,
+                        onClose: () => {
+                            currentImg.removeEventListener('click', showModal)
+                        }
+                    });
+                }
+
+                for(var item of document.querySelectorAll(`#${this.GetUnicIdBlock} .card_news-description img`)) { 
+                    vm.imageService.addItem({
+                        id : item.getAttribute('id'),
+                        src: item.getAttribute('src')
+                    });
+                    item.style.cursor = 'pointer';
+                    item.addEventListener('click', showModal);
+                };
             }
         },
         mounted() {            
+            this.showImageSlider();
+        },
+        updated() {
+            this.imageService = new  ImageCalendarService();
+            this.showImageSlider();
         }
     };
 </script>

@@ -1,0 +1,71 @@
+.bodyImage {
+  position: relative;
+
+  &__nextDivBlock {
+    width: 20%;
+    position: absolute;
+    right:0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    top:0;
+    z-index: 30;
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    &_desactive {
+      display: none;
+    }
+  }
+
+  &__prevDivBlock {
+    width: 20%;
+    position: absolute;
+    left:0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    top:0;
+    z-index: 30;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+    }
+    &_desactive {
+      display: none;
+    }
+  }
+
+  &__close-btn {
+    right: -9px !important;
+    top: -9px !important;
+    background-color: white;
+    border-radius: 25px;
+    width: 20px;
+    height: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 35;
+  }
+
+  .arrow {
+    width: 60px;
+    height: 60px;
+    border-top: 5px solid rgba(255, 255, 255, 0.5);
+    border-right: 5px solid rgba(255, 255, 255, 0.5);
+    margin-right: 60px;
+    position: absolute;
+
+    &-left {
+      transform: rotate(-135deg);
+    }
+
+    &-right {
+      transform: rotate(45deg);
+      right: -60px;
+    }
+  }
+}
