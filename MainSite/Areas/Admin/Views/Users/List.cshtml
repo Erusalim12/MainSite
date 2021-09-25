@@ -26,29 +26,28 @@
         <thead>
             <tr>
                 <th>Имя пользователя</th>
-                <th>System name</th>
                 <th>Роли</th>
+                <th>Последний визит</th>
+                <th>Кол-во сообщений</th>
                 <th></th>
             </tr>
         </thead>
         <tbody id="record_list" class="black-text">
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @item.UserName
-                    </td>
-                    <td>
-                        @item.SystemName
-                    </td>
-
-                    <td>
-                        @string.Join(", ", item.UserRoles)
-                    </td>
-                    <td>
-                        <a class="btn btn-defaultMainSite" href="@Url.Action("AddRolesToUser", "Users", new {id = item.Id})">Установить роль</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @item.UserName
+                </td>
+                <td>
+                    @string.Join(", ", item.UserRoles)
+                </td>
+                <td>@item.LastVisitDate</td>
+                <td>@item.MessagesCount</td>
+                <td>
+                    <a class="btn btn-defaultMainSite" href="@Url.Action("AddRolesToUser", "Users", new {id = item.Id})">Установить роль</a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>

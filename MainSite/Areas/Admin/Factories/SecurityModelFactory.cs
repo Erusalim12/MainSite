@@ -42,12 +42,12 @@ namespace MainSite.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Permission mapping model</param>
         /// <returns>Permission mapping model</returns>
-        public virtual PermissionMappingModel PreparePermissionMappingModel(PermissionMappingModel model)
+        public virtual PermissionMappingModel PreparePermissionMappingModel(PermissionMappingModel model, string[] roles)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var userRoles = _userService.GetAllUserRoles(true);
+            var userRoles = _userService.GetAllUserRoles(true).Where(r => roles.Contains(r.Id));
             model.AvailableUserRoles = userRoles.Select(role => new UserRoleModel
             {
                 Id = role.Id,

@@ -12,7 +12,7 @@ export default {
           return <span>Загрузка изображения...</span>
         }
         else {
-          return <img src={this.item.src} id={this.item.id}  />
+          return <img src={this.item.src.replace('/thumbs/', '/')} id={this.item.id}  />
         }
     }
   },

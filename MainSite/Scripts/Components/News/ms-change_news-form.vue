@@ -7,11 +7,12 @@
     <div class="s12 m12">
       <div class="bold">Введите заголовок объявления:</div>
       <div class="error" style="font-size:14px;" v-if="isErrorHeader">Вы должны вести заголовок сообщения</div>
-      <input v-model="model.header" name="Header" id="TextHeader" class="inputTextMainSite" type="text" />
+      <input ref="formTitle" name="Header" id="TextHeader" class="inputTextMainSite" type="text" v-model="model.header"/>
     </div>
-    <ms-wysiwyg v-model="textEditor"
+    <ms-wysiwyg 
+      v-model="textEditor"
       :fileList="fileList"
-      :parentTextEditor="getDescription"
+      :parentTextEditor="Description"
       @changeFileList="changeFileList" />
     <input type="hidden" v-model="textEditor" name="Description" id="TextDescription" />
     <input style="display: flex; margin-left: auto;" type="submit" class="btn btn-defaultMainSite" :value="textSubmit" />
@@ -48,17 +49,17 @@
     },
     data: () => {
       return {
-        model: {},
+        model: {
+          header: ''
+        },
         textEditor: '',
         fileList: [],
         isErrorHeader: false
       }
     },
     computed: {
-      getDescription() {
-        if (this.editModel != null) return this.editModel.description;
-
-        return "";
+      Description() {
+        return this.editModel != null ? this.editModel.description : '';
       }
     },
     components: {
@@ -83,12 +84,10 @@
       submit(e) {
         e.preventDefault();
 
-        if(!this.model.header || this.model.header.trim() === '') {
+        if(this.$refs.formTitle.value.trim() === '') {
           this.isErrorHeader = true;
           return;
         }
-
-        this.model.CategoryId = this.CategoryId;
 
         let formData = new FormData(this.$refs.formCreateNews);
 
@@ -117,26 +116,11 @@
         };
 
         this.$emit('changeNew', result);
-      
-        this.fileList = [];
-        this.$refs.formCreateNews.reset();
-        this.model = {};
-        if (!this.isAdvancedEditor && this.editModel == null) {
-          this.$refs.fileInputNameList.value = '';
-        }
       }
     },
     created() {
-        if (this.editModel != null) this.model = this.editModel;
-        if(this.editFiles.length) {
-          this.fileList = this.editFiles.map((item, index) => {
-            //let element = this.GET_FILE(item.id)
-            //console.log(item)
-            //let file = new File([element], item.name + item.extension, { type: item.mimeType, name: item.dataBaseName})
-
-            return item
-          })
-        }
+        if (this.editModel != null) this.model = {...this.editModel};
+        if(this.editFiles.length) this.fileList = this.editFiles.map((item, index) => item)
     }
   }
 </script>

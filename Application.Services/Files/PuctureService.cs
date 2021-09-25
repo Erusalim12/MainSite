@@ -372,7 +372,7 @@ namespace Application.Services.Files
                 return null;
 
             var parts = mimeType.Split('/');
-            var lastPart = parts[parts.Length - 1];
+            var lastPart = parts[^1];
             switch (lastPart)
             {
                 case "pjpeg":
@@ -405,10 +405,10 @@ namespace Application.Services.Files
 
 
         /// <summary>
-        /// Gets the default picture URL
+        /// Получить ссылку на изображение - заглушку
         /// </summary>
-        /// <param name="targetSize">The target picture size (longest side)</param>
-        /// <param name="defaultPictureType">Default picture type</param>
+        /// <param name="targetSize">Размер целевого изображения (наибольшая сторона)</param>
+        /// <param name="defaultPictureType">формат изображения(изображение/аватарка)</param>
         /// <returns>Picture URL</returns>
         public virtual string GetDefaultPictureUrl(int targetSize = 0,
             PictureType defaultPictureType = PictureType.Entity)
@@ -426,7 +426,7 @@ namespace Application.Services.Files
 
             if (targetSize == 0)
             {
-                var url = GetImagesPathUrl( ) + defaultImageFileName;
+                var url = GetImagesPathUrl() + defaultImageFileName;
 
                 return url;
             }
@@ -453,12 +453,12 @@ namespace Application.Services.Files
         }
 
         /// <summary>
-        /// Get a picture URL
+        /// Получить ссылку на изображение
         /// </summary>
-        /// <param name="pictureId">Picture identifier</param>
-        /// <param name="targetSize">The target picture size (longest side)</param>
+        /// <param name="pictureId">Идентификатор изображения</param>
+        /// <param name="targetSize">Размер целевого изображения (наибольшая сторона)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="defaultPictureType">Default picture type</param>
+        /// <param name="defaultPictureType">формат изображения(изображение/аватарка)</param>
         /// <returns>Picture URL</returns>
         public virtual string GetPictureUrl(string pictureId,
             int targetSize = 0,
@@ -471,7 +471,7 @@ namespace Application.Services.Files
         }
 
         /// <summary>
-        /// Get a picture URL
+        /// Получить ссылку на изображение
         /// </summary>
         /// <param name="picture">Reference instance of Picture</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
@@ -558,7 +558,7 @@ namespace Application.Services.Files
         }
 
         /// <summary>
-        /// Get a picture local path
+        /// Получить ссылку на изображение
         /// </summary>
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
@@ -677,7 +677,7 @@ namespace Application.Services.Files
         /// <param name="defaultFileName">File name which will be use if IFormFile.FileName not present</param>
         /// <param name="virtualPath">Virtual path</param>
         /// <returns>Picture</returns>
-        public virtual Picture InsertPicture(IFormFile formFile,  string virtualPath = "")
+        public virtual Picture InsertPicture(IFormFile formFile, string virtualPath = "")
         {
             var imgExt = new List<string>
             {
@@ -696,7 +696,7 @@ namespace Application.Services.Files
             } as IReadOnlyCollection<string>;
 
             var fileName = formFile.FileName;
-           
+
             //remove path (passed in IE)
             fileName = _fileProvider.GetFileName(fileName);
 
@@ -819,8 +819,8 @@ namespace Application.Services.Files
             _pictureRepository.Update(picture);
             UpdatePictureBinary(picture, StoreInDb ? GetPictureBinaryByPictureId(picture.Id).BinaryData : Array.Empty<byte>());
 
-          //  if (!StoreInDb)
-              //  SavePictureInFile(picture.Id, GetPictureBinaryByPictureId(picture.Id).BinaryData, picture.MimeType);
+            //  if (!StoreInDb)
+            //  SavePictureInFile(picture.Id, GetPictureBinaryByPictureId(picture.Id).BinaryData, picture.MimeType);
 
             //event notification
             //  _eventPublisher.EntityUpdated(picture);

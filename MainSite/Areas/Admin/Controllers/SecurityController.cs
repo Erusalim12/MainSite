@@ -51,23 +51,23 @@ namespace MainSite.Areas.Admin.Controllers
 
         [Route("admin/security/permissions")]
         [HttpGet, ActionName("Permissions")]
-        public virtual IActionResult Permissions()
+        public virtual IActionResult Permissions(string[] roles)
         {
 #if RELEASE
              var user = _userService.GetUserBySystemName(User);
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl, user))
                 return AccessDeniedView();   
 #endif
-             
+
             //prepare model
-            var model = _securityModelFactory.PreparePermissionMappingModel(new PermissionMappingModel());
+            var model = _securityModelFactory.PreparePermissionMappingModel(new PermissionMappingModel(), roles);
 
             return View(model);
         }
 
         [Route("admin/security/permissions")]
         [HttpPost, ActionName("Permissions")]
-        public virtual IActionResult PermissionsSave(PermissionMappingModel model, IFormCollection form)
+        public virtual IActionResult PermissionsSave(PermissionMappingModel model, IFormCollection form, string[] roles)
         {
 #if RELEASE
                  var user = _userService.GetUserBySystemName(User);
@@ -77,7 +77,7 @@ namespace MainSite.Areas.Admin.Controllers
 
 
             var permissionRecords = _permissionService.GetAllPermissionRecords();
-            var userRoles = _userService.GetAllUserRoles(true);
+            var userRoles = _userService.GetAllUserRoles(true).Where(c => roles.Contains(c.Id));
 
             foreach (var cr in userRoles)
             {
@@ -108,7 +108,7 @@ namespace MainSite.Areas.Admin.Controllers
 
             //   _notificationService.SuccessNotification( "Admin.Configuration.ACL.Updated");
 
-            return RedirectToAction("Permissions");
+            return RedirectToAction("Permissions", new { roles });
         }
 
 

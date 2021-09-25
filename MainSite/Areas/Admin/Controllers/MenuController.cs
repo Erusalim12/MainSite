@@ -100,7 +100,7 @@ namespace MainSite.Areas.Admin.Controllers
 
                 if (entity != null)
                 {
-                    var permission = _permissionService.GetPermissionRecordBySystemName(entity.Name);
+                    var permission = _permissionService.GetPermissionRecordBySystemName(entity.ActionName);
 
                     entity.Name = model.Name;
                     entity.IsActive = model.IsActive;
