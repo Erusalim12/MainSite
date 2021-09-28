@@ -6,6 +6,7 @@ import msSearchNews from '../Components/Search/ms-search-news.vue';
 import msCategory from '../Components/Category/ms-category.vue';
 import msCategoryList from '../Components/Category/ms-category-list.vue';
 import msCategoryItemCreate from '../Components/Category/ms-category-item_create.vue';
+import msFeedBack from '../Components/FeedBack/ms-feedback.vue';
 Vue.use(Router);
 
 let router = new Router({
@@ -29,6 +30,12 @@ let router = new Router({
             name: 'search',
             component: msSearchNews,
             props: true
+        },
+        {
+            path: '/feedback',
+            name: 'feedback',
+            component: msFeedBack,
+            props: false
         },
         {
             path: '/category',
