@@ -40,10 +40,13 @@ namespace MainSite.Controllers
         [HttpGet]
         public string GetInfoCurrentUser()
         {
+            var infoUser = _userService.GetUserBySystemName(User);
+            
             var model = new
             {
-                Name = _userService.GetUserBySystemName(User)?.Name,
-                IsEditer = User.IsInRole("Модератор") || User.IsInRole("Администратор")
+                Name = infoUser != null ? infoUser.Name : "Пользователь",
+                IsAdmin = User.IsInRole("Администратор"),
+                Id = infoUser.Id
             };
 
             return JsonConvert.SerializeObject(model);

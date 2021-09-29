@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Server.HttpSys;
 using Application.Services.PlanCalendar;
 using Microsoft.OpenApi.Models;
 using MainSite.Middleware;
+using MainSite.Models.WebSocket.Hubs;
 
 namespace MainSite
 {
@@ -83,7 +84,8 @@ namespace MainSite
             services.AddTransient<PlanCalendarRepository>();
             services.AddTransient<NewsItemRepository>();
 
-
+            services.AddCors();
+            services.AddSignalR();
 
         }
 
@@ -120,11 +122,16 @@ namespace MainSite
             app.UseRouting();
             app.UseMvc(routes =>
             {
-         
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}",
-                    defaults: new {controller = "Home", action = "Index"});
+                    defaults: new { controller = "Home", action = "Index" });
+            });
+
+            app.UseSignalR(route =>
+            {
+                route.MapHub<QuestionHub>("/question-hub");
             });
 
         }

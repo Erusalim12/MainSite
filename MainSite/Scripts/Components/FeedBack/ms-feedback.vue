@@ -1,12 +1,11 @@
 <template>
-  <h2>В стадии разработки.</h2>
-  <!--<div>
-    <h1>
-      This totally looks like Stack Overflow
+  <div style="margin:0px;">
+    <h4>
+      Указать проблему и начать диалог
       <button v-b-modal.addQuestionModal class="btn btn-primary mt-2 float-right">
-        <i class="fas fa-plus"/> Ask a question
+        <i class="fas fa-plus"/> Указать проблему
       </button>
-    </h1>
+    </h4>
     <ul class="list-group question-previews mt-4">
       <question-preview
         v-for="question in questions"
@@ -16,34 +15,40 @@
     </ul>
     <add-question-modal @question-added="onQuestionAdded"/>
   </div>
-  -->
 </template>
  
 <script>    
-//import QuestionPreview from './question-preview'
-//import AddQuestionModal from './add-question-modal'
- 
+import QuestionPreview from './question-preview'
+import AddQuestionModal from './add-question-modal'
+import {mapState} from 'vuex' 
 export default {
   name: 'ms-feedback',
   components: {
-    //QuestionPreview,
-    //AddQuestionModal
+    QuestionPreview,
+    AddQuestionModal
   },
   data () {
     return {
       questions: []
     }
   },
-  /*created () {
-    this.$http.get('/api/Question/question').then(res => {
-      this.questions = res.data
-    })
+  computed: {
+    ...mapState('user', ['currentUser']),
   },
   methods: {
     onQuestionAdded (question) {
       this.questions = [question, ...this.questions]
     }
-  }*/
+  },
+  created () {
+    this.$http.get('/api/Question/question').then(res => {
+      this.questions = res.data
+      this.$questionHub.questionOpened(this.currentUser.Id, this.currentUser.IsAdmin)
+    })
+  },
+  beforeDestroy() {
+    this.$questionHub.questionClosed(this.currentUser.Id)
+  },
 }
 </script>
  

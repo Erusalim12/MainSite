@@ -7,6 +7,7 @@ import msCategory from '../Components/Category/ms-category.vue';
 import msCategoryList from '../Components/Category/ms-category-list.vue';
 import msCategoryItemCreate from '../Components/Category/ms-category-item_create.vue';
 import msFeedBack from '../Components/FeedBack/ms-feedback.vue';
+import QuestionPage from '../Components/FeedBack/question.vue';
 Vue.use(Router);
 
 let router = new Router({
@@ -36,6 +37,11 @@ let router = new Router({
             name: 'feedback',
             component: msFeedBack,
             props: false
+        },
+        {
+            path: '/question/:id',
+            name: 'Question',
+            component: QuestionPage
         },
         {
             path: '/category',
