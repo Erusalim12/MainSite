@@ -112,13 +112,12 @@
                     e.preventDefault();
                     if (e.target.tagName == 'IMG') {
                         if(e.target.getAttribute('_moz_resizing')) {
-                            function mouseUp() {
-                                if(vm.editor.clientWidth < this.clientWidth) {
-                                    this.setAttribute('width', vm.editor.clientWidth - 20);
+                            document.addEventListener('mouseup', () => {
+                                if(vm.editor.clientWidth < e.target.clientWidth) {
+                                    e.target.setAttribute('width', vm.editor.clientWidth - 20);
                                     vm.$emit('input', vm.editor.innerHTML);
                                 }
-                            }
-                            document.addEventListener('mouseup', mouseUp.bind(e.target));
+                            });
                         }
                         else {
                             document.execCommand('enableObjectResizing', false, 'false');
