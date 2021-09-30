@@ -122,7 +122,8 @@ body.modals-open {
       }
 
       &--is-img-slider {
-        width: 70%;
+        width: auto;
+        height: auto;
         display: block;
         -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none; /* Safari */
@@ -133,8 +134,14 @@ body.modals-open {
         img {
           left: 0;
           top: 0;
-          width: 100%;
-          max-height: 600px;
+          
+         
+          /*width: 100%;
+          max-height: 600px;*/
+        }
+
+        .vu-modal__close-btn {
+          display: none;
         }
       }
   

@@ -1,7 +1,7 @@
 import MsModal from "../ms-modal"
 import '../styles/imageShow.scss'
 import {ImageGlobalService} from '../../../Services/ImageModalService'
-import MsImageItem from '../Models/ImgSlider/ms-img-item'
+import MsImageList from '../Models/ImgSlider/ms-img-list'
 import CloseIcon from "../close-icon"
 
 export default {
@@ -9,16 +9,19 @@ export default {
   data() {
     return {
       imgList: [],
-      currentIndex: 0
+      currentIndex: 0,
+      displayArrowImgList: {},
     }
   },
   computed: {
     getImgList() {
-      if(this.imgList) {
-        return <MsImageItem item={this.imgList[this.currentIndex]}></MsImageItem>
+      if(this.imgList !== undefined && this.imgList[this.currentIndex] !== undefined) {
+        this.displayArrowImgList = {}
+        return <MsImageList array={this.imgList} currentIndex={this.currentIndex} />
       }
 
-      return <div>Загрузка...</div>
+      this.displayArrowImgList = {display: 'none'}
+      return <h4>Загрузка изображений...</h4>
     },
     showPrevArrow() {
       return this.getClassArrow(
@@ -45,8 +48,8 @@ export default {
       }
     },
     getClassArrow(callback ,prevClass) {
-      return`${prevClass} ${(callback(prevClass) ? prevClass + '_desactive': '')}`;
-    }
+      return`${prevClass} ${(callback(prevClass) ? prevClass + '_desactive': '')}`
+    },
   },
   created () {
     this.imgList = ImageGlobalService.getCurrentImageCalendarService().getData()
@@ -57,26 +60,28 @@ export default {
   render() {
     return (
       <MsModal>
-        <div slot="body">
-          <div class="bodyImage">
+          <div ref="bodyImage" class="bodyImage" slot="body">
             {this.getImgList}
             <div 
               class={this.showNextArrow}
-              onClick={this.incrementIndex}>
-                <div  class="arrow arrow-right"></div>
+              onClick={this.incrementIndex}
+              style={this.displayArrowImgList}
+            >
+              <div class="arrow arrow-right"></div>
             </div>
             <div 
               class={this.showPrevArrow}
-              onClick={this.decrementIndex}>
-                <div class="arrow arrow-left"></div>
+              onClick={this.decrementIndex}
+              style={this.displayArrowImgList}
+            >
+              <div class="arrow arrow-left"></div>
             </div>            
             <div 
               class="vu-modal__close-btn bodyImage__close-btn"
               onClick={() => { this.$modals.dismiss()}}>
-                <CloseIcon />
+              <CloseIcon />
             </div>
           </div>
-        </div>
       </MsModal>
     )
   },
