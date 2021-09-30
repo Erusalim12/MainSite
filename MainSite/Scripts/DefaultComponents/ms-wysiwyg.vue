@@ -147,11 +147,6 @@
      
                             let img = await new Promise((resolve, reject) => {
                                 let elementImg = document.createElement('img')
-                                let unicId = 'image_' + Date.now().toString();
-
-
-                                elementImg.setAttribute('id', unicId);
-                                //elementImg.classList.add('materialboxed');
                                 elementImg.src = e.target.result;
 
                                 elementImg.onload =  function() {
