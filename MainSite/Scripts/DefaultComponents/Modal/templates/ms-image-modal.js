@@ -10,7 +10,7 @@ export default {
     return {
       imgList: [],
       currentIndex: 0,
-      displayArrowImgList: {},
+      displayArrowImgList: {display: 'none'}
     }
   },
   computed: {

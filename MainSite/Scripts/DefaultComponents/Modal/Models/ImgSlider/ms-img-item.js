@@ -8,6 +8,11 @@ export default {
     isDisplay: {
       type: Boolean,
       default: true
+    },
+  },
+  data() {
+    return {
+      visibilityImgBlock: {visibility : 'hidden'}
     }
   },
   computed: {
@@ -18,12 +23,14 @@ export default {
       else {
         let styleImg = { display: (this.isDisplay ? 'inherit': 'none') }
         return (
-         <img 
-          src={this.item.src.replace('/thumbs/', '/')}
-          id={this.item.id} 
-          onLoad={this.onLoaded}
-          style={styleImg}
-         />
+         <div style={this.visibilityImgBlock}> 
+          <img 
+            src={this.item.src.replace('/thumbs/', '/')}
+            id={this.item.id} 
+            onLoad={this.onLoaded.bind(this)}
+            style={styleImg}
+          />
+         </div>
         )
       }
     }
@@ -46,6 +53,8 @@ export default {
 
       e.target.width = tempWidth                  
       e.target.height = tempHeight
+
+      this.visibilityImgBlock.visibility = 'inherit'
     }
   },
   render() {
