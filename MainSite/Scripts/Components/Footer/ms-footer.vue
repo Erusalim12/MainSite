@@ -2,7 +2,7 @@
   <footer>
     <nav>
       <div class="container">
-        <router-link class="bold" to="feedback">Сообщить о проблеме или высказать пожелание</router-link>
+        <router-link class="bold" to="/feedback">Сообщить о проблеме или высказать пожелание</router-link>
         <br />
         <span>{{GetApplicationCopy}}</span>
       </div>

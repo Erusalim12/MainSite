@@ -1,11 +1,16 @@
 <template>
-  <div style="margin:0px;">
-    <h4>
-      Указать проблему и начать диалог
-      <button v-b-modal.addQuestionModal class="btn btn-primary mt-2 float-right">
+  <div class="row">
+    <div class="card-panel" style="display:flex;align-items:center;">
+      <h5>Указать проблему и начать диалог</h5>
+      <button 
+        @click="openAddQuestionModal" 
+        class="btn btn-defaultMainSite"
+        style="margin-left:auto;"
+      >
         <i class="fas fa-plus"/> Указать проблему
       </button>
-    </h4>
+    </div>
+    <input type="text" v-model="this.currentUser.type" />
     <ul class="list-group question-previews mt-4">
       <question-preview
         v-for="question in questions"
@@ -13,19 +18,19 @@
         :question="question"
         class="list-group-item list-group-item-action mb-3" />
     </ul>
-    <add-question-modal @question-added="onQuestionAdded"/>
   </div>
 </template>
  
 <script>    
 import QuestionPreview from './question-preview'
-import AddQuestionModal from './add-question-modal'
+import FeedBackQuestionModal from '../../DefaultComponents/Modal/templates/ms-feedback-question-modal.js'
+
 import {mapState} from 'vuex' 
+
 export default {
   name: 'ms-feedback',
   components: {
-    QuestionPreview,
-    AddQuestionModal
+    QuestionPreview
   },
   data () {
     return {
@@ -38,6 +43,16 @@ export default {
   methods: {
     onQuestionAdded (question) {
       this.questions = [question, ...this.questions]
+    },
+    openAddQuestionModal() {
+      let vm = this;
+
+      this.$modals.open({
+          component: FeedBackQuestionModal,
+          onClose(newQuestion) {
+              vm.questions = [newQuestion, ...vm.questions]
+          }
+      })
     }
   },
   created () {
@@ -52,8 +67,11 @@ export default {
 }
 </script>
  
-<style lang="scss">
+<style lang="scss" scoped>
 .question-previews .list-group-item{
   cursor: pointer;
+}
+#mainBlock {
+  padding:0 !important;
 }
 </style>

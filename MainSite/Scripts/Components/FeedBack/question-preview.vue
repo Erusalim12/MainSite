@@ -1,14 +1,12 @@
 <template>
   <li class="card container" @click="onOpenQuestion">
-    <div class="card-body row">
-      <question-score :question="question" class="col-1" />
-      <div class="col-11">
+    <div class="card-body" style="padding:10px;">
+      <!--<question-score :question="question" class="col-1" />-->
         <h5 class="card-title">{{ question.title }}</h5>
-        <p><vue-markdown :source="question.body" /></p>
+        <!--<p><vue-markdown :source="question.body" /></p>-->
         <a href="#" class="card-link">
-          View question <span class="badge badge-success">{{ question.answerCount }}</span>
+          Количество сообщений <span class="badge badge-success">{{ question.answerCount }}</span>
         </a>
-      </div>
     </div>
   </li>
 </template>

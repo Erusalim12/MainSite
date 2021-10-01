@@ -1,13 +1,13 @@
-﻿using Application.Dal.Domain.Users;
+﻿using Application.Dal.Domain.FeedBack;
+using Application.Dal.Domain.Users;
+using Application.Services.FeedBack.Customers;
+using Application.Services.FeedBack.Questions;
 using Application.Services.Users;
-using MainSite.Models.WebSocket;
 using MainSite.Models.WebSocket.Hubs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,67 +20,52 @@ namespace MainSite.Controllers
     {
 
         private readonly IUsersService _userService;
-        private static List<Question> questions = new List<Question> {
-            new Question {
-                Id = Guid.Parse("b00c58c0-df00-49ac-ae85-0a135f75e01b"),
-                Title = "Welcome",
-                Body = "Welcome to the _mini Stack Overflow_ rip-off!\nThis will help showcasing **SignalR** and its integration with **Vue**",
-                Answers = new List<Answer> { new Answer { Body = "Sample answer" } }
-            },
-            new Question
-            {
-                Id = Guid.Parse("b00c58c0-df00-49ac-ae85-0a135f75e02b"),
-                Title = "GoodBuy",
-                Body = "Sorry, this element have deleted because I dont speack English",
-                Answers = new List<Answer> { new Answer { Body = "Base answer" } }
-            }
-         };
-        private List<string> admins = new List<string>();
+        private readonly ICustomerService _cusomerService;
+        private readonly IQuestionService _questionService;
 
         private readonly IHubContext<QuestionHub, IQuestionHub> _hubContext;
-        public QuestionController(IHubContext<QuestionHub, IQuestionHub> questionHub, IUsersService usersService)
+        public QuestionController(IHubContext<QuestionHub, IQuestionHub> questionHub, IUsersService usersService, ICustomerService customerService, IQuestionService questionService)
         {
             _hubContext = questionHub;
+            _questionService = questionService;
+            _cusomerService = customerService;
             _userService = usersService;
         }
 
         [HttpGet("question")]
         public IEnumerable GetQuestions()
         {
-            return questions.Select(q => new {
+            return _questionService.GetAll().Select(q => new {
                 Id = q.Id,
                 Title = q.Title,
-                Body = q.Body,
-                Score = q.Score,
                 AnswerCount = q.Answers.Count
             });
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetQuestion(Guid id)
+        public ActionResult GetQuestion(string id)
         {
-            var question = questions.SingleOrDefault(t => t.Id == id);
+            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
             if (question == null) return NotFound();
 
             return new JsonResult(question);
         }
 
         [HttpPost("addQuestion")]
-        public Question AddQuestion([FromBody] Question question)
+        public Question AddQuestion( Question question)
         {
-            question.Id = Guid.NewGuid();
-            question.Answers = new List<Answer>();
-            questions.Add(question);
+            _questionService.Add(question);
+
             return question;
         }
 
         [HttpPost("{id}/answer")]
-        public async Task<ActionResult> AddAnswerAsync(Guid id, [FromBody] Answer answer)
+        public async Task<ActionResult> AddAnswerAsync(string id, [FromBody] Answer answer)
         {
-            var question = questions.SingleOrDefault(t => t.Id == id);
+            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
             if (question == null) return NotFound();
 
-            answer.Id = Guid.NewGuid();
+            answer.Id = Guid.NewGuid().ToString();
             answer.QuestionId = id;
             question.Answers.Add(answer);
 
@@ -91,17 +76,17 @@ namespace MainSite.Controllers
         }
 
         [HttpPatch("{id}/upvote")]
-        public async Task<ActionResult> UpvoteQuestionAsync(Guid id)
+        public async Task<ActionResult> UpvoteQuestionAsync(string id)
         {
-            var question = questions.SingleOrDefault(t => t.Id == id);
+            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
             if (question == null) return NotFound();
 
             // Warning, this increment isnt thread-safe! Use Interlocked methods
-            question.Score++;
+            //question.Score++;
 
             // Notify every client
             //var groupChat = admins.
-            await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
+            //await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
             //await _hubContext.Clients.Users(new List<string> { "25211647-9c0e-48ab-8952-c64c9c3afd55", "25211647-9c0e-48ab-8952-c64c9c3afd55", "25211647-9c0e-48ab-8952-c64c9c3afd55" }).QuestionScoreChange(question.Id, question.Score);
             //await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
 
@@ -109,16 +94,16 @@ namespace MainSite.Controllers
         }
 
         [HttpPatch("{id}/downvote")]
-        public async Task<ActionResult> DownvoteQuestionAsync(Guid id)
+        public async Task<ActionResult> DownvoteQuestionAsync(string id)
         {
-            var question = questions.SingleOrDefault(t => t.Id == id);
+            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
             if (question == null) return NotFound();
 
             // Warning, this isnt really atomic
-            question.Score--;
+            //question.Score--;
 
             // Notify every client
-            await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
+            //await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
 
             return new JsonResult(question);
         }

@@ -1,33 +1,29 @@
 <template>
-  <article class="container" v-if="question">
+  <div class="row" v-if="question">
     <header class="row align-items-center">
-      <question-score :question="question" class="col-1" />
+      <!--<question-score :question="question" class="col-1" />-->
       <h3 class="col-11">{{ question.title }}</h3>
     </header>
-    <p class="row">
-      <vue-markdown class="offset-1 col-11">{{ question.body }}</vue-markdown>
-    </p>
+    <add-answer :propsQuestionId="question.id"></add-answer>
     <ul class="list-unstyled row" v-if="hasAnswers">
       <li v-for="answer in question.answers" :key="answer.id" class="offset-1 col-11 border-top py-2">
         <vue-markdown>{{ answer.body }}</vue-markdown>
       </li>
     </ul>
-      <button class="btn btn-primary float-right" v-b-modal.addAnswerModal><i class="fas fa-edit"/> Post your Answer</button>
-      <button class="btn btn-link float-right" @click="onReturnFeedBack">Back to list</button>
-    <add-answer-modal :question-id="this.questionId" @answer-added="onAnswerAdded"/>
-  </article>
+    <!--<add-answer-modal :question-id="this.questionId" @answer-added="onAnswerAdded"/>-->
+  </div>
 </template>
  
 <script>
 import VueMarkdown from 'vue-markdown'
 import QuestionScore from './question-score'
-import AddAnswerModal from './add-answer-modal'
+import AddAnswer from './add-answer'
  
 export default {
   components: {
     VueMarkdown,
     QuestionScore,
-    AddAnswerModal
+    AddAnswer
   },
   data () {
     return {

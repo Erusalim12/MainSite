@@ -5,8 +5,10 @@ namespace MainSite.Models.WebSocket.Hubs
 {
     public interface IQuestionHub
     {
-        Task QuestionScoreChange(Guid questionId, int score);
+        Task QuestionScoreChange(string questionId, int score);
 
-        Task AnswerCountChange(Guid questionId, int answerCount);
+        Task AnswerCountChange(string questionId, int answerCount);
+
+        //Task AddQuestionChange();
     }
 }
