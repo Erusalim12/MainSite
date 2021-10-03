@@ -225,12 +225,11 @@ namespace MainSite.Models
                 doc.LoadXml($"<root>{matchValue}</root>");
 
                 var img = doc.FirstChild.FirstChild;
+
                 var srcNode = img.Attributes["src"];
 
-                var height = int.Parse(img.Attributes["height"].InnerText);
-                var width = int.Parse(img.Attributes["width"].InnerText);
-
-                
+                var height = int.Parse(img.Attributes["height"].InnerText.Split('.')[0]);
+                var width = int.Parse(img.Attributes["width"].InnerText.Split('.')[0]);
 
                 string mime = MimeTypes.ImageJpeg;
                 try
@@ -243,8 +242,8 @@ namespace MainSite.Models
                 if (base64Match.Success)
                 {
                     var bytes = Convert.FromBase64String(base64Match.Groups["base64"].Value);
-                    // var filepath = _downloadService.SaveFileInFileSystem(bytes, img.Attributes["id"].Value + fileExt, AppMediaDefaults.PathToNewsMedia);
                     var storedPicture = _pictureService.InsertPicture(bytes, mime, item.Header + i, null, item.Header + "_" + i, true);
+
 
                     //если высота больше ширины, значит портретное изображение
                     if (height > width)
@@ -258,8 +257,10 @@ namespace MainSite.Models
                     }
                     srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, 300);
 
-                    item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
+                    //item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 }
+
+                item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 i++;
             }
         }

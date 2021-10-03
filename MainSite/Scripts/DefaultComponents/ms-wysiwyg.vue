@@ -147,11 +147,6 @@
      
                             let img = await new Promise((resolve, reject) => {
                                 let elementImg = document.createElement('img')
-                                let unicId = 'image_' + Date.now().toString();
-
-
-                                elementImg.setAttribute('id', unicId);
-                                //elementImg.classList.add('materialboxed');
                                 elementImg.src = e.target.result;
 
                                 elementImg.onload =  function() {
@@ -160,6 +155,10 @@
                                     let scale = imgWidth / imgHeight;
                                     let tempHeight = vm.editor.offsetHeight * 3 / 5 - 30
                                     let tempWidth = tempHeight * scale
+
+                                    if(tempWidth >= vm.editor.offsetWidth) {
+                                        tempWidth = vm.editor.offsetWidth * 3 / 5 - 30
+                                    }
                             
                                     elementImg.width = tempWidth;                        
                                     elementImg.height = tempHeight;
@@ -225,6 +224,15 @@
 </script>
 
 <style lang="scss">
+    .decorate_block {
+        -moz-user-select: none; /* Firefox */
+        * {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+        }
+    }
     .file_loader_label {
         input[type="file"] {
             display: none;
