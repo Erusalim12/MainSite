@@ -103,8 +103,31 @@
             changeResizeEditor(editor) {
                 this.$emit('input', editor);
             },
+            insertText(text) {
+                if (document.queryCommandSupported('insertText')) {
+                    document.execCommand('insertText', false, text);
+                }
+                else {
+                    var range = document.getSelection().getRangeAt(0);
+                    range.deleteContents();
+                    var textNode = document.createTextNode(text);
+                    range.insertNode(textNode);
+                    range.selectNodeContents(textNode);
+                    range.collapse(false);
+
+                    var selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            },
             loadIframe() { 
                 this.editor = document.getElementById(this.GUUID);
+                this.editor.addEventListener("paste", (e) => {
+                    e.preventDefault()
+                    let text = e.clipboardData.getData('text/plain')
+                    this.insertText(text)
+                })
+            
                 if (this.parentTextEditor !== '') this.$emit('input', this.parentTextEditor);
                 let vm = this;
 
@@ -172,8 +195,8 @@
                               vm.formatDoc("insertHTML", img.outerHTML);
                             }
                             else {
-                              vm.editor.appendChild(img);
                               vm.editor.focus();
+                              vm.editor.appendChild(img);
                             }
                         }                        
                     }   
