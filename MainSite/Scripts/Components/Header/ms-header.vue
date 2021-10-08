@@ -117,9 +117,14 @@
             this.GET_INFO_BY_CURRENT_USER();
             
             let elem = document.querySelector('.inputSearch')
-            let vm = this
-            elem.addEventListener('focus', vm.actionFocusout.bind(this))
-            elem.addEventListener('blur', vm.actionFocusin.bind(this))
+            elem.addEventListener('focus', this.actionFocusout)
+            elem.addEventListener('blur', this.actionFocusin)
+        },
+        created() {
+            this.$questionHub.connetionAdminOpened()
+        },
+        beforeDestroy() {
+            this.$questionHub.connetionAdminClosed()
         }
     }
 </script>
