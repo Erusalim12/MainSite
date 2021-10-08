@@ -35,7 +35,6 @@ namespace Application.Dal
 
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
-        public DbSet<Customer> Customers { get; set; }
 
         /// <summary>
         /// маппер USER-UserRole
@@ -55,6 +54,7 @@ namespace Application.Dal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Question>().HasMany(a => a.Answers).WithOne(s => s.Question).OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Setting>().HasData(
                 new Setting[]

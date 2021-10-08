@@ -1,29 +1,46 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Application.Dal.Domain.Users;
+using Application.Services.Users;
+using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MainSite.Models.WebSocket.Hubs
 {
     public class QuestionHub : Hub<IQuestionHub>
     {
-        public QuestionHub()
+        private readonly IUsersService _userService;
+        public QuestionHub(IUsersService userService)
         {
+            _userService = userService;
         }
 
         public async Task QuestionScoreChange(string questionId, int score)
         {
-            this.Clients.Group("Group").ToString();
         }
 
-        public async Task JoinQuestionGroup(string userId, bool isAdmin)
+        public async Task CreateQuestionGroup(string questionId)
         {
-            Console.WriteLine("Коннект {0}, {1}", userId, isAdmin);
-            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, questionId);
         }
-        public async Task LeaveQuestionGroup(string userId)
+        public async Task RemoveQuestionGroup(string questionId)
         {
-            Console.WriteLine("Коннект Удаление");
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, questionId);
+        }
+
+        public async Task CreateAdminGroup()
+        {
+            if (isAdminUser()) await Groups.AddToGroupAsync(Context.ConnectionId, AppUserDefaults.AdministratorsRoleName);
+        }
+
+        public async Task RemoveAdminGroup()
+        {
+            if (isAdminUser())  await Groups.RemoveFromGroupAsync(Context.ConnectionId, AppUserDefaults.AdministratorsRoleName);
+        }
+
+        private bool isAdminUser()
+        {
+            return _userService.IsAdmin(_userService.GetUserBySystemName(Context.User));
         }
 
     }

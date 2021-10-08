@@ -1,6 +1,6 @@
 ﻿using Application.Dal.Domain.FeedBack;
 using Application.Dal.Domain.Users;
-using Application.Services.FeedBack.Customers;
+using Application.Services.FeedBack.Answers;
 using Application.Services.FeedBack.Questions;
 using Application.Services.Users;
 using MainSite.Models.WebSocket.Hubs;
@@ -20,102 +20,104 @@ namespace MainSite.Controllers
     {
 
         private readonly IUsersService _userService;
-        private readonly ICustomerService _cusomerService;
         private readonly IQuestionService _questionService;
-
+        private readonly IAnswerService _answerService;
         private readonly IHubContext<QuestionHub, IQuestionHub> _hubContext;
-        public QuestionController(IHubContext<QuestionHub, IQuestionHub> questionHub, IUsersService usersService, ICustomerService customerService, IQuestionService questionService)
+        public QuestionController(IHubContext<QuestionHub, IQuestionHub> questionHub, IUsersService usersService, IQuestionService questionService, IAnswerService answerService)
         {
             _hubContext = questionHub;
             _questionService = questionService;
-            _cusomerService = customerService;
             _userService = usersService;
+            _answerService = answerService;
         }
 
         [HttpGet("question")]
         public IEnumerable GetQuestions()
         {
-            return _questionService.GetAll().Select(q => new {
-                Id = q.Id,
-                Title = q.Title,
-                AnswerCount = q.Answers.Count
+            var isAdmin = _userService.IsAdmin(_userService.GetUserBySystemName(HttpContext.User));
+
+            var questions = _questionService.GetAll().Where(s => s.CustomerId == HttpContext.User.Identity.Name || isAdmin).Select(a => new {
+                Id = a.Id,
+                CustomerId = a.CustomerId,
+                AnswerCount = a.Answers.Count
             });
+            return questions;
         }
 
         [HttpGet("{id}")]
         public ActionResult GetQuestion(string id)
         {
-            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
-            if (question == null) return NotFound();
+            var question = _questionService.GetQuestionById(id);
+            if (question == null) return new JsonResult(null);
 
             return new JsonResult(question);
         }
 
         [HttpPost("addQuestion")]
-        public Question AddQuestion( Question question)
+        public async Task<ActionResult> AddQuestionAsync(Question question)
         {
-            _questionService.Add(question);
+            if (question != null)
+            {
+                var answer = question.Answers.FirstOrDefault();
+                if(answer != null)
+                { 
+                    answer.Id = Guid.NewGuid().ToString();
+                    answer.Date = DateTime.Now;
+                    answer.SenderName = User.Identity.Name;
+                    answer.IsAdmin = _userService.IsAdmin(_userService.GetUserBySystemName(User));
+                }
+                _questionService.Add(question);
 
-            return question;
+                await _hubContext.Clients.Group(AppUserDefaults.AdministratorsRoleName).AddQuestionChange(question);
+                await _hubContext.Clients.Group(question.Id).AddQuestionChange(question);
+
+                return new JsonResult(new { Id = question.Id, Title = question.Title, AnswerCount =  question.Answers.Count() });
+            }
+
+            return new JsonResult(null);
         }
 
-        [HttpPost("{id}/answer")]
-        public async Task<ActionResult> AddAnswerAsync(string id, [FromBody] Answer answer)
+        [HttpPost("addAnswer")]
+        public async Task<ActionResult> AddAnswerAsync(Answer answer)
         {
-            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
-            if (question == null) return NotFound();
+            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == answer.QuestionId);
+            if (question == null)
+            {
+                throw new ArgumentNullException(nameof(question));
+            }
+            else
+            {
 
-            answer.Id = Guid.NewGuid().ToString();
-            answer.QuestionId = id;
-            question.Answers.Add(answer);
+                answer.Id = Guid.NewGuid().ToString();
+                answer.Date = DateTime.Now;
+                answer.SenderName = User.Identity.Name;
+                answer.IsAdmin = _userService.IsAdmin(_userService.GetUserBySystemName(User));
 
-            // Notify every client
-            await _hubContext.Clients.All.AnswerCountChange(question.Id, question.Answers.Count);
+                _answerService.Add(answer);
+                // Notify every client
+                await _hubContext.Clients.Group(answer.QuestionId).AnswerCountChange(question.Id, question.Answers.Count);
+                await _hubContext.Clients.Group(answer.QuestionId).AnswerAdded(answer);
 
-            return new JsonResult(answer);
+                return new JsonResult(answer);
+            }
         }
 
-        [HttpPatch("{id}/upvote")]
-        public async Task<ActionResult> UpvoteQuestionAsync(string id)
+        [HttpPost("deleteQuestion")]
+        public async Task<ActionResult> DeleteQuestionAsync(string questionId)
         {
-            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
-            if (question == null) return NotFound();
+            var question = _questionService.GetQuestionById(questionId);
+            if (question == null)
+            {
+                throw new ArgumentNullException(questionId);
+            }
+            else
+            {
+                await _hubContext.Clients.Group(questionId).DeleteQuestionChange();
+                _questionService.Delete(questionId);
 
-            // Warning, this increment isnt thread-safe! Use Interlocked methods
-            //question.Score++;
-
-            // Notify every client
-            //var groupChat = admins.
-            //await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
-            //await _hubContext.Clients.Users(new List<string> { "25211647-9c0e-48ab-8952-c64c9c3afd55", "25211647-9c0e-48ab-8952-c64c9c3afd55", "25211647-9c0e-48ab-8952-c64c9c3afd55" }).QuestionScoreChange(question.Id, question.Score);
-            //await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
-
-            return new JsonResult(question);
+                return new JsonResult(new { Succes = "Диалог успешно завершен" });
+            }
         }
 
-        [HttpPatch("{id}/downvote")]
-        public async Task<ActionResult> DownvoteQuestionAsync(string id)
-        {
-            var question = _questionService.GetAll().SingleOrDefault(t => t.Id == id);
-            if (question == null) return NotFound();
-
-            // Warning, this isnt really atomic
-            //question.Score--;
-
-            // Notify every client
-            //await _hubContext.Clients.All.QuestionScoreChange(question.Id, question.Score);
-
-            return new JsonResult(question);
-        }
-
-        /*private List<string> GetListUserIdsBySendingMessage()
-        {
-            admins = _userService.GetUserIdsByRoles(new List<string> { AppUserDefaults.AdministratorsRoleName }).ToList();
-            var newGroupUsers = new List<string>();
-            newGroupUsers.AddRange(admins);
-            newGroupUsers.Add(_userService.GetUserBySystemName(HttpContext.User).Id);
-
-            return newGroupUsers;
-        }*/
     }
 }

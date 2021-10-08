@@ -119,6 +119,12 @@
             let elem = document.querySelector('.inputSearch')
             elem.addEventListener('focus', this.actionFocusout)
             elem.addEventListener('blur', this.actionFocusin)
+        },
+        created() {
+            this.$questionHub.connetionAdminOpened()
+        },
+        beforeDestroy() {
+            this.$questionHub.connetionAdminClosed()
         }
     }
 </script>

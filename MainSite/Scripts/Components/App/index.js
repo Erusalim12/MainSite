@@ -7,14 +7,12 @@ import msMainWrapper from '../App/ms-main-wrapper.vue';
 import VuModal from '../../DefaultComponents/Modal/main';
 import msFooter from '../Footer/ms-footer.vue';
 import axios from 'axios';
-import BootstrapVue from 'bootstrap-vue';
 import QuestionHubPlugin from '../../Plugins/question-hub';
 
 
 Vue.prototype.$http = axios;
 axios.defaults.baseURL = `${window.location.protocol + "//"}${window.location.host}`
 
-Vue.use(BootstrapVue);
 Vue.use(QuestionHubPlugin);
 Vue.config.devtools = true;
 

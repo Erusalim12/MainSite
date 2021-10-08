@@ -3,14 +3,24 @@ import { HubConnectionBuilder, LogLevel } from '@aspnet/signalr'
 export default{
   install(Vue) {
     let questionHub = new Vue()
-    questionHub.questionOpened = (userId, isAdmin) => {
+    questionHub.questionOpened = questionId => {
       return startedPromise
-        .then(() => connection.invoke('JoinQuestionGroup', userId, isAdmin))
+        .then(() => connection.invoke('CreateQuestionGroup', questionId))
         .catch(console.error)
     }
-    questionHub.questionClosed = (userId) => {
+    questionHub.questionClosed = questionId => {
       return startedPromise
-        .then(() => connection.invoke('LeaveQuestionGroup', userId))
+        .then(() => connection.invoke('RemoveQuestionGroup', questionId))
+        .catch(console.error)
+    }
+    questionHub.connetionAdminOpened = () => {
+      return startedPromise
+        .then(() => connection.invoke('CreateAdminGroup'))
+        .catch(console.error)
+    }
+    questionHub.connetionAdminClosed = () => {
+      return startedPromise
+        .then(() => connection.invoke('RemoveAdminGroup'))
         .catch(console.error)
     }
   
@@ -30,6 +40,12 @@ export default{
     })
     connection.on('AnswerAdded', answer => {
       questionHub.$emit('answer-added', answer)
+    })
+    connection.on('AddQuestionChange', question => {
+      questionHub.$emit('question-added', question)
+    })
+    connection.on('DeleteQuestionChange', () => {
+      questionHub.$emit('question-deleted')
     })
 
     let startedPromise = null

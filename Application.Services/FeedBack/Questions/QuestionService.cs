@@ -1,16 +1,18 @@
 ﻿using Application.Dal;
 using Application.Dal.Domain.FeedBack;
+using Application.Dal.Repositories;
 using Application.Services.FeedBack.Answers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Application.Services.FeedBack.Questions
 {
     public class QuestionService: IQuestionService
     {
-        private readonly IRepository<Question> _repository;
+        private readonly FeedBackRepository _repository;
         private readonly IAnswerService _answerService;
-        public QuestionService(IRepository<Question> repository, IAnswerService answerService)
+        public QuestionService(FeedBackRepository repository, IAnswerService answerService)
         {
             _repository = repository;
             _answerService = answerService;
@@ -30,6 +32,16 @@ namespace Application.Services.FeedBack.Questions
         public IEnumerable<Question> GetAll()
         {
             return _repository.GetAll;
+        }
+
+        public Question GetQuestionById(string id)
+        {
+            return _repository.Get(id);
+        }
+
+        public void Delete(string id)
+        {
+            _repository.Delete(id);
         }
     }
 }

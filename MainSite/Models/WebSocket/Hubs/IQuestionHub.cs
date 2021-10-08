@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Application.Dal.Domain.FeedBack;
 using System.Threading.Tasks;
 
 namespace MainSite.Models.WebSocket.Hubs
@@ -9,6 +9,10 @@ namespace MainSite.Models.WebSocket.Hubs
 
         Task AnswerCountChange(string questionId, int answerCount);
 
-        //Task AddQuestionChange();
+        Task AnswerAdded(Answer answer);
+
+        Task AddQuestionChange(Question question);
+
+        Task DeleteQuestionChange();
     }
 }

@@ -1,13 +1,17 @@
 ﻿import Vue from 'vue'
 import Router from 'vue-router'
+
 import msNews from '../Components/News/ms-news.vue';
 import msNewsByCategory from '../Components/News/ms-news-category';
 import msSearchNews from '../Components/Search/ms-search-news.vue';
+
 import msCategory from '../Components/Category/ms-category.vue';
 import msCategoryList from '../Components/Category/ms-category-list.vue';
 import msCategoryItemCreate from '../Components/Category/ms-category-item_create.vue';
+
 import msFeedBack from '../Components/FeedBack/ms-feedback.vue';
-import QuestionPage from '../Components/FeedBack/question.vue';
+import msChatAdmin from '../Components/FeedBack/ms-chat-admin.vue';
+
 Vue.use(Router);
 
 let router = new Router({
@@ -34,14 +38,15 @@ let router = new Router({
         },
         {
             path: '/feedback',
-            name: 'feedback',
             component: msFeedBack,
-            props: false
+            name: 'feedback',
+            props: true
         },
         {
-            path: '/question/:id',
-            name: 'Question',
-            component: QuestionPage
+            path: '/adminChat/:questionId',
+            name: 'adminChat',
+            component: msChatAdmin,
+            props: false
         },
         {
             path: '/category',

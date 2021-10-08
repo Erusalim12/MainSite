@@ -7,5 +7,8 @@ namespace Application.Services.FeedBack.Questions
     {
         IEnumerable<Question> GetAll();
         void Add(Question question);
+
+        Question GetQuestionById(string id);
+        void Delete(string id);
     }
 }

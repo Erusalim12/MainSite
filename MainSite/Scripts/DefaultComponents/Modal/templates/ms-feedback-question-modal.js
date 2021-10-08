@@ -1,4 +1,5 @@
 import MsModal from "../ms-modal"
+import {mapState} from 'vuex' 
 
 export default {
   name: 'ms-feedback-question-modal',
@@ -7,14 +8,19 @@ export default {
       model: {}
     }
   },
+  computed: {
+    ...mapState('user', ['currentUser'])
+  },
   methods: {
     close() {
       let modelResult = {
-        title: this.$refs.question.value,
-        Answers: [{message: this.$refs.answer.value}]
+        customerId: this.currentUser.SystemName,
+        answers: [{message: this.$refs.answer.value}]
       }
-      this.$http.post('/api/Question/addQuestion', modelResult)
-      this.$modals.close(modelResult)
+      this.$http.post('/api/Question/addQuestion', modelResult).then(promise => {
+        this.$modals.close(promise.data)
+      })
+      ///this.$modals.close(modelResult)
     },
     cancel() {
       this.$modals.dismiss()
@@ -24,8 +30,6 @@ export default {
     return (
       <MsModal>
         <div slot="body" class="s12 m12">
-          <div class="bold">Укажите проблему:</div>
-          <input ref="question" class="inputTextMainSite" type="text" />
           <div class="bold">Задайте вопрос:</div>
           <textarea ref="answer" class="inputTextMainSite"></textarea>
         </div>

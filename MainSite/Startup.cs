@@ -23,9 +23,9 @@ using Application.Services.PlanCalendar;
 using Microsoft.OpenApi.Models;
 using MainSite.Middleware;
 using MainSite.Models.WebSocket.Hubs;
-using Application.Services.FeedBack.Customers;
 using Application.Services.FeedBack.Answers;
 using Application.Services.FeedBack.Questions;
+using Application.Dal.Repositories;
 
 namespace MainSite
 {
@@ -86,8 +86,8 @@ namespace MainSite
 
             services.AddTransient<PlanCalendarRepository>();
             services.AddTransient<NewsItemRepository>();
+            services.AddTransient<FeedBackRepository>();
 
-            services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IAnswerService, AnswerService>();
             services.AddTransient<IQuestionService, QuestionService>();
 
