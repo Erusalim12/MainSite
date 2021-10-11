@@ -22,20 +22,32 @@ export default {
       form: {
         message: '',
         questionId: this.questionId
-      }
+      },
+      textareaClientHeight: 0
     }
   },
   methods: {
     onSubmit (evt) {
       this.$http.post(`api/question/addAnswer`, this.form)
       .then(res => {
+        this.form.message = ''
+        document.querySelector('textarea').style.height = '2.5rem';
         this.$emit('answer-added', res.data)
       })
       .catch(error => {
+        this.form.message = ''
         M.toast({html: error})
       });
     }
-  }
+  },
+  mounted() {
+    this.textareaClientHeight = document.querySelector('textarea').clientHeight
+
+    document.querySelector('textarea').addEventListener('input', (e) => {
+      e.target.style.height = 'auto'
+      e.target.style.height = (e.target.scrollHeight + 2) + "px"
+    });
+ }
 }
 </script>
 

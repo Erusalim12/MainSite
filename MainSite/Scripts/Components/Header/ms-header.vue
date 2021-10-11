@@ -13,26 +13,21 @@
                             ></span>
                         </a>
                         <a id="openMenu" data-target="mobile-demo" class="sidenav-trigger" style="float: right;cursor:pointer;"><i class="material-icons">menu</i></a>
-                        <ul class="hide-on-med-and-down col m12 s12 l9 headerMenu" style="padding:0;">
-                            <li class="headerMenu-search">
-                                    <span style="margin-right:5px;" class="bold">Поиск:</span>
-                                    <input style="margin-right:5px;" v-model="searchText" class="inputTextMainSite inputSearch" type="text" />
-                                    <button style="margin-right:5px;" class="btn btn-default" @click="searchNews">Найти</button>
-                            </li>
-                            <li>
-                                <div class="headerMenu-user">
-                                    <a data-target='dropdown1' class="dropdown-trigger valign-wrapper" style="padding: 0px;">
-                                        <span class="headerMenu-user__info">{{currentUser.Name}}</span>
-                                        <img src="/images/layout_icons/userLogout.svg" alt="" />
-                                        <!--<i class="material-icons">keyboard_arrow_down</i>-->
-                                    </a>
-                                    <ul id='dropdown1' class='dropdown-content headerMenu-user__settings'>
-                                        <li><a href="#!"><i class="material-icons">home</i>Личный кабинет</a></li>
-                                        <li><a href="#!"><i class="material-icons">cloud</i>Управление сервисами</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
+                        <div class="hide-on-med-and-down col m12 s12 l9 headerMenu">
+                            <div class="col l6 headerMenu-search">
+                                <span class="bold">Поиск:</span>
+                                <input v-model="searchText" class="inputTextMainSite" type="text" />
+                                <button class="btn btn-default" @click="searchNews">Найти</button>
+                            </div>
+                            <a data-target='dropdown1' class="dropdown-trigger valign-wrapper" style="justify-content:flex-end;">
+                                <span class="headerMenu-user__info">{{currentUser.Name}}</span>
+                                <img src="/images/layout_icons/userLogout.svg" alt="" />
+                            </a>
+                            <!--<ul id='dropdown1' class='dropdown-content headerMenu-user__settings'>
+                                <li><a href="#!"><i class="material-icons">home</i>Личный кабинет</a></li>
+                                <li><a href="#!"><i class="material-icons">cloud</i>Управление сервисами</a></li>
+                            </ul>-->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,27 +93,11 @@
                     this.SET_OR_UPDATE_ACTIVE_CATEGORY(null);
                     this.$router.push('/');
                 }
-            },
-            actionFocusin(e) {
-                e.target.style.backgroundColor = 'white';
-            },
-            actionFocusout(e) {
-                if(e.target.value.trim() != '')
-                {
-                    e.target.style.backgroundColor = 'white';
-                }
-                else {
-                    e.target.style.backgroundColor = '#eeeeee';
-                }
             }
         },
         mounted() {
             this.GET_SETTINGS();
             this.GET_INFO_BY_CURRENT_USER();
-            
-            let elem = document.querySelector('.inputSearch')
-            elem.addEventListener('focus', this.actionFocusout)
-            elem.addEventListener('blur', this.actionFocusin)
         },
         created() {
             this.$questionHub.connetionAdminOpened()
@@ -147,16 +126,28 @@
     }
 
     .headerMenu {
-        display: flex;
-        padding: 0px;
+        padding: 0 !important;
 
         &-search {
             display: flex;
-            align-items: center;    
-            flex-basis: 45%;  
-            & .inputSearch {
-                width: 50% !important;
-            }  
+            align-items: center;
+            padding-left: 0px !important;
+            margin-left: 0;
+
+            & > span {
+                margin-right:5px;
+            }
+
+            & > .inputTextMainSite{
+                margin-right:5px;
+                max-width: calc( 100% - 150px);
+                border-radius: 8px 0px 0px 8px !important;
+                border-right:none !important;
+            }
+
+            & > .btn-default {
+                border-radius: 0px 8px 8px 0px !important;
+            }
         }
 
         & > li {
@@ -170,7 +161,7 @@
         &-user {
             padding:0;
             &__info {
-                font-size:18px;
+                font-size:14px;
                 padding-right:10px;
             }
             

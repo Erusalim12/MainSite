@@ -453,7 +453,7 @@ html {
     color: #9e9e9e;
     border: 1px solid #9e9e9e;
     line-height: 1.5em;
-    box-shadow: none; }
+    box-shadow: none !important; }
     .btn-default:active, .btn-default:focus {
       background-color: white; }
     .btn-default:hover {

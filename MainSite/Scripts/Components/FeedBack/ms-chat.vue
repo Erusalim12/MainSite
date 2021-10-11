@@ -8,7 +8,7 @@
           v-for="answer in question.answers" 
           :key="answer.id" 
           class="card card-panel message" 
-          v-bind:class="answer.isAdmin ? 'message-admin': ''"
+          v-bind:class="currentUser.IsAdmin? answer.isAdmin ? '': 'message-admin' : answer.isAdmin? 'message-admin': ''"
         >
           <div class="message-sender">{{ SenderNameUser(answer.senderName, answer.isAdmin) }}</div>
           <div class="message-body">{{ answer.message }}</div>
@@ -21,7 +21,8 @@
  
 <script>
 import msAddAnswer from './ms-add-answer'
- 
+import {mapState} from 'vuex'
+
 export default {
   components: {
     msAddAnswer
@@ -39,6 +40,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('user', ['currentUser']),
     hasAnswers () {
       return this.question.answers.length > 0
     },
