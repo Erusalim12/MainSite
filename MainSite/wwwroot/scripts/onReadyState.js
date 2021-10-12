@@ -34,7 +34,7 @@ function eventClickMobileIconMenu() {
      };
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+/*document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.dropdown-trigger');
     var dropdownOptions = {
         inDuration: 500,
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         alignment: 'center' // Displays dropdown with edge aligned to the left of button
     };
     var instances = M.Dropdown.init(elems, dropdownOptions);
-});
+});*/
 
 /*document.addEventListener('DOMContentLoaded', function () {
     var elems = document.querySelectorAll('.collapsible.expandable');

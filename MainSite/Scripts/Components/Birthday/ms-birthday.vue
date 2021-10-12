@@ -9,17 +9,44 @@
         </div>
       </div>
     </div>
+    <ul class="menu">
+      <li>
+        <a :href="getLinkUrl" style="padding-left: 0px" v-html="getLinkInfo" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
   import axios from 'axios';
+  import { mapState } from 'vuex';
 
   export default {
     data() {
       return {
         users: [],
       };
+    },
+    computed: {
+      ...mapState('settings', ['settings']),
+      getLinkName() {
+        return `<div class="bold">${this.searchSettingByName(
+          'Link.Name',
+          'Ссылка на ресурс',
+        )}</div>`;
+      },
+      getLinkUrl() {
+        return this.searchSettingByName('Link.Url', '#');
+      },
+      getLinkIcon() {
+        let icon = this.searchSettingByName('Link.Icon', null);
+        if (icon) return `<img src="${icon}" />`;
+
+        return `<span class='rectangle' style='background-color: white'></span>`;
+      },
+      getLinkInfo() {
+        return this.getLinkIcon + this.getLinkName;
+      },
     },
     methods: {
       setUsers() {
@@ -30,11 +57,20 @@
         });
       },
       getSubDivision(subDivision) {
-        if (typeof subDivision == 'undefined' || subDivision == null) return 'ООНРиПНПК';
+        if (typeof subDivision == 'undefined' || subDivision == null) return 'Подразделение';
 
         return subDivision.DepartmentShortName !== ''
           ? subDivision.DepartmentShortName
           : subDivision.DepartmentFullName;
+      },
+      searchSettingByName(name, defaultName) {
+        let item = this.settings.find(function (item) {
+          if (item.Name == name && item.Value != '') {
+            return item;
+          }
+        });
+
+        return typeof item == 'undefined' || item == null ? defaultName : item.Value;
       },
     },
     mounted() {
