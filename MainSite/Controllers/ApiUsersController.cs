@@ -4,6 +4,7 @@ using Application.Services.Users;
 using MainSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Linq;
 
 namespace MainSite.Controllers
@@ -40,10 +41,16 @@ namespace MainSite.Controllers
         [HttpGet]
         public string GetInfoCurrentUser()
         {
+            var infoUser = _userService.GetUserBySystemName(User);
+
+            Random rnd = new Random();
+            int value = rnd.Next(0, 2);
             var model = new
             {
-                Name = _userService.GetUserBySystemName(User)?.Name,
-                IsEditer = User.IsInRole("Модератор") || User.IsInRole("Администратор")
+                Name = infoUser != null ? infoUser.Name : "Пользователь",
+                SystemName = User.Identity.Name,
+                IsAdmin = _userService.IsAdmin(infoUser),
+                Id = infoUser.Id
             };
 
             return JsonConvert.SerializeObject(model);

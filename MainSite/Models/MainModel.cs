@@ -228,6 +228,11 @@ namespace MainSite.Models
 
                 var srcNode = img.Attributes["src"];
 
+                if (img.Attributes["id"] == null) {
+                    var xmlElement = (XmlElement)img;
+                    xmlElement.SetAttribute("id", Guid.NewGuid().ToString());
+                }
+
                 var height = int.Parse(img.Attributes["height"].InnerText.Split('.')[0]);
                 var width = int.Parse(img.Attributes["width"].InnerText.Split('.')[0]);
 

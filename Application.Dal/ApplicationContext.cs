@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using Application.Dal.Domain.Birthday;
+using Application.Dal.Domain.FeedBack;
 using Application.Dal.Domain.Files;
 using Application.Dal.Domain.Menu;
 using Application.Dal.Domain.News;
@@ -32,6 +33,9 @@ namespace Application.Dal
         public DbSet<User> UserInfo { get; set; }
         public DbSet<Birtday> Birtdays { get; set; }
 
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+
         /// <summary>
         /// маппер USER-UserRole
         /// </summary>
@@ -50,6 +54,7 @@ namespace Application.Dal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Question>().HasMany(a => a.Answers).WithOne(s => s.Question).OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Setting>().HasData(
                 new Setting[]
