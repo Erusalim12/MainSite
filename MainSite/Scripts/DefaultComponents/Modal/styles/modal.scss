@@ -20,7 +20,7 @@ body.modals-open {
       position: absolute;
       width: 100%;
       height: 100%;
-      overflow-y: scroll;
+      overflow-y: hidden;
       &--disabled {
         background-color: rgba(0, 0, 0, 0);
       }
@@ -119,6 +119,30 @@ body.modals-open {
   
       &--p90 {
         width: 90%;
+      }
+
+      &--is-img-slider {
+        width: auto;
+        height: auto;
+        display: block;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+        img {
+          left: 0;
+          top: 0;
+          
+         
+          /*width: 100%;
+          max-height: 600px;*/
+        }
+
+        .vu-modal__close-btn {
+          display: none;
+        }
       }
   
       &-body {

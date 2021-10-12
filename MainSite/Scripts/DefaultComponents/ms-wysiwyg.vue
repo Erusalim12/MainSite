@@ -103,8 +103,31 @@
             changeResizeEditor(editor) {
                 this.$emit('input', editor);
             },
+            insertText(text) {
+                if (document.queryCommandSupported('insertText')) {
+                    document.execCommand('insertText', false, text);
+                }
+                else {
+                    var range = document.getSelection().getRangeAt(0);
+                    range.deleteContents();
+                    var textNode = document.createTextNode(text);
+                    range.insertNode(textNode);
+                    range.selectNodeContents(textNode);
+                    range.collapse(false);
+
+                    var selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            },
             loadIframe() { 
                 this.editor = document.getElementById(this.GUUID);
+                this.editor.addEventListener("paste", (e) => {
+                    e.preventDefault()
+                    let text = e.clipboardData.getData('text/plain')
+                    this.insertText(text)
+                })
+            
                 if (this.parentTextEditor !== '') this.$emit('input', this.parentTextEditor);
                 let vm = this;
 
@@ -112,13 +135,12 @@
                     e.preventDefault();
                     if (e.target.tagName == 'IMG') {
                         if(e.target.getAttribute('_moz_resizing')) {
-                            function mouseUp() {
-                                if(vm.editor.clientWidth < this.clientWidth) {
-                                    this.setAttribute('width', vm.editor.clientWidth - 20);
+                            document.addEventListener('mouseup', () => {
+                                if(vm.editor.clientWidth < e.target.clientWidth) {
+                                    e.target.setAttribute('width', vm.editor.clientWidth - 20);
                                     vm.$emit('input', vm.editor.innerHTML);
                                 }
-                            }
-                            document.addEventListener('mouseup', mouseUp.bind(e.target));
+                            });
                         }
                         else {
                             document.execCommand('enableObjectResizing', false, 'false');
@@ -148,11 +170,6 @@
      
                             let img = await new Promise((resolve, reject) => {
                                 let elementImg = document.createElement('img')
-                                let unicId = 'image_' + Date.now().toString();
-
-
-                                elementImg.setAttribute('id', unicId);
-                                //elementImg.classList.add('materialboxed');
                                 elementImg.src = e.target.result;
 
                                 elementImg.onload =  function() {
@@ -161,6 +178,10 @@
                                     let scale = imgWidth / imgHeight;
                                     let tempHeight = vm.editor.offsetHeight * 3 / 5 - 30
                                     let tempWidth = tempHeight * scale
+
+                                    if(tempWidth >= vm.editor.offsetWidth) {
+                                        tempWidth = vm.editor.offsetWidth * 3 / 5 - 30
+                                    }
                             
                                     elementImg.width = tempWidth;                        
                                     elementImg.height = tempHeight;
@@ -174,8 +195,8 @@
                               vm.formatDoc("insertHTML", img.outerHTML);
                             }
                             else {
-                              vm.editor.appendChild(img);
                               vm.editor.focus();
+                              vm.editor.appendChild(img);
                             }
                         }                        
                     }   
@@ -226,6 +247,15 @@
 </script>
 
 <style lang="scss">
+    .decorate_block {
+        -moz-user-select: none; /* Firefox */
+        * {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+        }
+    }
     .file_loader_label {
         input[type="file"] {
             display: none;
@@ -277,7 +307,7 @@
            background-color: white;
         }
 
-        p {
+        p,h1,h2,h3,h4,h5 {
             margin: 0;
         }
     }

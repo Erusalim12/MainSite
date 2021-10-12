@@ -19,7 +19,7 @@ $btnSettings: (
     "color": $otherTextColor,
     "border": $borderDefault,
     "line-height": 1.5em,
-    "box-shadow": none,
+    "box-shadow": none !important,
   ),
   "defaultMainSite": (
     "height": 2.5rem !important,

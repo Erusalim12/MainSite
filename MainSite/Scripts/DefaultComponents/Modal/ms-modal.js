@@ -73,7 +73,6 @@ export default {
   },
   render(h) {
     const { dismissable, title, isScroll, fullscreen, isTop, isBottom, isLeft, isRight, center, size, className, bodyPadding,  bodyInfo} = this.propsData
-
     const closeBtn = dismissable 
       ? h('div', {
             class: 'vu-modal__close-btn',

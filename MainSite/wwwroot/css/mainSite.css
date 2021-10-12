@@ -166,72 +166,73 @@ html {
         #menuBlock .secondMenuBlock > div {
           width: 100%;
           flex-direction: column-reverse; } }
-  #menuBlock .menu {
-    margin: 0px; }
-    #menuBlock .menu li ul {
-      padding-left: 5px;
-      opacity: 0;
-      position: absolute;
-      left: 0;
-      top: 0;
-      z-index: -1; }
-      #menuBlock .menu li ul.active {
-        opacity: 1;
-        height: 100%;
-        position: inherit;
-        width: 100%;
-        z-index: 10;
-        /*position: inherit;
+
+.menu {
+  margin: 0px; }
+  .menu li ul {
+    padding-left: 5px;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1; }
+    .menu li ul.active {
+      opacity: 1;
+      height: 100%;
+      position: inherit;
+      width: 100%;
+      z-index: 10;
+      /*position: inherit;
           opacity: 1;
           transition: 0.3s;*/ }
-    #menuBlock .menu a {
-      float: none;
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-      min-height: 50px;
-      cursor: pointer;
-      padding-left: 10px; }
-      #menuBlock .menu a > img, #menuBlock .menu a object {
-        height: 40px;
-        width: 40px; }
-      #menuBlock .menu a > .newsBLock {
-        width: 30px;
-        height: 30px;
-        padding: 0px; }
-      #menuBlock .menu a.active {
-        padding-left: 5px;
-        border-left: 5px solid #64b5f6; }
-        #menuBlock .menu a.active:hover {
-          border-radius: 0px 8px 8px 0px; }
-      #menuBlock .menu a:hover {
-        border-radius: 8px 8px 8px 8px; }
-        #menuBlock .menu a:hover {
-          position: relative;
-          overflow: hidden;
-          z-index: 1; }
-        #menuBlock .menu a:hover:before {
-          content: "";
-          position: absolute;
-          top: 0;
-          right: -50px;
-          bottom: 0;
-          left: 0;
-          border-right: 40px solid transparent;
-          border-bottom: 70px solid rgba(0, 0, 0, 0.05);
-          transform: translateX(-100%);
-          z-index: -1; }
-        #menuBlock .menu a:hover:hover {
-          color: #9e9e9e; }
-          #menuBlock .menu a:hover:hover:before {
-            transform: translateX(0);
-            transition: 0.4s; }
-      #menuBlock .menu a > div {
-        padding-left: 10px;
+  .menu a {
+    float: none;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    min-height: 50px;
+    cursor: pointer;
+    padding-left: 10px; }
+    .menu a > img, .menu a object {
+      height: 40px;
+      width: 40px; }
+    .menu a > .newsBLock {
+      width: 30px;
+      height: 30px;
+      padding: 0px; }
+    .menu a.active {
+      padding-left: 5px;
+      border-left: 5px solid #64b5f6; }
+      .menu a.active:hover {
+        border-radius: 0px 8px 8px 0px; }
+    .menu a:hover {
+      border-radius: 8px 8px 8px 8px; }
+      .menu a:hover {
+        position: relative;
+        overflow: hidden;
+        z-index: 1; }
+      .menu a:hover:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -50px;
+        bottom: 0;
+        left: 0;
+        border-right: 40px solid transparent;
+        border-bottom: 70px solid rgba(0, 0, 0, 0.05);
+        transform: translateX(-100%);
+        z-index: -1; }
+      .menu a:hover:hover {
         color: #9e9e9e; }
-      @media (max-width: 992px) {
-        #menuBlock .menu a {
-          padding-left: 5px; } }
+        .menu a:hover:hover:before {
+          transform: translateX(0);
+          transition: 0.4s; }
+    .menu a > div {
+      padding-left: 10px;
+      color: #9e9e9e; }
+    @media (max-width: 992px) {
+      .menu a {
+        padding-left: 5px; } }
 
 .secondMenu {
   font-size: 18px;
@@ -453,7 +454,7 @@ html {
     color: #9e9e9e;
     border: 1px solid #9e9e9e;
     line-height: 1.5em;
-    box-shadow: none; }
+    box-shadow: none !important; }
     .btn-default:active, .btn-default:focus {
       background-color: white; }
     .btn-default:hover {

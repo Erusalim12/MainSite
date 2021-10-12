@@ -65,6 +65,8 @@ namespace MainSite.Areas.Admin.Factories
                 var curList = GenerationListActivitysInCurrentMoth(worksheet);
                 if (curList != null) dbParser.Add(GenerationListActivitysInCurrentMoth(worksheet));
             }
+
+            _fileProvider.DeleteFile(path);
             return dbParser;
         }
 

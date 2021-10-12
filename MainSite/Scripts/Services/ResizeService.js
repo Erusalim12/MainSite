@@ -1,5 +1,5 @@
 class ResizeService {
-  constructor(decorate, wysiwygNode) {
+  constructor(decorate, wysiwygComponent) {
     this.dir = {};
     this.height = null;
     this.width = null;
@@ -8,9 +8,11 @@ class ResizeService {
     this.currentDOMELement = null;
     this.resizeFunction = null;
     this.deleteListenerFunction = null;
+    this.removeCloneNodeFunction = null;
     this.isElementVision = false;
     this.decorate = null;
-    this.wysiwygNode = wysiwygNode;
+    this.wysiwygComponent = wysiwygComponent;
+    
     if(decorate) {
       let div = document.createElement('div');
       div.style.position = 'relative';
@@ -37,8 +39,8 @@ class ResizeService {
         this.DOMElement.setAttribute('contentEditable', false);
         this.decorate = newNode.clone;
         this.isElementVision = true;
-        this.remove = this.removeClickOtherBlock.bind(this);
-        document.addEventListener('click', this.remove);
+        this.removeCloneNodeFunction = this.removeClickOtherBlock.bind(this);
+        document.addEventListener('click', this.removeCloneNodeFunction);
         this.resizable({});
       });
     }
@@ -55,10 +57,12 @@ class ResizeService {
 
       this.DOMElement.parentNode.replaceChild(this.decorate, this.DOMElement);
 
-      this.wysiwygNode.changeTextEditor();
-      document.removeEventListener('click', this.remove);
+      this.wysiwygComponent.changeTextEditor();
+      document.removeEventListener('click', this.removeCloneNodeFunction);
     }
-    this.isElementVision = false;
+    else {
+      this.isElementVision = false;
+    }
   }
 
   resizable(options) {   
@@ -125,12 +129,11 @@ class ResizeService {
 
   deleteListeners() {
     this.isElementVision = false;
-    if(this.wysiwygNode.editor.clientWidth < this.DOMElement.clientWidth) {
-      this.DOMElement.style.width = (this.wysiwygNode.editor.clientWidth - 20) + 'px';
+    if(this.wysiwygComponent.editor.clientWidth < this.DOMElement.clientWidth) {
+      this.DOMElement.style.width = (this.wysiwygComponent.editor.clientWidth - 20) + 'px';
     }
 
-    this.wysiwygNode.changeTextEditor();
-
+    this.wysiwygComponent.changeTextEditor();
 
     document.removeEventListener( "mousemove", this.resizeFunction);
     document.removeEventListener( "mouseup", this.deleteListenerFunction);

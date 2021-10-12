@@ -1,4 +1,4 @@
-import './modal.scss'
+import './styles/modal.scss'
 import Bus from './utils/bus'
 import ModalCmp from './ms-modal'
 

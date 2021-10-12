@@ -226,6 +226,7 @@ namespace MainSite.Models
                 doc.LoadXml($"<root>{matchValue}</root>");
 
                 var img = doc.FirstChild.FirstChild;
+
                 var srcNode = img.Attributes["src"];
 
                 var height = (int)Double.Parse(img.Attributes["height"].InnerText, CultureInfo.InvariantCulture);
@@ -260,8 +261,10 @@ namespace MainSite.Models
 
                     }
 
-                    item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
+                    //item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 }
+
+                item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 i++;
             }
         }

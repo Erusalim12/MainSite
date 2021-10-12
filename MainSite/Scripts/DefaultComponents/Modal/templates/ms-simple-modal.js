@@ -2,12 +2,6 @@ import MsModal from "../ms-modal"
 
 export default {
   name: 'ms-simple-modal',
-  props: {
-    lorem: {
-      type: Boolean,
-      default: true
-    }
-  },
   data() {
     return {
       header: 'Ошибка1',
