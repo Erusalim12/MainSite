@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MainSite.Models;
 using Application.Services.Files;
 using System;
+using Application.Dal.Domain.Permissions;
 using Application.Services.Utils;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using MainSite.Areas.Admin.Factories;
 
 namespace MainSite.Areas.Admin.Controllers
@@ -100,20 +102,30 @@ namespace MainSite.Areas.Admin.Controllers
 
                 if (entity != null)
                 {
-                    var permission = _permissionService.GetPermissionRecordBySystemName(entity.ActionName);
-
                     entity.Name = model.Name;
                     entity.IsActive = model.IsActive;
                     entity.ParentId = model.ParentId;
                     entity.ToolTip = model.ToolTip;
                     if (!String.IsNullOrWhiteSpace(model.UrlIcone)) entity.UrlIcone = model.UrlIcone;
 
-                    _menuService.UpdateItem(entity);
+                    try
+                    {
+                        var permission = _permissionService.GetPermissionRecordBySystemName(entity.ActionName);
+                        permission.Name = model.Name;
+                        permission.SystemName = new TranslitMethods.Translitter().Translit(model.Name.Replace(',', ' '),
+                            TranslitMethods.TranslitType.Gost);
+                        _permissionService.UpdatePermissionRecord(permission);
+                        _menuService.UpdateItem(entity);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Не удалось обновить объект прав доступа " + ex.Message);
+                        ModelState.AddModelError("","Не удалось обновить Permission, обратитесь к Администратору для исправления данной проблемы");
+                        ViewBag.MenuId = _menuService.GetAll().Select(s => new SelectListItem { Text = s.Name, Value = s.Id }).ToList();
+                        return View(model);
+                    }
 
-                    permission.Name = model.Name;
-                    permission.SystemName = new TranslitMethods.Translitter().Translit(model.Name.Replace(',', ' '),
-                        TranslitMethods.TranslitType.Gost);
-                    _permissionService.UpdatePermissionRecord(permission);
+
                 }
                 else
                 {
@@ -125,8 +137,8 @@ namespace MainSite.Areas.Admin.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-
-            return View();
+            ViewBag.MenuId = _menuService.GetAll().Select(s => new SelectListItem { Text = s.Name, Value = s.Id }).ToList();
+            return View(model);
         }
 
         // POST: MenuService/Delete/5
