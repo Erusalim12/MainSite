@@ -1,72 +1,73 @@
 ﻿$borderDefaultMainSite: 2.5px solid $animationBorderBtnTextColor;
 $borderDefault: 1px solid $otherTextColor;
 
-$hoverSettings: ( 
-    "default": (
-        "background-color": #eeeeee
-    ),
-    "defaultMainSite": (
-        "background-color": $animationBorderBtnTextColor,
-        "color": #ffffff
-    )
+$hoverSettings: (
+  'default': (
+    'background-color': #eeeeee,
+  ),
+  'defaultMainSite': (
+    'background-color': $animationBorderBtnTextColor,
+    'color': #ffffff,
+  ),
 );
 
 $btnSettings: (
-  "default": (
-    "background-color": #ffffff,
-    "animation-fill-mode": forwards,
-    "height": auto,
-    "color": $otherTextColor,
-    "border": $borderDefault,
-    "line-height": 1.5em,
-    "box-shadow": none !important,
+  'default': (
+    'background-color': #ffffff,
+    'animation-fill-mode': forwards,
+    'height': auto !important,
+    'color': $otherTextColor,
+    'border': $borderDefault,
+    'line-height': 1.5em,
+    'box-shadow': none !important,
   ),
-  "defaultMainSite": (
-    "height": 2.5rem !important,
-    "background-color": #ffffff,
-    "animation-fill-mode": forwards,
-    "color": $otherTextColor,
-    "border": $borderDefaultMainSite,
-  )
+  'defaultMainSite': (
+    'height': auto !important,
+    'background-color': #ffffff,
+    'animation-fill-mode': forwards,
+    'color': $otherTextColor,
+    'border': $borderDefaultMainSite,
+  ),
 );
 
 .btn {
-    @each $typeBtn, $settings in $btnSettings {
-        &-#{$typeBtn} {
-            font-family: 'HelveticaNeueCyr' !important;
-            text-transform: inherit;
-            font-size: 18px !important;
-            position: relative;
-            border-radius: 8px !important;
+  @each $typeBtn, $settings in $btnSettings {
+    &-#{$typeBtn} {
+      font-family: 'HelveticaNeueCyr' !important;
+      text-transform: inherit;
+      font-size: 18px !important;
+      position: relative;
+      border-radius: 8px !important;
 
-            @if($typeBtn != "default") {
-                line-height: 2.3rem !important;
+      @if ($typeBtn != 'default') {
+        line-height: 2.3rem !important;
 
-                @-moz-document url-prefix() {
-                    height: 2.5rem !important;
-                    line-height: 2.3rem !important;
-                }
-            }
-            //border-left: 3px solid $animationBorderBtnTextColor;
-
-            @each $setting, $value in $settings {
-                #{$setting}: $value;
-            }
-
-            &:active, &:focus {
-                background-color: white;
-            }
-
-            &:hover {
-                @each $hoverSetting, $hoverValue in map-get($hoverSettings, $typeBtn) {
-                    #{$hoverSetting}: $hoverValue;
-                }
-            }
+        @-moz-document url-prefix() {
+          /*height: 2.5rem !important;*/
+          line-height: 2.3rem !important;
         }
-        //@include animationTranslateBtn($animationBorderBtnTextColor, $animationBtnTextColor);
-        /*&:hover {
+      }
+      //border-left: 3px solid $animationBorderBtnTextColor;
+
+      @each $setting, $value in $settings {
+        #{$setting}: $value;
+      }
+
+      &:active,
+      &:focus {
+        background-color: white;
+      }
+
+      &:hover {
+        @each $hoverSetting, $hoverValue in map-get($hoverSettings, $typeBtn) {
+          #{$hoverSetting}: $hoverValue;
+        }
+      }
+    }
+    //@include animationTranslateBtn($animationBorderBtnTextColor, $animationBtnTextColor);
+    /*&:hover {
             background-color: $animationBorderBtnTextColor;
             color: white;
         }*/
-    }
+  }
 }

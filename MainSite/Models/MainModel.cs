@@ -215,7 +215,9 @@ namespace MainSite.Models
             var imgRegex = new Regex("<img [^>]+>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             var base64Regex = new Regex("data:[^/]+/(?<ext>[a-z]+);base64,(?<base64>.+)", RegexOptions.IgnoreCase);
             byte i = 0;//постфикс наименования для изображения
-            foreach (Match? match in imgRegex.Matches(item.Description))
+             var descMatch = item.Description == null ? String.Empty : item.Description;
+
+            foreach (Match? match in imgRegex.Matches(descMatch))
             {
 
                 var doc = new XmlDocument();
