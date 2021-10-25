@@ -4,14 +4,16 @@ using Application.Dal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Application.Dal.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210622085135_addnewTable")]
+    partial class addnewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,66 +45,24 @@ namespace Application.Dal.Migrations
                     b.ToTable("birthday_Table");
                 });
 
-            modelBuilder.Entity("Application.Dal.Domain.FeedBack.Answer", b =>
+            modelBuilder.Entity("Application.Dal.Domain.Counters.VisitorsCounter", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("LastDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
+                    b.Property<int>("TodayCount")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuestionId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SenderName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TotalCount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("Answers");
+                    b.ToTable("VisitiorCounter");
                 });
-
-            modelBuilder.Entity("Application.Dal.Domain.FeedBack.Question", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Questions");
-                });
-            modelBuilder.Entity("Application.Dal.Domain.Counters.VisitorsCounter", b =>
-            {
-                b.Property<string>("Id")
-                    .HasColumnType("nvarchar(450)");
-
-                b.Property<DateTime>("LastDate")
-                    .HasColumnType("datetime2");
-
-                b.Property<int>("TodayCount")
-                    .HasColumnType("int");
-
-                b.Property<int>("TotalCount")
-                    .HasColumnType("int");
-
-                b.HasKey("Id");
-
-                b.ToTable("VisitiorCounter");
-            });
 
             modelBuilder.Entity("Application.Dal.Domain.Files.File", b =>
                 {
@@ -404,43 +364,37 @@ namespace Application.Dal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6405c496-82ff-4152-ba83-426d80d6499d",
+                            Id = "ccf3b66a-c371-445d-bd66-b312a0c74b22",
                             Name = "StoreFilesInDb",
                             Value = "false"
                         },
                         new
                         {
-                            Id = "b80a0b07-2891-49c5-a339-8ed94aaa5555",
+                            Id = "a9683d45-6840-4348-94a2-52c5eb55a3c4",
                             Name = "Application.Icon",
                             Value = "/images/layout_icons/header.png"
                         },
                         new
                         {
-                            Id = "f32925c0-7282-44e4-b9b1-3ce0478c081e",
+                            Id = "d67ea51e-8eb0-45cd-ba13-59c56d9b94ea",
                             Name = "Application.Name",
                             Value = ""
                         },
                         new
                         {
-                            Id = "258b8653-6895-4ab0-bfc2-fede455bed45",
+                            Id = "972f263e-59fc-4399-ace5-63074a773363",
                             Name = "Application.Copy",
                             Value = ""
                         },
                         new
                         {
-                            Id = "baf8880f-6c9e-4234-b937-c203559de6d3",
+                            Id = "7c6485e7-4886-4c44-9a0c-960cae00c1eb",
                             Name = "BirthdayPath",
                             Value = "http://localhost:50510/api/People/Birthdate?skip=0&take=10"
                         },
                         new
                         {
-                            Id = "de659cd8-d68e-429e-88bd-1c9935cec9e7",
-                            Name = "Application.Header",
-                            Value = "Main_Application"
-                        },
-                        new
-                        {
-                            Id = "7a313309-bdab-41cc-a2b6-a25c9c5de666",
+                            Id = "5cedd682-df99-4a29-ac65-cf9702131542",
                             Name = "Page.PageSize",
                             Value = "3"
                         });
@@ -549,16 +503,6 @@ namespace Application.Dal.Migrations
                     b.ToTable("UURM");
                 });
 
-            modelBuilder.Entity("Application.Dal.Domain.FeedBack.Answer", b =>
-                {
-                    b.HasOne("Application.Dal.Domain.FeedBack.Question", "Question")
-                        .WithMany("Answers")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Question");
-                });
-
             modelBuilder.Entity("Application.Dal.Domain.Files.File", b =>
                 {
                     b.HasOne("Application.Dal.Domain.News.NewsItem", null)
@@ -578,11 +522,6 @@ namespace Application.Dal.Migrations
                     b.HasOne("Application.Dal.Domain.Menu.MenuItem", null)
                         .WithMany("UserRoles")
                         .HasForeignKey("MenuItemId");
-                });
-
-            modelBuilder.Entity("Application.Dal.Domain.FeedBack.Question", b =>
-                {
-                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("Application.Dal.Domain.Menu.MenuItem", b =>
