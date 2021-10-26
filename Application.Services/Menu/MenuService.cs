@@ -26,10 +26,6 @@ namespace Application.Services.Menu
 
         public void InsertItem(MenuItem mi)
         {
-            if (mi.ActionName == null)
-                mi.ActionName = new TranslitMethods.Translitter().Translit(mi.Name, TranslitMethods.TranslitType.Gost)
-                    .Replace(' ', '_');
-
             var maxIndexForCurrentDirectory = GetMaximumIndexForCategory(mi.ParentId);
 
             mi.Index = maxIndexForCurrentDirectory + 1;

@@ -221,11 +221,18 @@ namespace MainSite.Models
 
                 var doc = new XmlDocument();
 
+
                 var matchValue = match.Value.EndsWith("/>") ? match.Value : match.Value.Replace(">", "/>");
 
                 doc.LoadXml($"<root>{matchValue}</root>");
 
                 var img = doc.FirstChild.FirstChild;
+
+                if (img.Attributes["id"] == null)
+                {
+                    var imgXmlElement = (XmlElement) img;
+                    imgXmlElement.SetAttribute("id", Guid.NewGuid().ToString());
+                }
 
                 var srcNode = img.Attributes["src"];
 
@@ -490,7 +497,7 @@ namespace MainSite.Models
         {
             var category = _menuService.Get(categoryId);
             var permission = _permissionService.GetPermissionRecordBySystemName(
-                new TranslitMethods.Translitter().Translit(category.Name, TranslitMethods.TranslitType.Gost));
+                new TranslitMethods.Translitter().Translit(category.Name, TranslitMethods.TranslitType.Gost).Replace(' ', '_'));
             return _permissionService.Authorize(permission, User);
         }
 

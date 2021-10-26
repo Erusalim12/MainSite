@@ -100,27 +100,33 @@ namespace MainSite.Areas.Admin.Controllers
 
                 var entity = model.Id != null ? _menuService.Get(model.Id) : null;
 
+                model.ActionName = new TranslitMethods.Translitter().Translit(model.Name, TranslitMethods.TranslitType.Gost)
+                        .Replace(' ', '_');
                 if (entity != null)
                 {
+                    var actionName = entity.ActionName;//сораняем значение ActionName перед изменением.
+                    //вносим в запись измения, соответственно модели
                     entity.Name = model.Name;
                     entity.IsActive = model.IsActive;
                     entity.ParentId = model.ParentId;
                     entity.ToolTip = model.ToolTip;
+                    entity.ActionName = model.ActionName;
+
                     if (!String.IsNullOrWhiteSpace(model.UrlIcone)) entity.UrlIcone = model.UrlIcone;
 
                     try
                     {
-                        var permission = _permissionService.GetPermissionRecordBySystemName(entity.ActionName);
+                        var permission = _permissionService.GetPermissionRecordBySystemName(actionName);//ищем Permission по старому названию объекта
                         permission.Name = model.Name;
-                        permission.SystemName = new TranslitMethods.Translitter().Translit(model.Name.Replace(',', ' '),
-                            TranslitMethods.TranslitType.Gost);
+                        permission.SystemName = model.ActionName;
+                        //   new TranslitMethods.Translitter().Translit(model.Name.Replace(',', ' '),TranslitMethods.TranslitType.Gost);
                         _permissionService.UpdatePermissionRecord(permission);
                         _menuService.UpdateItem(entity);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine("Не удалось обновить объект прав доступа " + ex.Message);
-                        ModelState.AddModelError("","Не удалось обновить Permission, обратитесь к Администратору для исправления данной проблемы");
+                        ModelState.AddModelError("", "Не удалось обновить Permission, обратитесь к Администратору для исправления данной проблемы");
                         ViewBag.MenuId = _menuService.GetAll().Select(s => new SelectListItem { Text = s.Name, Value = s.Id }).ToList();
                         return View(model);
                     }
@@ -129,6 +135,7 @@ namespace MainSite.Areas.Admin.Controllers
                 }
                 else
                 {
+
                     _menuService.InsertItem(model);
                     var permission = _securityModelFactory.CreatePermissionRecordForMenu(model);
                     _permissionService.InsertPermissionRecord(permission);

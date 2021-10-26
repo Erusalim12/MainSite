@@ -16,7 +16,7 @@ namespace Application.Services.Counters
         private static DateTime _currentDate { get; set; }
         private readonly IRepository<VisitorsCounter> _context;
 
-        public CountersService(IRepository<VisitorsCounter> context )
+        public CountersService(IRepository<VisitorsCounter> context)
         {
             _context = context;
 
@@ -101,7 +101,9 @@ namespace Application.Services.Counters
         public void LoadCounters()
         {
             var storedData = _context.GetAll.FirstOrDefault();
-            _todayCounter = storedData.TodayCount;
+            if (storedData == null) return;
+             _todayCounter = storedData.TodayCount;
+
             _totalCounter = storedData.TotalCount;
             _currentDate = storedData.LastDate;
             Console.WriteLine("visitor's counter was been loaded");

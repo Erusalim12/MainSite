@@ -91,7 +91,7 @@ namespace MainSite.Areas.Admin.Controllers
                     Id = model.Id,
                     Active = true,
                     IsSystemRole = model.IsSystemRole,
-                    SystemName = new TranslitMethods.Translitter().Translit(model.Name, TranslitMethods.TranslitType.Gost)
+                    SystemName = new TranslitMethods.Translitter().Translit(model.Name, TranslitMethods.TranslitType.Gost).Replace(' ', '_')
                 };
                 _userService.InsertUserRole(UserRole);
 
@@ -153,7 +153,7 @@ namespace MainSite.Areas.Admin.Controllers
                     if (UserRole.IsSystemRole && !model.Active)
                         throw new Exception("CantEditSystem");
                     var roleTranslit =
-                        new TranslitMethods.Translitter().Translit(model.Name, TranslitMethods.TranslitType.Gost);
+                        new TranslitMethods.Translitter().Translit(model.Name, TranslitMethods.TranslitType.Gost).Replace(' ', '_');
                     if (UserRole.IsSystemRole && !UserRole.SystemName.Equals(roleTranslit, StringComparison.InvariantCultureIgnoreCase))
                         throw new Exception("CantEditSystem");
 
