@@ -8,30 +8,35 @@ $fontDefaultAllSite: 18px;
 @mixin animationTranslateBtn($blockColor, $textColor) {
   & {
     position: relative;
-    overflow: hidden;
     z-index: 1;
   }
 
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -50px;
-    bottom: 0;
-    left: 0;
-    border-right: 40px solid transparent;
-    border-bottom: 70px solid $blockColor;
-    transform: translateX(-100%);
-    z-index: -1;
-  }
-
   &:hover {
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 100%;
+      top: 0;
+      height: 100%;
+      border-radius: 0px 8px 8px 0px;
+      background-color: rgba(0, 0, 0, 0.05);
+      /*right: -50px;
+      bottom: 0;
+      top: 0;
+      border-right: 40px solid transparent;
+      border-bottom: 70px solid $blockColor;
+      transform: translateX(-100%);
+      */
+      z-index: -1;
+    }
+
     color: $textColor;
 
-    &:before {
+    /*&:before {
       transform: translateX(0);
       transition: 0.4s;
-    }
+    }*/
   }
 }
 

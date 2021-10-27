@@ -36,6 +36,9 @@ namespace MainSite.ViewModels.News
         [Display(Name = "Дата последнего редактирования")]
         public DateTime LastChangeDate { get; set; }
 
+        [Display(Name = "Автор последнего редактирования")]
+        public string LastChangeAutor { get; set; }
+
         public string UrlIcon
         {
             get

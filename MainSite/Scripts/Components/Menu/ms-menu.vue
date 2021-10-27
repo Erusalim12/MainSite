@@ -1,14 +1,10 @@
 ﻿<template>
   <ul class="menu">
     <li>
-      <a
-        href="javascript:void(0)"
-        @click="eventClickElementMenu(arguments[0])"
-        v-bind:class="IsActive"
-      >
+      <router-link :to="{ name: 'main' }" :class="{ active: $route.path === '/' }">
         <span class="rectangle"></span>
         <div class="bold">Новости</div>
-      </a>
+      </router-link>
     </li>
     <ms-menu-item v-for="category in categories" :key="category.id" :menu_item="category">
     </ms-menu-item>
@@ -18,7 +14,6 @@
 <script>
   import msMenuItem from './ms-menu-item.vue';
   import { mapActions, mapState, mapMutations } from 'vuex';
-  //import { ItemMenuActive } from '../../Filters/Menu'
 
   export default {
     name: 'ms-menu',
@@ -31,25 +26,10 @@
       msMenuItem,
     },
     computed: {
-      ...mapState('menu', ['categories', 'activeCategoryId']),
-      IsActive() {
-        return this.categoryId == this.activeCategoryId &&
-          this.$route.params.categoryId == this.categoryId
-          ? 'active'
-          : '';
-      },
+      ...mapState('menu', ['categories', 'breadcrumbs']),
     },
     methods: {
       ...mapActions('menu', ['GET_CATEGORIES']),
-      ...mapMutations('menu', ['SET_OR_UPDATE_ACTIVE_CATEGORY']),
-      eventClickElementMenu(e) {
-        //ItemMenuActive.eventClickElementMenu(e);
-
-        if (this.$route.params.categoryId) {
-          this.SET_OR_UPDATE_ACTIVE_CATEGORY(null);
-          this.$router.push({ name: 'main' });
-        }
-      },
       searchSettingByName(name, defaultName) {
         let item = this.settings.find(function (item) {
           if (item.Name == name && item.Value != '') {
@@ -62,7 +42,6 @@
     },
     created() {
       this.GET_CATEGORIES();
-      if (this.categoryId != this.activeCategoryId) this.SET_OR_UPDATE_ACTIVE_CATEGORY(null);
     },
   };
 </script>

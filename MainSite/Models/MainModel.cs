@@ -92,6 +92,7 @@ namespace MainSite.Models
                 CategoryId = newsItem.Category,
                 Category = categoryName,
                 Author = newsItem.AutorFio,
+                LastChangeAutor = newsItem.LastChangeAuthor,
                 CreatedDate = newsItem.CreatedDate,
                 LastChangeDate = newsItem.LastChangeDate,
                 IsMessage = newsItem.Files != null ? !newsItem.Files.Any() : true,
@@ -115,7 +116,8 @@ namespace MainSite.Models
 
             entity.Header = model.Header;
             entity.LastChangeDate = DateTime.Now;
-            entity.AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";
+            entity.LastChangeAuthor = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";
+
             entity.Description = model.Description;
             List<IFormFile> httpPostedFile = new List<IFormFile>();
             List<IFormFile> httpCurrentFile = new List<IFormFile>();
@@ -148,13 +150,16 @@ namespace MainSite.Models
 
         public void CreateNewNewsItem(NewsItemViewModel newsItemViewModel, ClaimsPrincipal author)
         {
+            var curDate = DateTime.Now;
+
             var entity = new NewsItem
             {
                 Id = Guid.NewGuid().ToString(),
                 Header = newsItemViewModel.Header,
 
                 AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан",
-                CreatedDate = DateTime.Now,
+                CreatedDate = curDate,
+                LastChangeDate = curDate,
                 Category = newsItemViewModel.CategoryId,
                 IsAdvancedEditor = newsItemViewModel.IsAdvancedEditor
             };

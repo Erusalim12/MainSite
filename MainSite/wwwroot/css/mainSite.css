@@ -208,6 +208,32 @@ html {
       width: 30px;
       height: 30px;
       padding: 0px; }
+    .menu a {
+      position: relative;
+      z-index: 1; }
+    .menu a:hover {
+      color: #9e9e9e;
+      /*&:before {
+      transform: translateX(0);
+      transition: 0.4s;
+    }*/ }
+      .menu a:hover:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: 0;
+        height: 100%;
+        border-radius: 0px 8px 8px 0px;
+        background-color: rgba(0, 0, 0, 0.05);
+        /*right: -50px;
+      bottom: 0;
+      top: 0;
+      border-right: 40px solid transparent;
+      border-bottom: 70px solid $blockColor;
+      transform: translateX(-100%);
+      */
+        z-index: -1; }
     .menu a.active {
       padding-left: 5px;
       border-left: 5px solid #64b5f6; }
@@ -215,26 +241,6 @@ html {
         border-radius: 0px 8px 8px 0px; }
     .menu a:hover {
       border-radius: 8px 8px 8px 8px; }
-      .menu a:hover {
-        position: relative;
-        overflow: hidden;
-        z-index: 1; }
-      .menu a:hover:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: -50px;
-        bottom: 0;
-        left: 0;
-        border-right: 40px solid transparent;
-        border-bottom: 70px solid rgba(0, 0, 0, 0.05);
-        transform: translateX(-100%);
-        z-index: -1; }
-      .menu a:hover:hover {
-        color: #9e9e9e; }
-        .menu a:hover:hover:before {
-          transform: translateX(0);
-          transition: 0.4s; }
     .menu a > div {
       padding-left: 10px;
       color: #9e9e9e; }
