@@ -1,11 +1,12 @@
-﻿using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Application.Dal;
+using Application.Dal.Domain.Counters;
 using Application.Dal.Infrastructure;
+using Application.Services.BackgroundTask;
 using Application.Services.Files;
 using Application.Services.Menu;
 using Application.Services.News;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.Birthday;
+using Application.Services.Counters;
 using Application.Services.Permissions;
 using Application.Services.Settings;
 using MainSite.Models;
@@ -37,6 +39,7 @@ namespace MainSite
         }
 
         public IConfiguration Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -91,7 +94,9 @@ namespace MainSite
             services.AddTransient<IAnswerService, AnswerService>();
             services.AddTransient<IQuestionService, QuestionService>();
 
+            services.AddTransient<CountersService>();
 
+            services.AddHostedService<UpdateCountersInDb>();
 
             services.AddCors();
             services.AddSignalR();
@@ -99,7 +104,8 @@ namespace MainSite
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        [System.Obsolete]
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime hostLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -123,6 +129,7 @@ namespace MainSite
             });
             app.UseMiddleware<UserAreCreateMiddleware>();
 
+            app.UseMiddleware(typeof(SiteViewMiddleware));
             //app.UseStaticFiles(new StaticFileOptions
             //{
             //    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Content")),
@@ -144,5 +151,7 @@ namespace MainSite
             });
 
         }
+
+
     }
 }

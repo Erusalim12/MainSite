@@ -14,11 +14,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Application.Dal.Domain.Files;
+using Application.Dal.Domain.Users;
 using Application.Dal.Repositories.Infrastructure;
 using Application.Services.Permissions;
 using Application.Services.Utils;
@@ -91,8 +93,10 @@ namespace MainSite.Models
                 Description = string.IsNullOrWhiteSpace(newsItem.Description) ? "" : newsItem.Description,
                 CategoryId = newsItem.Category,
                 Category = categoryName,
+
                 Author = newsItem.AutorFio,
                 LastChangeAutor = newsItem.LastChangeAuthor,
+
                 CreatedDate = newsItem.CreatedDate,
                 LastChangeDate = newsItem.LastChangeDate,
                 IsMessage = newsItem.Files != null ? !newsItem.Files.Any() : true,
@@ -110,13 +114,14 @@ namespace MainSite.Models
 
         public void EditNewNewsItem(NewsItemViewModel model, ClaimsPrincipal author)
         {
-
             var entity = _newsService.GetNewsItem(model.Id);
             ReplaceImg(model);
-
+            var user = _usersService.GetUserBySystemName(author);
             entity.Header = model.Header;
             entity.LastChangeDate = DateTime.Now;
-            entity.LastChangeAuthor = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";
+
+            entity.LastChangeAuthorFio = user.FullName;
+            entity.LastChangeAuthorId = user.Id;
 
             entity.Description = model.Description;
             List<IFormFile> httpPostedFile = new List<IFormFile>();
@@ -150,16 +155,20 @@ namespace MainSite.Models
 
         public void CreateNewNewsItem(NewsItemViewModel newsItemViewModel, ClaimsPrincipal author)
         {
-            var curDate = DateTime.Now;
+
+            var createDate = DateTime.Now;
+            var user = _usersService.GetUserBySystemName(author);
 
             var entity = new NewsItem
             {
                 Id = Guid.NewGuid().ToString(),
                 Header = newsItemViewModel.Header,
-
-                AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан",
-                CreatedDate = curDate,
-                LastChangeDate = curDate,
+                AuthorFio = user.FullName,
+                AuthorId = user.Id,
+                LastChangeAuthorFio = user.FullName,
+                LastChangeAuthorId = user.Id,
+                CreatedDate = createDate,
+                LastChangeDate = createDate,
                 Category = newsItemViewModel.CategoryId,
                 IsAdvancedEditor = newsItemViewModel.IsAdvancedEditor
             };
@@ -227,21 +236,25 @@ namespace MainSite.Models
 
                 var doc = new XmlDocument();
 
+
                 var matchValue = match.Value.EndsWith("/>") ? match.Value : match.Value.Replace(">", "/>");
 
                 doc.LoadXml($"<root>{matchValue}</root>");
 
                 var img = doc.FirstChild.FirstChild;
 
-                var srcNode = img.Attributes["src"];
-
-                if (img.Attributes["id"] == null) {
-                    var xmlElement = (XmlElement)img;
-                    xmlElement.SetAttribute("id", Guid.NewGuid().ToString());
+                if (img.Attributes["id"] == null)
+                {
+                    var imgXmlElement = (XmlElement)img;
+                    imgXmlElement.SetAttribute("id", Guid.NewGuid().ToString());
                 }
 
-                var height = int.Parse(img.Attributes["height"].InnerText.Split('.')[0]);
-                var width = int.Parse(img.Attributes["width"].InnerText.Split('.')[0]);
+                var srcNode = img.Attributes["src"];
+
+                var height = (int)Double.Parse(img.Attributes["height"].InnerText, CultureInfo.InvariantCulture);
+                var width = (int)Double.Parse(img.Attributes["width"].InnerText, CultureInfo.InvariantCulture);
+
+
 
                 string mime = MimeTypes.ImageJpeg;
                 try
@@ -254,20 +267,21 @@ namespace MainSite.Models
                 if (base64Match.Success)
                 {
                     var bytes = Convert.FromBase64String(base64Match.Groups["base64"].Value);
-                    var storedPicture = _pictureService.InsertPicture(bytes, mime, item.Header + i, null, item.Header + "_" + i, true);
+                    //Сохранили изображение
+                    var storedPicture = _pictureService.InsertPicture(bytes, mime, item.Header + "_" + i, null, item.Header + "_" + i, true);
 
-
+                    //получить ссылку на изображение
                     //если высота больше ширины, значит портретное изображение
                     if (height > width)
                     {
-                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, height,true,PictureType.Avatar);
+
+                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, height, true, PictureType.Avatar);
                     }
                     else//иначе альбомное изображение
                     {
-                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, width,true,PictureType.Entity);
+                        srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, width, true, PictureType.Entity);
 
                     }
-                    srcNode.Value = _pictureService.GetPictureUrl(storedPicture.Id, 300);
 
                     //item.Description = item.Description.Replace(match.Value, img.OuterXml, StringComparison.OrdinalIgnoreCase);
                 }
@@ -423,7 +437,38 @@ namespace MainSite.Models
                     _downloadService.DeleteDownload(file);
                 }
             }
+
+            DeleteImagesFromNews(item.Description);
             _newsService.DeleteNews(item);
+        }
+
+
+        private void DeleteImagesFromNews(string newsDescription)
+        {
+            var imgRegex = new Regex("<img [^>]+>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+            foreach (Match? match in imgRegex.Matches(newsDescription))
+            {
+
+                var doc = new XmlDocument();
+
+                var matchValue = match.Value.EndsWith("/>") ? match.Value : match.Value.Replace(">", "/>");
+
+                doc.LoadXml($"<root>{matchValue}</root>");
+
+                var img = doc.FirstChild.FirstChild;
+                //путь к файлу в папке \images\thumbs\
+                var scrPath = img.Attributes["src"].Value;
+                // получить имя файла из описания
+
+                var fileId = _fileProvider.GetFileNameWithoutExtension(scrPath);
+                var picture = _pictureService.GetPictureById(fileId);
+                _pictureService.DeletePicture(picture);
+
+
+
+            }
+
         }
 
         #region Pined news
@@ -467,7 +512,7 @@ namespace MainSite.Models
         {
             var category = _menuService.Get(categoryId);
             var permission = _permissionService.GetPermissionRecordBySystemName(
-                new TranslitMethods.Translitter().Translit(category.Name, TranslitMethods.TranslitType.Gost));
+                new TranslitMethods.Translitter().Translit(category.Name, TranslitMethods.TranslitType.Gost).Replace(' ', '_'));
             return _permissionService.Authorize(permission, User);
         }
 

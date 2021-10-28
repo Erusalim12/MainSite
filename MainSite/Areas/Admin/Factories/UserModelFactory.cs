@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Application.Dal.Domain.Users;
+using Application.Services.News;
 using Application.Services.Users;
 using MainSite.Areas.Admin.Models.Users;
 
@@ -11,8 +12,9 @@ namespace MainSite.Areas.Admin.Factories
     {
         private readonly IUsersService _userService;
         private readonly IUserRoleModelFactory _userRoleModelFactory;
+        private readonly INewsService _newsService;
 
-        public UserModelFactory(IUsersService userService, IUserRoleModelFactory userRoleModelFactory)
+        public UserModelFactory(IUsersService userService, IUserRoleModelFactory userRoleModelFactory, INewsService newsService)
         {
             _userService = userService;
             _userRoleModelFactory = userRoleModelFactory;
@@ -36,7 +38,7 @@ namespace MainSite.Areas.Admin.Factories
                 pageSize: searchModel.Pagesize);
 
 
-            return customers.Select(c => PrepareModel(c)).OrderBy(c=>c.LastVisitDate);
+            return customers.Select(c => PrepareModel(c)).OrderByDescending(c=>c.LastVisitDate);
 
         }
 
@@ -51,7 +53,7 @@ namespace MainSite.Areas.Admin.Factories
                 IPAddress = user.LastIpAddress,
                 UserRoles = _userService.GetUserRoles(user)
                     .Select(s => _userRoleModelFactory.PrepareUserRoleModel(null, s).Name),
-                MessagesCount = -1,
+                MessagesCount = _newsService.GetNewsCountByUser(user.Id),
                 LastVisitDate = user.LastActivityDate
             };
 

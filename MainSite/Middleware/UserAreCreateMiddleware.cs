@@ -32,8 +32,6 @@ namespace MainSite.Middleware
         {
             var ip =
                 context.Features.Get<IHttpConnectionFeature>().RemoteIpAddress.MapToIPv4().ToString();
-
-
             return ip;
         }
     }

@@ -68,6 +68,11 @@ namespace Application.Services.News
         public int GetTotalNewsCount(string categoryId = null) =>
                      _newsRepository.GetNewsCount(categoryId);
 
+        public int GetNewsCountByUser(string userId)
+        {
+            return _newsRepository.GetAll.Where(c => c.LastChangeAuthorId == userId || c.AuthorId == userId).Distinct().Count();
+        }
+
 
         #endregion
     }

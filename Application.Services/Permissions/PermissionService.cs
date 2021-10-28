@@ -271,7 +271,7 @@ namespace Application.Services.Permissions
 
         public virtual bool Authorize(MenuItem mi, User user)
         {
-            return Authorize(new TranslitMethods.Translitter().Translit(mi.Name, TranslitMethods.TranslitType.Gost),
+            return Authorize(new TranslitMethods.Translitter().Translit(mi.Name, TranslitMethods.TranslitType.Gost).Replace(' ', '_'),
                 user);
         }
 

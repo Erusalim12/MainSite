@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using Application.Dal.Domain.Birthday;
+using Application.Dal.Domain.Counters;
 using Application.Dal.Domain.FeedBack;
 using Application.Dal.Domain.Files;
 using Application.Dal.Domain.Menu;
@@ -32,6 +33,7 @@ namespace Application.Dal
         public DbSet<PermissionRecord> Permissions { get; set; }
         public DbSet<User> UserInfo { get; set; }
         public DbSet<Birtday> Birtdays { get; set; }
+        public DbSet<VisitorsCounter> VisitiorCounter { get; set; }
 
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
@@ -45,7 +47,7 @@ namespace Application.Dal
         /// </summary>
         public DbSet<PermissionRecordUserRoleMapping> PRURM { get; set; }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        public ApplicationContext(DbContextOptions options)
             : base(options)
         {
             Database.EnsureCreated();

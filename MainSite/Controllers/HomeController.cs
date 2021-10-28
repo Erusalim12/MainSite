@@ -1,4 +1,5 @@
-﻿using MainSite.ViewModels;
+﻿using System;
+using MainSite.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using MainSite.Models;
@@ -12,6 +13,7 @@ using Application.Services.Permissions;
 using MainSite.Areas.Admin.Factories;
 using MainSite.ViewModels.UI.Menu;
 using Application.Services.Users;
+using Application.Services.Utils;
 
 namespace MainSite.Controllers
 {
@@ -103,7 +105,8 @@ namespace MainSite.Controllers
 
                     model.UrlIcone = _pictureService.GetPictureUrl(file.Id);
                 }
-
+                model.ActionName = new TranslitMethods.Translitter().Translit(model.Name, TranslitMethods.TranslitType.Gost)
+                  .Replace(' ', '_');
                 _menuService.InsertItem(model);
                 _permissionService.InsertPermissionRecord(_securityModelFactory.CreatePermissionRecordForMenu(model));
 

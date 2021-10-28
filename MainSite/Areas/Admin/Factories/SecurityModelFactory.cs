@@ -103,8 +103,7 @@ namespace MainSite.Areas.Admin.Factories
         public virtual PermissionRecord CreatePermissionRecordForMenu(MenuItem menuItem)
         {
             return CreatePermissionRecord(
-                "Редактировать " + menuItem.Name,
-        new TranslitMethods.Translitter().Translit(menuItem.Name.Replace(',', ' '), TranslitMethods.TranslitType.Gost)
+                "Редактировать " + menuItem.Name, menuItem.ActionName
                 , nameof(MenuItem));
         }
         #endregion

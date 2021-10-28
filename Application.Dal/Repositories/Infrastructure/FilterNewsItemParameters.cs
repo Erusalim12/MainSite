@@ -14,5 +14,6 @@ namespace Application.Dal.Repositories.Infrastructure
         public bool? IsNewest { get; set; }
         public IEnumerable<string> CategoryIds { get; set; } = new List<string>();
         public IEnumerable<string> PinnedNewsIds { get; set; } = new List<string>();
+        public string AuthorFio { get; set; }
     }
 }
