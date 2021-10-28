@@ -196,7 +196,7 @@ namespace Application.Dal.Migrations
                     b.Property<bool>("IsAdvancedEditor")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastChangeAuthor")
+                    b.Property<string>("LastChangeAuthorFio")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastChangeDate")

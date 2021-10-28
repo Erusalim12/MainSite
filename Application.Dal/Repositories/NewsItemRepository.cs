@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using Application.Dal.Domain.News;
 using Application.Dal.Repositories.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Application.Dal
 {
@@ -50,6 +49,7 @@ namespace Application.Dal
             var pinnedNews = filterNewsItemParameters?.PinnedNewsIds;
             var skip = filterNewsItemParameters?.Skip ?? 0;
             var take = filterNewsItemParameters?.Take ?? 5;
+            var authorFio = filterNewsItemParameters.AuthorFio;
 
             var data = GetAllQueryable;
             if (category != null)
@@ -69,8 +69,13 @@ namespace Application.Dal
 
             if (authorId != null)
             {
-                data = data.Where(d => d.AutorFio == authorId);
+                data = data.Where(d => d.AuthorId == authorId || d.LastChangeAuthorId == authorId);
             }
+            if (authorFio != null)
+            {
+                data = data.Where(d => d.AuthorFio == authorFio || d.LastChangeAuthorFio == authorFio);
+            }
+
 
             if (startDate != null && startDate != DateTime.MinValue)
             {
@@ -86,7 +91,7 @@ namespace Application.Dal
                 data = data.Where(d => pinnedNews.Contains(d.Id));
             }
 
-           
+
 
             if (skip != 0)
             {

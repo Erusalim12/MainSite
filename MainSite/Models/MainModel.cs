@@ -20,6 +20,7 @@ using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Application.Dal.Domain.Files;
+using Application.Dal.Domain.Users;
 using Application.Dal.Repositories.Infrastructure;
 using Application.Services.Permissions;
 using Application.Services.Utils;
@@ -92,7 +93,8 @@ namespace MainSite.Models
                 Description = string.IsNullOrWhiteSpace(newsItem.Description) ? "" : newsItem.Description,
                 CategoryId = newsItem.Category,
                 Category = categoryName,
-                Author = newsItem.AutorFio,
+                Author = newsItem.AuthorFio,
+
                 CreatedDate = newsItem.CreatedDate,
                 LastChangeDate = newsItem.LastChangeDate,
                 IsMessage = newsItem.Files != null ? !newsItem.Files.Any() : true,
@@ -110,13 +112,13 @@ namespace MainSite.Models
 
         public void EditNewNewsItem(NewsItemViewModel model, ClaimsPrincipal author)
         {
-
             var entity = _newsService.GetNewsItem(model.Id);
             ReplaceImg(model);
-
+            var user = _usersService.GetUserBySystemName(author);
             entity.Header = model.Header;
             entity.LastChangeDate = DateTime.Now;
-            entity.AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан";
+            entity.LastChangeAuthorFio = user.FullName;
+            entity.LastChangeAuthorId = user.Id;
             entity.Description = model.Description;
             List<IFormFile> httpPostedFile = new List<IFormFile>();
             List<IFormFile> httpCurrentFile = new List<IFormFile>();
@@ -149,13 +151,19 @@ namespace MainSite.Models
 
         public void CreateNewNewsItem(NewsItemViewModel newsItemViewModel, ClaimsPrincipal author)
         {
+            var createDate = DateTime.Now;
+            var user = _usersService.GetUserBySystemName(author);
             var entity = new NewsItem
             {
                 Id = Guid.NewGuid().ToString(),
                 Header = newsItemViewModel.Header,
 
-                AutorFio = _usersService.GetUserBySystemName(author)?.FullName ?? "Автор не указан",
-                CreatedDate = DateTime.Now,
+                AuthorFio = user.FullName,
+                AuthorId = user.Id,
+                LastChangeAuthorFio = user.FullName,
+                LastChangeAuthorId = user.Id,
+                CreatedDate = createDate,
+                LastChangeDate = createDate,
                 Category = newsItemViewModel.CategoryId,
                 IsAdvancedEditor = newsItemViewModel.IsAdvancedEditor
             };
@@ -230,7 +238,7 @@ namespace MainSite.Models
 
                 if (img.Attributes["id"] == null)
                 {
-                    var imgXmlElement = (XmlElement) img;
+                    var imgXmlElement = (XmlElement)img;
                     imgXmlElement.SetAttribute("id", Guid.NewGuid().ToString());
                 }
 

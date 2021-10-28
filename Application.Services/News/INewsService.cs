@@ -20,5 +20,7 @@ namespace Application.Services.News
         /// </summary>
         /// <returns></returns>
         int GetTotalNewsCount(string categoryId = null);
+
+        int GetNewsCountByUser(string userId);
     }
 }
