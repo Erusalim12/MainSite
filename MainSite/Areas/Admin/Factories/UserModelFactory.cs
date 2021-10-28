@@ -18,6 +18,7 @@ namespace MainSite.Areas.Admin.Factories
         {
             _userService = userService;
             _userRoleModelFactory = userRoleModelFactory;
+            _newsService = newsService;
         }
         /// <summary>
         /// 
