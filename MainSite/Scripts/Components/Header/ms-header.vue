@@ -106,13 +106,10 @@
       ...mapActions('user', ['GET_INFO_BY_CURRENT_USER']),
       ...mapMutations('menu', ['SET_OR_UPDATE_ACTIVE_CATEGORY']),
       searchNews() {
-        if (Object.keys(this.$route.params).length == 0 || this.searchText != '') {
-          let routerParams = { name: 'search', params: { searchText: this.searchText } };
-
-          if (this.$route.params.searchText != this.searchText) {
-            this.$router.push(routerParams);
-          }
+        if (this.searchText !== this.$route.params.searchText) {
+          this.$router.push({ name: 'search', params: { searchText: this.searchText } });
         }
+        this.searchText = '';
       },
       searchSettingByName(name, defaultName) {
         let item = this.settings.find(function (item) {

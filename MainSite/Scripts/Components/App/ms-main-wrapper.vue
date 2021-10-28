@@ -23,6 +23,6 @@
 
 <style lang="scss">
   .container {
-    width: 80%;
+    width: 70%;
   }
 </style>

@@ -2,7 +2,7 @@
   <ul class="menu">
     <li>
       <router-link :to="{ name: 'main' }" :class="{ active: $route.path === '/' }">
-        <span class="rectangle"></span>
+        <img src="/images/layout_icons/newsfeed.svg" />
         <div class="bold">Новости</div>
       </router-link>
     </li>

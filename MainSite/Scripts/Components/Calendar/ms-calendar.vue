@@ -2,7 +2,7 @@
   <div class="card-panel">
     <div class="ms-calendar">
       <h6 style="text-align: center; color: #1e57a5">
-        Основные мероприятия училища, предусмотренные планом-календарем на текущую неделю
+        Основные мероприятия училища, предусмотренные планом-календарем
       </h6>
       <div class="ms-calendar_carusel">
         <div class="ms-calendar_description">

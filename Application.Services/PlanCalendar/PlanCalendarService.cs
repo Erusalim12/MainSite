@@ -38,7 +38,7 @@ namespace Application.Services.PlanCalendar
         public IEnumerable<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForWeek()
         {
 
-            return _planCalendarRepository.GetLast().Events.Where(a => IncludeDayInWeek(int.TryParse(a.Day, out int day), day));
+            return _planCalendarRepository.GetLast()?.Events.Where(a => IncludeDayInWeek(int.TryParse(a.Day, out int day), day));
         }
 
         private bool IncludeDayInWeek(bool isNumber, int day)
@@ -52,7 +52,7 @@ namespace Application.Services.PlanCalendar
             int daysOffsetStart = nowDate.DayOfWeek - DayOfWeek.Monday;
             int daysOffsetEnd = DayOfWeek.Saturday - nowDate.DayOfWeek;
 
-            var endDate = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day + daysOffsetEnd);
+            var endDate = nowDate.AddDays(daysOffsetEnd);
             var startDate = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day - daysOffsetStart);
 
             var dateToCheck = new DateTime(nowDate.Year, nowDate.Month, day);

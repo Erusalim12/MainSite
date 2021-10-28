@@ -27,7 +27,7 @@ namespace MainSite.Controllers
         [HttpGet]
         public IActionResult GetPlanCalendar()
         {
-            var collection = _planCalendarSevice.GetEventsForWeek().ToList();
+            var collection = _planCalendarSevice.GetEventsForWeek();
 
             if (collection != null) {
                 var nowDate = DateTime.Now;
@@ -38,9 +38,16 @@ namespace MainSite.Controllers
 
                 for(var i= curDay - dayOffsetStart; i < curDay + daysOffsetEnd; i++)
                 {
-                    if(!collection.Any(a => int.Parse(a.Day) == i ))
+                    
+                    if (i >=  curDay)
                     {
-                        collection.Add(new EventCalendar { 
+                        var date = nowDate.AddDays(i - curDay);
+                        if (date.Month != nowDate.Month) break;
+                    }
+
+                    if (!collection.Any(a => int.Parse(a.Day) == i ))
+                    {
+                        collection.Append(new EventCalendar { 
                             Day = i.ToString(),
                             Time = ""
                         });

@@ -29,7 +29,10 @@ export default {
       });
       commit('SET_PAGE', {});
       commit('SET_NEWS', result.data);
-    } catch (ex) {}
+    } catch (ex) {
+      commit('SET_PAGE', {});
+      commit('SET_NEWS', []);
+    }
     commit('preLoader/CHANGE_STATE_ACTIVE', false, { root: true });
   },
   async CREATE_NEW({ commit }, data) {
