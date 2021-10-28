@@ -30,7 +30,7 @@
         <thead>
             <tr>
                 <th>Роль</th>
-                <th>Права</th>
+                <th>Количество разрешений</th>
                 <th>
                 </th>
             </tr>
@@ -43,15 +43,10 @@
                         @item.Name
                     </td>
                     <td>
-                        <ul>
-                            @foreach (var permission in item.PermissionNames)
-                            {
-                                <li>@permission</li>
-                            }
-                        </ul>
+                        @item.PermissionNames.Count()
                     </td>
                     <td>
-                        <a class="btn btn-defaultMainSite"  href="@Url.Action("Permissions", "Security", new {roles = item.Id})">Изменить</a>
+                        <a class="btn btn-defaultMainSite" href="@Url.Action("Permissions", "Security", new {roles = item.Id})">Изменить</a>
                     </td>
                 </tr>
             }

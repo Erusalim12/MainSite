@@ -118,8 +118,7 @@ namespace MainSite.Areas.Admin.Controllers
                     {
                         var permission = _permissionService.GetPermissionRecordBySystemName(actionName);//ищем Permission по старому названию объекта
                         permission.Name = model.Name;
-                        permission.SystemName = model.ActionName;
-                        //   new TranslitMethods.Translitter().Translit(model.Name.Replace(',', ' '),TranslitMethods.TranslitType.Gost);
+                        permission.SystemName = model.ActionName;                       
                         _permissionService.UpdatePermissionRecord(permission);
                         _menuService.UpdateItem(entity);
                     }
@@ -161,10 +160,9 @@ namespace MainSite.Areas.Admin.Controllers
             var item = _menuService.Get(id);
             if (item != null)
             {
-                //удаляя пункт меню, удаляем и permission record 
+                //удаляя пункт меню, удаляем и permission record         
+                var permission = _permissionService.GetPermissionRecordBySystemName(item.ActionName);
                 _menuService.DeleteItem(item);
-                var permission = _permissionService.GetPermissionRecordBySystemName(
-                    new TranslitMethods.Translitter().Translit(item.Name, TranslitMethods.TranslitType.Gost));
                 if (permission != null)
                     _permissionService.DeletePermissionRecord(permission);
             }

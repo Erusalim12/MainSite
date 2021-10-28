@@ -70,7 +70,7 @@ namespace Application.Services.News
 
         public int GetNewsCountByUser(string userId)
         {
-            return _newsRepository.GetAll.Where(c => c.LastChangeAuthorId == userId || c.AuthorId == userId).Distinct().Count();
+            return _newsRepository.GetAllQueryable.Where(c => c.LastChangeAuthorId == userId || c.AuthorId == userId).Distinct().Count();
         }
 
 

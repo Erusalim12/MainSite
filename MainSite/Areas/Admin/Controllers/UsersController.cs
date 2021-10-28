@@ -37,7 +37,7 @@ namespace MainSite.Areas.Admin.Controllers
         [HttpGet]
         public virtual IActionResult Index()
         {
-            return RedirectToAction("List");
+            return RedirectPermanent("List");
         }
         [Route("Admin/Users/List")]
         [HttpGet]
