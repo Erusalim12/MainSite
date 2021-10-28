@@ -511,8 +511,7 @@ namespace MainSite.Models
         public bool GetUserPermissionForCategory(string categoryId, ClaimsPrincipal User)
         {
             var category = _menuService.Get(categoryId);
-            var permission = _permissionService.GetPermissionRecordBySystemName(
-                new TranslitMethods.Translitter().Translit(category.Name, TranslitMethods.TranslitType.Gost).Replace(' ', '_'));
+            var permission = _permissionService.GetPermissionRecordBySystemName(category.ActionName);
             return _permissionService.Authorize(permission, User);
         }
 
