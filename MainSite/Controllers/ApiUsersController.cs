@@ -60,7 +60,7 @@ namespace MainSite.Controllers
         [HttpGet]
         public bool IsPermissionForCategory(string categoryId)
         {
-            bool result = true;
+            bool result = false;
             if (categoryId != null) result = _mainMode.GetUserPermissionForCategory(categoryId, HttpContext.User);
 
             return result;
