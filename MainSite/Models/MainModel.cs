@@ -94,9 +94,8 @@ namespace MainSite.Models
                 CategoryId = newsItem.Category,
                 Category = categoryName,
 
-                Author = newsItem.AutorFio,
-                LastChangeAutor = newsItem.LastChangeAuthor,
-
+                Author = newsItem.AuthorFio,
+                LastChangeAutor = newsItem.LastChangeAuthorFio,
                 CreatedDate = newsItem.CreatedDate,
                 LastChangeDate = newsItem.LastChangeDate,
                 IsMessage = newsItem.Files != null ? !newsItem.Files.Any() : true,
@@ -229,7 +228,7 @@ namespace MainSite.Models
             var imgRegex = new Regex("<img [^>]+>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             var base64Regex = new Regex("data:[^/]+/(?<ext>[a-z]+);base64,(?<base64>.+)", RegexOptions.IgnoreCase);
             byte i = 0;//постфикс наименования для изображения
-             var descMatch = item.Description == null ? String.Empty : item.Description;
+            var descMatch = item.Description == null ? String.Empty : item.Description;
 
             foreach (Match? match in imgRegex.Matches(descMatch))
             {
@@ -437,7 +436,7 @@ namespace MainSite.Models
                     _downloadService.DeleteDownload(file);
                 }
             }
-
+            
             DeleteImagesFromNews(item.Description);
             _newsService.DeleteNews(item);
         }
@@ -445,6 +444,7 @@ namespace MainSite.Models
 
         private void DeleteImagesFromNews(string newsDescription)
         {
+            if(newsDescription==null) return;
             var imgRegex = new Regex("<img [^>]+>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             foreach (Match? match in imgRegex.Matches(newsDescription))
