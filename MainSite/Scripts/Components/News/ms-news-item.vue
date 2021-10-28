@@ -5,7 +5,7 @@
         <div class="card_news-image"><img :src="this.news_item.urlIcon" alt="" /></div>
         <div class="card_news-main">
           <div v-if="isNews" class="card_news-main-header">
-            <span class="bold">{{ this.news_item.author }}</span>
+            <span class="bold">{{ this.news_item.lastChangeAutor }}</span>
             <span class="bold">{{ this.IsChangeNews }} запись в разделе</span>
             <router-link
               :id="news_item.id"
@@ -21,7 +21,7 @@
             <a>{{ this.news_item.header }}</a>
           </div>
           <div class="card_news-main-footer">
-            <b v-if="!isNews">{{ this.news_item.author }}</b> {{ RefactDate }}
+            <b v-if="!isNews">{{ this.news_item.lastChangeAutor }}</b> {{ RefactDate }}
           </div>
         </div>
 
@@ -109,7 +109,9 @@
     },
     computed: {
       IsChangeNews() {
-        return this.news_item.lastChangeAutor ? 'отредактировал' : 'разместил';
+        return this.news_item.lastChangeDate !== this.news_item.createdDate
+          ? 'отредактировал'
+          : 'разместил';
       },
       GetUnicIdBlock() {
         return 'new_' + this.news_item.id;
