@@ -60,11 +60,11 @@ namespace Application.Dal
             }
             if (isNewest == null)//по-умолчанию, сортировка от последнего к первому элементу
             {
-                data = data.OrderByDescending(d => d.CreatedDate);
+                data = data.OrderByDescending(d => d.LastChangeDate);//.ThenByDescending(d => d.CreatedDate);
             }
             else//но её можно задать явно
             {
-                data = isNewest.Value ? data.OrderByDescending(d => d.CreatedDate) : data.OrderBy(d => d.CreatedDate);
+                data = isNewest.Value ? data.OrderByDescending(d => d.LastChangeDate) : data.OrderBy(d => d.LastChangeDate);
             }
 
             if (authorId != null)

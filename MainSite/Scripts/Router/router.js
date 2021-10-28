@@ -1,5 +1,5 @@
-﻿import Vue from 'vue'
-import Router from 'vue-router'
+﻿import Vue from 'vue';
+import Router from 'vue-router';
 
 import msNews from '../Components/News/ms-news.vue';
 import msNewsByCategory from '../Components/News/ms-news-category';
@@ -15,66 +15,73 @@ import msChatAdmin from '../Components/FeedBack/ms-chat-admin.vue';
 Vue.use(Router);
 
 let router = new Router({
-    //mode:'history',
-    routes: [
+  //mode:'history',
+  routes: [
+    {
+      path: '/',
+      name: 'main',
+      component: msNews,
+      children: [
         {
-            path: '/',
-            name:'main',
-            component: msNews,
-            children: [
-                {
-                    path: '/page=:page',
-                    name: 'news',
-                    component: msNews,
-                    props: true
-                }
-            ]
+          path: '/page=:page',
+          name: 'news',
+          component: msNews,
+          props: true,
+        },
+      ],
+    },
+    {
+      path: '/search/searchText=:searchText',
+      name: 'search',
+      component: msSearchNews,
+      props: true,
+    },
+    {
+      path: '/feedback',
+      component: msFeedBack,
+      name: 'feedback',
+      props: true,
+    },
+    {
+      path: '/adminChat/:questionId',
+      name: 'adminChat',
+      component: msChatAdmin,
+      props: false,
+    },
+    {
+      path: '/category',
+      name: 'category',
+      component: msCategory,
+      children: [
+        {
+          path: '/category/:categoryId',
+          name: 'categoryList',
+          component: msCategoryList,
+          props: true,
+          children: [
+            {
+              path: '/category/:categoryId/:subCategoryId',
+              component: msCategoryList,
+              props: true,
+            },
+          ],
         },
         {
-            path: '/search/searchText=:searchText',
-            name: 'search',
-            component: msSearchNews,
-            props: true
+          path: '/categoryDetails/:categoryId/page=:page',
+          name: 'categoryDetails',
+          component: msNewsByCategory,
+          props: true,
         },
         {
-            path: '/feedback',
-            component: msFeedBack,
-            name: 'feedback',
-            props: true
+          path: '/create/parentCategoryId=:parentCategoryId',
+          name: 'createCategory',
+          component: msCategoryItemCreate,
+          props: true,
         },
-        {
-            path: '/adminChat/:questionId',
-            name: 'adminChat',
-            component: msChatAdmin,
-            props: false
-        },
-        {
-            path: '/category',
-            name: 'category',
-            component: msCategory,
-            children: [
-                {
-                    path: '/categoryDetails/categoryId=:categoryId/page=:page',
-                    name: 'categoryDetails',
-                    component: msNewsByCategory,
-                    props: true
-                },
-                {
-                    path: 'category/create/parentCategoryId=:parentCategoryId',
-                    name: 'createCategory',
-                    component: msCategoryItemCreate,
-                    props: true
-                },
-                {
-                    path: '/category/categoryId=:categoryId',
-                    name: 'categoryList',
-                    component: msCategoryList,
-                    props: true
-                }
-            ],
-            props:true
-        },
-    ]
+      ],
+      props: true,
+    },
+  ],
 });
 
 export default router;

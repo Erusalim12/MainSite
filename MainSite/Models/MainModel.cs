@@ -93,7 +93,9 @@ namespace MainSite.Models
                 Description = string.IsNullOrWhiteSpace(newsItem.Description) ? "" : newsItem.Description,
                 CategoryId = newsItem.Category,
                 Category = categoryName,
-                Author = newsItem.AuthorFio,
+
+                Author = newsItem.AutorFio,
+                LastChangeAutor = newsItem.LastChangeAuthor,
 
                 CreatedDate = newsItem.CreatedDate,
                 LastChangeDate = newsItem.LastChangeDate,
@@ -117,8 +119,10 @@ namespace MainSite.Models
             var user = _usersService.GetUserBySystemName(author);
             entity.Header = model.Header;
             entity.LastChangeDate = DateTime.Now;
+
             entity.LastChangeAuthorFio = user.FullName;
             entity.LastChangeAuthorId = user.Id;
+
             entity.Description = model.Description;
             List<IFormFile> httpPostedFile = new List<IFormFile>();
             List<IFormFile> httpCurrentFile = new List<IFormFile>();
@@ -151,13 +155,14 @@ namespace MainSite.Models
 
         public void CreateNewNewsItem(NewsItemViewModel newsItemViewModel, ClaimsPrincipal author)
         {
+
             var createDate = DateTime.Now;
             var user = _usersService.GetUserBySystemName(author);
+
             var entity = new NewsItem
             {
                 Id = Guid.NewGuid().ToString(),
                 Header = newsItemViewModel.Header,
-
                 AuthorFio = user.FullName,
                 AuthorId = user.Id,
                 LastChangeAuthorFio = user.FullName,
@@ -224,7 +229,9 @@ namespace MainSite.Models
             var imgRegex = new Regex("<img [^>]+>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             var base64Regex = new Regex("data:[^/]+/(?<ext>[a-z]+);base64,(?<base64>.+)", RegexOptions.IgnoreCase);
             byte i = 0;//постфикс наименования для изображения
-            foreach (Match? match in imgRegex.Matches(item.Description))
+             var descMatch = item.Description == null ? String.Empty : item.Description;
+
+            foreach (Match? match in imgRegex.Matches(descMatch))
             {
 
                 var doc = new XmlDocument();

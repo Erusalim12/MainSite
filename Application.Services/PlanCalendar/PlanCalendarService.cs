@@ -1,4 +1,5 @@
 ﻿using Application.Dal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,9 +35,44 @@ namespace Application.Services.PlanCalendar
             return _planCalendarRepository.Get(itemId);        
         }
 
-        public Dal.Domain.PlanCalendar.PlanCalendar GetLastPlanCalendar()
+        public IEnumerable<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForWeek()
         {
-            return _planCalendarRepository.GetLast();
+
+            return _planCalendarRepository.GetLast()?.Events.Where(a => IncludeDayInWeek(int.TryParse(a.Day, out int day), day));
+        }
+
+        private bool IncludeDayInWeek(bool isNumber, int day)
+        {
+            if(!isNumber) return false;
+
+            var nowDate = DateTime.Now;
+
+            //var startDate = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day);
+
+            int daysOffsetStart = nowDate.DayOfWeek - DayOfWeek.Monday;
+            int daysOffsetEnd = DayOfWeek.Saturday - nowDate.DayOfWeek;
+
+            var endDate = nowDate.AddDays(daysOffsetEnd);
+            var startDate = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day - daysOffsetStart);
+
+            var dateToCheck = new DateTime(nowDate.Year, nowDate.Month, day);
+
+            if (dateToCheck >= startDate && dateToCheck <= endDate)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsCorrectlyTime(string timeValue)
+        {
+            if(!String.IsNullOrWhiteSpace(timeValue))
+            {
+                return int.TryParse(timeValue[0].ToString(), out int num);
+            }
+
+            return false;
         }
     }
 }

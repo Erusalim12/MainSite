@@ -72,7 +72,7 @@
   font-style: normal; }
 
 html {
-  font-family: "HelveticaNeueCyr" !important;
+  font-family: 'HelveticaNeueCyr' !important;
   overflow-x: hidden;
   position: relative;
   min-height: 100%; }
@@ -104,7 +104,7 @@ html {
     html body header {
       color: #9e9e9e;
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-      transition: box-shadow .25s;
+      transition: box-shadow 0.25s;
       background-color: #ffffff; }
       html body header #openMenu {
         margin-left: auto; }
@@ -115,7 +115,8 @@ html {
         html body header .nav-header a {
           color: #9e9e9e; }
     html body footer {
-      position: absolute;
+      position: fixed;
+      z-index: 50;
       bottom: 0;
       width: 100%;
       white-space: nowrap; }
@@ -169,6 +170,12 @@ html {
 
 .menu {
   margin: 0px; }
+  .menu-link {
+    position: absolute;
+    left: 102%;
+    top: 0; }
+    .menu-link a {
+      padding: 0 !important; }
   .menu li ul {
     padding-left: 5px;
     opacity: 0;
@@ -193,13 +200,40 @@ html {
     min-height: 50px;
     cursor: pointer;
     padding-left: 10px; }
-    .menu a > img, .menu a object {
+    .menu a > img,
+    .menu a object {
       height: 40px;
       width: 40px; }
     .menu a > .newsBLock {
       width: 30px;
       height: 30px;
       padding: 0px; }
+    .menu a {
+      position: relative;
+      z-index: 1; }
+    .menu a:hover {
+      color: #9e9e9e;
+      /*&:before {
+      transform: translateX(0);
+      transition: 0.4s;
+    }*/ }
+      .menu a:hover:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: 0;
+        height: 100%;
+        border-radius: 0px 8px 8px 0px;
+        background-color: rgba(0, 0, 0, 0.05);
+        /*right: -50px;
+      bottom: 0;
+      top: 0;
+      border-right: 40px solid transparent;
+      border-bottom: 70px solid $blockColor;
+      transform: translateX(-100%);
+      */
+        z-index: -1; }
     .menu a.active {
       padding-left: 5px;
       border-left: 5px solid #64b5f6; }
@@ -207,26 +241,6 @@ html {
         border-radius: 0px 8px 8px 0px; }
     .menu a:hover {
       border-radius: 8px 8px 8px 8px; }
-      .menu a:hover {
-        position: relative;
-        overflow: hidden;
-        z-index: 1; }
-      .menu a:hover:before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: -50px;
-        bottom: 0;
-        left: 0;
-        border-right: 40px solid transparent;
-        border-bottom: 70px solid rgba(0, 0, 0, 0.05);
-        transform: translateX(-100%);
-        z-index: -1; }
-      .menu a:hover:hover {
-        color: #9e9e9e; }
-        .menu a:hover:hover:before {
-          transform: translateX(0);
-          transition: 0.4s; }
     .menu a > div {
       padding-left: 10px;
       color: #9e9e9e; }
@@ -450,7 +464,7 @@ html {
     border-radius: 8px !important;
     background-color: #ffffff;
     animation-fill-mode: forwards;
-    height: auto;
+    height: auto !important;
     color: #9e9e9e;
     border: 1px solid #9e9e9e;
     line-height: 1.5em;
@@ -466,7 +480,7 @@ html {
     position: relative;
     border-radius: 8px !important;
     line-height: 2.3rem !important;
-    height: 2.5rem !important;
+    height: auto !important;
     background-color: #ffffff;
     animation-fill-mode: forwards;
     color: #9e9e9e;
@@ -474,7 +488,7 @@ html {
 
 @-moz-document url-prefix() {
   .btn-defaultMainSite {
-    height: 2.5rem !important;
+    /*height: 2.5rem !important;*/
     line-height: 2.3rem !important; } }
     .btn-defaultMainSite:active, .btn-defaultMainSite:focus {
       background-color: white; }

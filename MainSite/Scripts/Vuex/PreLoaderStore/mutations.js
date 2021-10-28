@@ -1,5 +1,5 @@
 ﻿export default {
-    CHANGE_STATE_ACTIVE(state) {
-        state.isActive = !state.isActive; 
-    }
-}
+  CHANGE_STATE_ACTIVE(state, value = !state.isActive) {
+    state.isActive = value;
+  },
+};
