@@ -21,13 +21,12 @@ namespace MainSite.Areas.Admin.Controllers
         }
 
         // GET: SettingsController
-        [Route("Admin/Settings")]
         [HttpGet]
         public ActionResult Index()
         {
 #if RELEASE
-   if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
-                return AccessDeniedView(); 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
+                return AccessDeniedView();
 #endif
 
 
@@ -35,26 +34,24 @@ namespace MainSite.Areas.Admin.Controllers
             return View(settings);
         }
 
-        [Route("Admin/Settings/Create")]
         [HttpGet]
         public ActionResult Create()
         {
 #if RELEASE
-   if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
-                return AccessDeniedView(); 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
+                return AccessDeniedView();
 #endif
 
             return View();
         }
 
         // POST: SettingsController/Create
-        [HttpPost("Admin/Settings/Create")]
         [ValidateAntiForgeryToken]
         public IActionResult Create([FromForm] Setting setting)
         {
 #if RELEASE
-   if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
-                return AccessDeniedView(); 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
+                return AccessDeniedView();
 #endif
             if (ModelState.IsValid)
             {
@@ -64,23 +61,21 @@ namespace MainSite.Areas.Admin.Controllers
             return View(setting);
 
         }
-
-        [HttpGet("Admin/Settings/Update")]
+        [HttpGet]
         public IActionResult Update(string id)
         {
 #if RELEASE
-   if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
-                return AccessDeniedView(); 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
+                return AccessDeniedView();
 #endif
             return View(_settingsService.GetSettingById(id));
         }
-
-        [HttpPost("Admin/Settings/Update")]
+        [HttpPost]
         public IActionResult Update(Setting setting)
         {
 #if RELEASE
-   if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
-                return AccessDeniedView(); 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
+                return AccessDeniedView();
 #endif
             var entity = _settingsService.GetSettingById(setting.Id);
             if (entity == null) ModelState.AddModelError("", "Запись не найдена");
@@ -94,7 +89,6 @@ namespace MainSite.Areas.Admin.Controllers
             return View(setting);
         }
 
-        [Route("Admin/Settings/CreateIndex")]
         [HttpGet]
         public IActionResult CreateIndex()
         {
@@ -105,12 +99,11 @@ namespace MainSite.Areas.Admin.Controllers
 
         // GET: SettingsController/Delete/5
         [HttpGet]
-        [Route("Admin/Settings/Delete")]
         public ActionResult Delete(string id)
         {
 #if RELEASE
-   if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
-                return AccessDeniedView(); 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings, User))
+                return AccessDeniedView();
 #endif
             _settingsService.DeleteSetting(id);
             return RedirectToAction("Index");
@@ -118,7 +111,7 @@ namespace MainSite.Areas.Admin.Controllers
 
         [HttpGet]
         [Route("Admin/GetSettings")]
-        public string GetAllSettings()
+        public string GetSettings()
         {
             var model = _settingsService.GetAllSettings();
 

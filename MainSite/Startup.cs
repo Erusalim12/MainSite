@@ -138,11 +138,17 @@ namespace MainSite
             app.UseRouting();
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                name: "Admin",
+             template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            );
+
+
 
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}",
-                    defaults: new { controller = "Home", action = "Index" });
+                     name: "default",
+                     template: "{controller}/{action}",
+                     defaults: new { controller = "Home", action = "Index" });
             });
 
             app.UseSignalR(route =>
