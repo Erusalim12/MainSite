@@ -89,7 +89,7 @@
       },
     },
     async created() {
-      if (this.planCalendar.length == 0) await this.GET_PLAN_CALENDAR();
+      if (!this.planCalendar.length) await this.GET_PLAN_CALENDAR();
       this.selectedDay = this.planCalendar.findIndex(
         (el) => Number(el.day) === this.dateNow.getDate(),
       );

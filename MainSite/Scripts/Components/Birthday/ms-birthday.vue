@@ -1,9 +1,9 @@
 ﻿<template>
   <div class="card_birthday">
-    <div v-if="users && users.length" class="card-panel">
+    <div v-if="birthdays && birthdays.length" class="card-panel">
       <div class="card_birthday-title bold">C днём рождения!</div>
       <div class="card_birthday-content">
-        <div class="card_birthday-content_description" v-for="item in users" :key="item.Id">
+        <div class="card_birthday-content_description" v-for="item in birthdays" :key="item.Id">
           <span class="fio">{{ item.FIO }}</span>
           <span class="subdivision">{{ getSubDivision(item) }}</span>
         </div>
@@ -13,23 +13,15 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { mapState } from 'vuex';
+  import { mapState, mapActions } from 'vuex';
 
   export default {
-    data() {
-      return {
-        users: [],
-      };
+    name: 'ms-birthday',
+    computed: {
+      ...mapState('user', ['birthdays']),
     },
     methods: {
-      setUsers() {
-        axios('/api/ApiUsers/GetBirthdayUsers', {
-          method: 'GET',
-        }).then((responce) => {
-          this.users = responce.data;
-        });
-      },
+      ...mapActions('user', ['GET_BIRTHDAYS']),
       getSubDivision(subDivision) {
         if (typeof subDivision == 'undefined' || subDivision == null) return 'Подразделение';
 
@@ -39,7 +31,7 @@
       },
     },
     mounted() {
-      this.setUsers();
+      if (!this.birthdays.length) this.GET_BIRTHDAYS();
     },
   };
 </script>
@@ -49,20 +41,6 @@
   .card_birthday {
     .card-panel {
       margin-top: 0px;
-    }
-
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 0;
-    transform: translateX(110%);
-    width: 25%;
-
-    @media (max-width: 900px) {
-      margin: 0.5rem 0 1rem 0;
-      transform: translateX(0px);
-      position: inherit;
-      width: 100%;
     }
 
     &-title {

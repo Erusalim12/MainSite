@@ -25,21 +25,9 @@
                 <input v-model="searchText" class="inputTextMainSite" type="text" />
                 <button class="btn btn-default" @click="searchNews">Найти</button>
               </div>
-              <a
-                data-target="dropdown1"
-                class="dropdown-trigger valign-wrapper"
-                style="justify-content: flex-end"
-              >
+              <div class="valign-wrapper" style="justify-content: flex-end">
                 <span class="headerMenu-user__info">{{ currentUser.Name }}</span>
-                <!--<img src="/images/layout_icons/userLogout.svg" alt="" />-->
-              </a>
-              <ul class="menu menu-link">
-                <li style="padding: 0" v-html="getLinkInfo"></li>
-              </ul>
-              <!--<ul id='dropdown1' class='dropdown-content headerMenu-user__settings'>
-								<li><a href="#!"><i class="material-icons">home</i>Личный кабинет</a></li>
-								<li><a href="#!"><i class="material-icons">cloud</i>Управление сервисами</a></li>
-							</ul>-->
+              </div>
             </div>
           </div>
         </div>
@@ -75,25 +63,6 @@
       ...mapState('settings', ['settings']),
       ...mapState('user', ['currentUser']),
       ...mapState('preLoader', ['isActive']),
-      ...mapState('settings', ['settings']),
-      getLinkName() {
-        return `<div class="bold">${this.searchSettingByName(
-          'Link.Name',
-          'Ссылка на ресурс',
-        )}</div>`;
-      },
-      getLinkUrl() {
-        return this.searchSettingByName('Link.Url', '#');
-      },
-      getLinkIcon() {
-        let icon = this.searchSettingByName('Link.Icon', null);
-        if (icon) return `<img src="${icon}" />`;
-
-        return `<span class='rectangle' style='background-color: white'></span>`;
-      },
-      getLinkInfo() {
-        return `<a href="${this.getLinkUrl}">${this.getLinkIcon + this.getLinkName}</a>`;
-      },
       GetApplicationName() {
         return this.searchSettingByName('Application.Name', 'WebSite');
       },

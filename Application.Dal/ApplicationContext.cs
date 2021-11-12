@@ -2,6 +2,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Application.Dal.Domain.Birthday;
 using Application.Dal.Domain.Counters;
+using Application.Dal.Domain.ExternalLinks;
 using Application.Dal.Domain.FeedBack;
 using Application.Dal.Domain.Files;
 using Application.Dal.Domain.Menu;
@@ -18,6 +19,7 @@ namespace Application.Dal
     {
          
         public DbSet<MenuItem> MenuItems { get; set; }
+        public DbSet<ExternalLink> ExternalLinks { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<FileBinary> FileBinary { get; set; }
