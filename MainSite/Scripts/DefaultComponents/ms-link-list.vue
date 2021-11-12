@@ -5,6 +5,7 @@
         <img v-if="item.pathIcon" width="40" height="40" :src="item.pathIcon" />
         {{ item.name }}
       </a>
+      <i class="material-icons">send</i>
     </li>
   </ul>
 </template>
@@ -32,6 +33,16 @@
     overflow: hidden;
     li {
       border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      i {
+        margin-right: 5px;
+        color: #039be5;
+      }
 
       &:hover {
         background: rgba(0, 0, 0, 0.04);
@@ -43,13 +54,13 @@
     }
     a {
       display: flex;
-      flex-wrap: wrap;
       width: 100%;
       align-items: center;
       font-size: 16px;
       font-weight: 600;
       color: #9e9e9e;
       padding: 10px 15px 10px 15px;
+      min-height: 60px;
 
       img {
         margin-right: 10px;
