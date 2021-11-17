@@ -12,9 +12,9 @@ namespace Application.Dal.Repositories
         public FeedBackRepository(ApplicationContext context) : base(context)
         {
         }
-        public override Question Get(string id)
+        public Question GetQuestion(string id, bool isAdmin = false)
         {
-            return _context.Questions.Include(s => s.Answers.OrderByDescending(w => w.Date)).FirstOrDefault(c => c.Id == id);
+            return _context.Questions.Include(s => s.Answers.OrderByDescending(w => w.Date)).FirstOrDefault(c => c.Id == id && (c.EndDate == null || isAdmin));
         }
 
         public override IEnumerable<Question> GetAll

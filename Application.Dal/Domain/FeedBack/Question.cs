@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Application.Dal.Domain.FeedBack
 {
@@ -11,5 +12,7 @@ namespace Application.Dal.Domain.FeedBack
         public string Title { get; set; }
         public ICollection<Answer> Answers { get; set; }
         public string CustomerId { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

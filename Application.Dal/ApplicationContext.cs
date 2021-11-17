@@ -52,7 +52,7 @@ namespace Application.Dal
         public ApplicationContext(DbContextOptions options)
             : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
             //Database.EnsureCreated();   // создаем базу данных при первом обращении
         }
 

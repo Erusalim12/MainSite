@@ -6,32 +6,36 @@
 </template>
 
 <script>
-  import msBirthday from '../Components/Birthday/ms-birthday.vue';
-  import msLinkList from './ms-link-list.vue';
+import msBirthday from "../Components/Birthday/ms-birthday.vue";
+import msLinkList from "./ms-link-list.vue";
 
-  export default {
-    name: 'ms-right-info-panel',
-    components: {
-      msBirthday,
-      msLinkList,
-    },
-  };
+export default {
+  name: "ms-right-info-panel",
+  components: {
+    msBirthday,
+    msLinkList,
+  },
+};
 </script>
 
 <style lang="scss">
-  .ms-right-panel {
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 0;
-    transform: translateX(110%);
-    width: 25%;
+.ms-right-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0;
+  transform: translateX(110%);
+  width: 25%;
 
-    @media (max-width: 900px) {
-      margin: 0.5rem 0 1rem 0;
-      transform: translateX(0px);
-      position: inherit;
-      width: 100%;
-    }
+  @media (max-width: 975px) {
+    margin: 0.5rem 0 1rem 0;
+    transform: translateX(0px);
+    position: inherit;
+    width: 100%;
   }
+
+  @media only screen and (min-width: 883px) and (max-width: 1700px) {
+    width: 34%;
+  }
+}
 </style>
