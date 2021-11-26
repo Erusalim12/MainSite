@@ -42,10 +42,15 @@
               </div>
               <div class="valign-wrapper" style="justify-content: flex-end">
                 <span class="headerMenu-user__info">
-                  <div v-if="messageInfo">
+                  <router-link
+                    v-if="messageInfo"
+                    style="color: #b12344"
+                    title="Имеются непрочитанные сообщения"
+                    to="/feedback"
+                  >
                     <i class="material-icons">message</i>
                     {{ messageInfo }}
-                  </div>
+                  </router-link>
                   {{ currentUser.Name }}
                 </span>
               </div>
@@ -78,13 +83,13 @@ export default {
         true: { display: "block" },
         false: { display: "none" },
       },
-      messageInfo: "",
     };
   },
   computed: {
     ...mapState("settings", ["settings"]),
     ...mapState("user", ["currentUser"]),
     ...mapState("preLoader", ["isActive"]),
+    ...mapState("feedBack", ["messageInfo"]),
     GetApplicationName() {
       return this.searchSettingByName("Application.Name", "WebSite");
     },
@@ -98,6 +103,7 @@ export default {
   methods: {
     ...mapActions("settings", ["GET_SETTINGS"]),
     ...mapActions("user", ["GET_INFO_BY_CURRENT_USER"]),
+    ...mapActions("feedBack", ["GET_MESSAGE_INFO"]),
     ...mapMutations("menu", ["SET_OR_UPDATE_ACTIVE_CATEGORY"]),
     searchNews() {
       if (this.searchText !== this.$route.params.searchText) {
@@ -132,9 +138,7 @@ export default {
   },
   created() {
     this.$questionHub.connetionAdminOpened();
-    this.$http("/api/Question/newMessage").then((res) => {
-      this.messageInfo = res.data ? res.data.messageInfo : 0;
-    });
+    this.GET_MESSAGE_INFO();
   },
   beforeDestroy() {
     this.$questionHub.connetionAdminClosed();
@@ -195,7 +199,7 @@ export default {
     &__info {
       display: flex;
       font-size: 14px;
-      div {
+      a {
         padding-right: 5px;
         display: flex;
         align-items: baseline;

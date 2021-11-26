@@ -18,6 +18,12 @@ namespace Application.Services.FeedBack.Answers
             if (answer != null) _repository.Add(answer);
         }
 
+        public void Update(Answer answer) 
+        {
+            if(answer != null) _repository.Update(answer);
+
+        }
+
         public IEnumerable<Answer> GetAll()
         {
             throw new NotImplementedException();

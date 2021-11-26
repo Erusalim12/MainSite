@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 import msQuestionPreview from "../FeedBack/ms-question-preview.vue";
 
 export default {
@@ -60,7 +62,7 @@ export default {
     },
   },
   created() {
-    this.$http.get("/api/Question/question").then((res) => {
+    axios.get("/api/Question/question").then((res) => {
       let questions = res.data;
 
       this.questionUsers = this.generateQuestionUsers(questions);

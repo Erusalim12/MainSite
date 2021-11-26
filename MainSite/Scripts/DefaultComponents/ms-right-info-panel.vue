@@ -25,16 +25,15 @@ export default {
   top: 0;
   margin: 0;
   transform: translateX(110%);
-  width: 25%;
 
-  @media (max-width: 975px) {
+  @media (max-width: 992px) {
     margin: 0.5rem 0 1rem 0;
     transform: translateX(0px);
     position: inherit;
     width: 100%;
   }
 
-  @media only screen and (min-width: 883px) and (max-width: 1700px) {
+  @media only screen and (min-width: 993px) and (max-width: 1700px) {
     width: 34%;
   }
 }

@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 import msChat from "../FeedBack/ms-chat.vue";
 import msSimpleModal from "../../DefaultComponents/Modal/templates/ms-simple-modal";
 
@@ -52,7 +54,7 @@ export default {
         onClose: (data) => {
           if (data.ended) return false;
 
-          this.$http({
+          axios({
             method: "post",
             url: "/api/question/deleteQuestion",
             params: { questionId: this.$route.params.questionId },

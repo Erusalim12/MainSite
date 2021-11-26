@@ -67,11 +67,11 @@ namespace MainSite.Controllers
 
             if (isAdmin)
             {
-                var questionForAdmin = _questionService.GetAll().FirstOrDefault(a => a.EndDate == null && !a.Answers.OrderByDescending(s => s.Date).FirstOrDefault().IsAdmin);
+                var questionForAdmin = _questionService.GetAll().FirstOrDefault(a => a.EndDate == null && a.Answers.OrderByDescending(s => s.Date).FirstOrDefault(w => !w.IsAdmin && !w.IsVisit) != null);
 
                 if (questionForAdmin != null)
                 {
-                    return new JsonResult(new { MessageInfo = '+' });
+                    return new JsonResult(new { result = '+' });
                 }
             }
             else
@@ -86,13 +86,30 @@ namespace MainSite.Controllers
                     var lastAnswerIndex = answers.Select((el, index) => new { Index = index, Element = el }).FirstOrDefault(e => !e.Element.IsAdmin)?.Index;
                     if (lastAnswerIndex != null)
                     {
-                        var listAdminMessagesCount = answers.Take((int)lastAnswerIndex).Count();
+                        var listAdminMessagesCount = answers.Take((int)lastAnswerIndex).Count(w => !w.IsVisit);
 
-                        return new JsonResult(new { MessageInfo = listAdminMessagesCount });
+                        return new JsonResult(new { result = listAdminMessagesCount });
                     }
                 }
             }
             
+            return new JsonResult(null);
+        }
+
+        [HttpGet("visitChat")]
+        public IActionResult VisitedQuestion(string questionId)
+        {
+            var curUserName = _userService.GetUserBySystemName(User).SystemName;
+            var answers = _questionService.GetAll().SingleOrDefault(t => t.Id == questionId)?.Answers.Where(w => !w.IsVisit && w.SenderName != curUserName);
+            if (answers != null)
+            {
+                foreach (var answer in answers)
+                {
+                    answer.IsVisit = true;
+                    _answerService.Update(answer);
+                }
+            }
+
             return new JsonResult(null);
         }
 

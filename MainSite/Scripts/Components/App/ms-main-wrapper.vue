@@ -26,7 +26,7 @@ export default {
   width: 70%;
 
   @media only screen and (min-width: 883px) and (max-width: 1700px) {
-    margin-left: 10%;
+    margin-left: 6%;
   }
 }
 </style>
