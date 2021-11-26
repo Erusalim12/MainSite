@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Application.Dal.Domain.ExternalLinks.ExternalLink>
+
+@{
+    Layout = "_Layout";
+}
+<div class="col s12 m12 card-panel">
+    <h5>Внешние ресурсы</h5>
+
+    <p>
+        <a href="@Url.Action("Create")">Добавить</a>
+        @Html.ActionLink("Назад", "Index", "Home")
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Иконка
+                </th>
+                <th>
+                    Наименование
+                </th>
+                <th>
+                    Url
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @if (String.IsNullOrWhiteSpace(item.PathIcon))
+                    {
+                        <span>Иконка отсутствует</span>
+                    }
+                    else
+                    {
+                        <img src="@item.PathIcon" width="50" height="50" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td>
+                    @Html.ActionLink("Обновить", "Create", "ExternalLinks", new { item.Id })
+                    @Html.ActionLink("Удалить", "Delete", "ExternalLinks", new { item.Id })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

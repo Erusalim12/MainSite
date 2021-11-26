@@ -34,14 +34,18 @@ namespace Application.Services.FeedBack.Questions
             return _repository.GetAll;
         }
 
-        public Question GetQuestionById(string id)
+        public Question GetQuestionById(string id, bool isAdmin)
         {
-            return _repository.Get(id);
+            return _repository.GetQuestion(id, isAdmin);
         }
 
         public void Delete(string id)
         {
-            _repository.Delete(id);
+            var question = _repository.Get(id);
+            question.EndDate = DateTime.Today;
+
+            _repository.Update(question);
+            //_repository.Delete(id);
         }
     }
 }

@@ -1,3 +1,4 @@
 ﻿export default {
-    currentUser: {}
-}
+  currentUser: {},
+  birthdays: [],
+};

@@ -17,5 +17,7 @@ namespace Application.Dal.Domain.FeedBack
         public DateTime Date { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        public bool IsVisit { get; set; } = false;
     }
 }

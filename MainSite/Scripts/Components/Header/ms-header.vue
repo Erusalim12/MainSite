@@ -4,11 +4,20 @@
       <div class="container">
         <div class="nav-wrapper">
           <div class="valign-wrapper">
-            <a style="cursor: pointer" @click="routerPushMainView" class="valign-wrapper">
+            <a
+              style="cursor: pointer"
+              @click="routerPushMainView"
+              class="valign-wrapper"
+            >
               <img :src="GetApplicationIcon" width="50" height="50" />
               <span
                 class="bold"
-                style="padding-left: 10px; line-height: 15px; margin-right: 13px; font-size: 12px"
+                style="
+                  padding-left: 10px;
+                  line-height: 15px;
+                  margin-right: 13px;
+                  font-size: 12px;
+                "
                 v-html="GetApplicationName"
               ></span>
             </a>
@@ -22,24 +31,29 @@
             <div class="hide-on-med-and-down col m12 s12 l9 headerMenu">
               <div class="col l6 headerMenu-search">
                 <span class="bold">Поиск:</span>
-                <input v-model="searchText" class="inputTextMainSite" type="text" />
-                <button class="btn btn-default" @click="searchNews">Найти</button>
+                <input
+                  v-model="searchText"
+                  class="inputTextMainSite"
+                  type="text"
+                />
+                <button class="btn btn-default" @click="searchNews">
+                  Найти
+                </button>
               </div>
-              <a
-                data-target="dropdown1"
-                class="dropdown-trigger valign-wrapper"
-                style="justify-content: flex-end"
-              >
-                <span class="headerMenu-user__info">{{ currentUser.Name }}</span>
-                <!--<img src="/images/layout_icons/userLogout.svg" alt="" />-->
-              </a>
-              <ul class="menu menu-link">
-                <li style="padding: 0" v-html="getLinkInfo"></li>
-              </ul>
-              <!--<ul id='dropdown1' class='dropdown-content headerMenu-user__settings'>
-								<li><a href="#!"><i class="material-icons">home</i>Личный кабинет</a></li>
-								<li><a href="#!"><i class="material-icons">cloud</i>Управление сервисами</a></li>
-							</ul>-->
+              <div class="valign-wrapper" style="justify-content: flex-end">
+                <span class="headerMenu-user__info">
+                  <router-link
+                    v-if="messageInfo"
+                    style="color: #b12344"
+                    title="Имеются непрочитанные сообщения"
+                    to="/feedback"
+                  >
+                    <i class="material-icons">message</i>
+                    {{ messageInfo }}
+                  </router-link>
+                  {{ currentUser.Name }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -57,145 +71,140 @@
 </template>
 
 <script>
-  import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from "vuex";
 
-  export default {
-    name: 'ms-header',
-    data() {
-      return {
-        userName: 'Незарегистрированный пользователь',
-        searchText: '',
-        isShow: {
-          true: { display: 'block' },
-          false: { display: 'none' },
-        },
-      };
+export default {
+  name: "ms-header",
+  data() {
+    return {
+      userName: "Незарегистрированный пользователь",
+      searchText: "",
+      isShow: {
+        true: { display: "block" },
+        false: { display: "none" },
+      },
+    };
+  },
+  computed: {
+    ...mapState("settings", ["settings"]),
+    ...mapState("user", ["currentUser"]),
+    ...mapState("preLoader", ["isActive"]),
+    ...mapState("feedBack", ["messageInfo"]),
+    GetApplicationName() {
+      return this.searchSettingByName("Application.Name", "WebSite");
     },
-    computed: {
-      ...mapState('settings', ['settings']),
-      ...mapState('user', ['currentUser']),
-      ...mapState('preLoader', ['isActive']),
-      ...mapState('settings', ['settings']),
-      getLinkName() {
-        return `<div class="bold">${this.searchSettingByName(
-          'Link.Name',
-          'Ссылка на ресурс',
-        )}</div>`;
-      },
-      getLinkUrl() {
-        return this.searchSettingByName('Link.Url', '#');
-      },
-      getLinkIcon() {
-        let icon = this.searchSettingByName('Link.Icon', null);
-        if (icon) return `<img src="${icon}" />`;
-
-        return `<span class='rectangle' style='background-color: white'></span>`;
-      },
-      getLinkInfo() {
-        return `<a href="${this.getLinkUrl}">${this.getLinkIcon + this.getLinkName}</a>`;
-      },
-      GetApplicationName() {
-        return this.searchSettingByName('Application.Name', 'WebSite');
-      },
-      GetApplicationIcon() {
-        return this.searchSettingByName('Application.Icon', '/images/layout_icons/header.png');
-      },
+    GetApplicationIcon() {
+      return this.searchSettingByName(
+        "Application.Icon",
+        "/images/layout_icons/header.png"
+      );
     },
-    methods: {
-      ...mapActions('settings', ['GET_SETTINGS']),
-      ...mapActions('user', ['GET_INFO_BY_CURRENT_USER']),
-      ...mapMutations('menu', ['SET_OR_UPDATE_ACTIVE_CATEGORY']),
-      searchNews() {
-        if (this.searchText !== this.$route.params.searchText) {
-          this.$router.push({ name: 'search', params: { searchText: this.searchText } });
-        }
-        this.searchText = '';
-      },
-      searchSettingByName(name, defaultName) {
-        let item = this.settings.find(function (item) {
-          if (item.Name == name && item.Value != '') {
-            return item;
-          }
+  },
+  methods: {
+    ...mapActions("settings", ["GET_SETTINGS"]),
+    ...mapActions("user", ["GET_INFO_BY_CURRENT_USER"]),
+    ...mapActions("feedBack", ["GET_MESSAGE_INFO"]),
+    ...mapMutations("menu", ["SET_OR_UPDATE_ACTIVE_CATEGORY"]),
+    searchNews() {
+      if (this.searchText !== this.$route.params.searchText) {
+        this.$router.push({
+          name: "search",
+          params: { searchText: this.searchText },
         });
-
-        return typeof item == 'undefined' || item == null ? defaultName : item.Value;
-      },
-      routerPushMainView() {
-        if (this.$route.name != 'main') {
-          this.SET_OR_UPDATE_ACTIVE_CATEGORY(null);
-          this.$router.push('/');
+      }
+      this.searchText = "";
+    },
+    searchSettingByName(name, defaultName) {
+      let item = this.settings.find(function (item) {
+        if (item.Name == name && item.Value != "") {
+          return item;
         }
-      },
+      });
+
+      return typeof item == "undefined" || item == null
+        ? defaultName
+        : item.Value;
     },
-    mounted() {
-      this.GET_SETTINGS();
-      this.GET_INFO_BY_CURRENT_USER();
+    routerPushMainView() {
+      if (this.$route.name != "main") {
+        this.SET_OR_UPDATE_ACTIVE_CATEGORY(null);
+        this.$router.push("/");
+      }
     },
-    created() {
-      this.$questionHub.connetionAdminOpened();
-    },
-    beforeDestroy() {
-      this.$questionHub.connetionAdminClosed();
-    },
-  };
+  },
+  mounted() {
+    this.GET_SETTINGS();
+    this.GET_INFO_BY_CURRENT_USER();
+  },
+  created() {
+    this.$questionHub.connetionAdminOpened();
+    this.GET_MESSAGE_INFO();
+  },
+  beforeDestroy() {
+    this.$questionHub.connetionAdminClosed();
+  },
+};
 </script>
 
 <style lang="scss">
-  .isActive {
-    display: block;
+.isActive {
+  display: block;
+}
+
+.secondMenu {
+  display: flex;
+  padding-left: 0px;
+  padding-right: 0px;
+
+  &:last-child {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+}
+
+.headerMenu {
+  padding: 0 !important;
+
+  &-search {
+    display: flex;
+    align-items: center;
+    padding-left: 0px !important;
+    margin-left: 0;
+
+    & > span {
+      margin-right: 5px;
+    }
+
+    & > .inputTextMainSite {
+      margin-right: 5px;
+      max-width: calc(100% - 150px);
+      border-radius: 8px 0px 0px 8px !important;
+      border-right: none !important;
+    }
+
+    & > .btn-default {
+      border-radius: 0px 8px 8px 0px !important;
+    }
   }
 
-  .secondMenu {
-    display: flex;
-    padding-left: 0px;
-    padding-right: 0px;
-
+  & > li {
     &:last-child {
-      display: flex;
-      align-items: center;
       margin-left: auto;
     }
   }
 
-  .headerMenu {
-    padding: 0 !important;
-
-    &-search {
+  &-user {
+    padding: 0;
+    &__info {
       display: flex;
-      align-items: center;
-      padding-left: 0px !important;
-      margin-left: 0;
-
-      & > span {
-        margin-right: 5px;
-      }
-
-      & > .inputTextMainSite {
-        margin-right: 5px;
-        max-width: calc(100% - 150px);
-        border-radius: 8px 0px 0px 8px !important;
-        border-right: none !important;
-      }
-
-      & > .btn-default {
-        border-radius: 0px 8px 8px 0px !important;
-      }
-    }
-
-    & > li {
-      &:last-child {
-        margin-left: auto;
-      }
-    }
-
-    &-user {
-      padding: 0;
-      &__info {
-        font-size: 14px;
-      }
-
-      &__settings {
+      font-size: 14px;
+      a {
+        padding-right: 5px;
+        display: flex;
+        align-items: baseline;
       }
     }
   }
+}
 </style>

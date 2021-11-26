@@ -1,0 +1,44 @@
+﻿@model Application.Dal.Domain.ExternalLinks.ExternalLink
+@{
+    Layout = "_Layout";
+}
+
+<div class="col s12 m12 card-panel">
+    <h5 class="header">Добавление/Редактирование Внешнего ресура</h5>
+    <div>
+        @using (Html.BeginForm(FormMethod.Post, true, new { @enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(true)
+
+            @Html.HiddenFor(model => model.Id)
+
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class=""></div>
+            <div class="input-field col s12 m12">
+                @Html.TextBoxFor(model => model.Name, new { @class = "validate", type = "text" })
+                <label asp-for="Name" for="Name">Наименование</label>
+            </div>
+
+            <div class="input-field col s12 m12">
+                @Html.TextBoxFor(model => model.Url, new { @class = "validate", type = "text" })
+                <label asp-for="Url" for="Url">URL ресурса</label>
+            </div>
+
+            <div class="file-field input-field col s12 m12">
+                <div class="btn btn-defaultMainSite">
+                    <span>Выбрать изображение...</span>
+                    <input type="file" name="UploadedFiles">
+                </div>
+                <div class="file-path-wrapper" style="flex-grow: 1;">
+                    <input disabled="disabled" type="text" placeholder="Наименование изображения" class="file-path" style="border: none; color: rgb(101, 147, 92);">
+                </div>
+            </div>
+
+        </div>
+            <div class="input-field m12">
+                <input type="submit" value="Сохранить" class="btn btn-defaultMainSite" />
+                @Html.ActionLink("Назад", "Index", "Home", null, new { @class = "btn btn-defaultMainSite" })
+            </div>
+        }
+    </div>
+</div>

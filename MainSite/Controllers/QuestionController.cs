@@ -32,25 +32,85 @@ namespace MainSite.Controllers
         }
 
         [HttpGet("question")]
-        public IEnumerable GetQuestions()
+        public ActionResult GetQuestions()
         {
             var isAdmin = _userService.IsAdmin(_userService.GetUserBySystemName(HttpContext.User));
 
-            var questions = _questionService.GetAll().Where(s => s.CustomerId == HttpContext.User.Identity.Name || isAdmin).Select(a => new {
+            var questions = _questionService.GetAll().Where(s => (s.CustomerId == HttpContext.User.Identity.Name && s.EndDate == null) || isAdmin).Select(a => new
+            {
                 Id = a.Id,
                 CustomerId = a.CustomerId,
-                AnswerCount = a.Answers.Count
+                AnswerCount = a.Answers.Count,
+                CreatedDate = a.CreateDate,
+                EndDate = a.EndDate
             });
-            return questions;
+
+            return new JsonResult(questions);
         }
 
         [HttpGet("{id}")]
         public ActionResult GetQuestion(string id)
         {
-            var question = _questionService.GetQuestionById(id);
+            var isAdmin = _userService.IsAdmin(_userService.GetUserBySystemName(HttpContext.User));
+
+            var question = _questionService.GetQuestionById(id, isAdmin);
             if (question == null) return new JsonResult(null);
 
             return new JsonResult(question);
+        }
+
+        [HttpGet("newMessage")]
+        public ActionResult GetNewMessage()
+        {
+            var user = _userService.GetUserBySystemName(HttpContext.User);
+            var isAdmin = _userService.IsAdmin(user);
+
+            if (isAdmin)
+            {
+                var questionForAdmin = _questionService.GetAll().FirstOrDefault(a => a.EndDate == null && a.Answers.OrderByDescending(s => s.Date).FirstOrDefault(w => !w.IsAdmin && !w.IsVisit) != null);
+
+                if (questionForAdmin != null)
+                {
+                    return new JsonResult(new { result = '+' });
+                }
+            }
+            else
+            {
+
+                var answers = _questionService.GetAll().FirstOrDefault(a => a.CustomerId == user.SystemName && a.EndDate == null)
+                    ?.Answers.OrderByDescending(d => d.Date);
+
+                if (answers != null && answers.Count() > 0)
+                {
+
+                    var lastAnswerIndex = answers.Select((el, index) => new { Index = index, Element = el }).FirstOrDefault(e => !e.Element.IsAdmin)?.Index;
+                    if (lastAnswerIndex != null)
+                    {
+                        var listAdminMessagesCount = answers.Take((int)lastAnswerIndex).Count(w => !w.IsVisit);
+
+                        return new JsonResult(new { result = listAdminMessagesCount });
+                    }
+                }
+            }
+            
+            return new JsonResult(null);
+        }
+
+        [HttpGet("visitChat")]
+        public IActionResult VisitedQuestion(string questionId)
+        {
+            var curUserName = _userService.GetUserBySystemName(User).SystemName;
+            var answers = _questionService.GetAll().SingleOrDefault(t => t.Id == questionId)?.Answers.Where(w => !w.IsVisit && w.SenderName != curUserName);
+            if (answers != null)
+            {
+                foreach (var answer in answers)
+                {
+                    answer.IsVisit = true;
+                    _answerService.Update(answer);
+                }
+            }
+
+            return new JsonResult(null);
         }
 
         [HttpPost("addQuestion")]
@@ -66,6 +126,8 @@ namespace MainSite.Controllers
                     answer.SenderName = User.Identity.Name;
                     answer.IsAdmin = _userService.IsAdmin(_userService.GetUserBySystemName(User));
                 }
+                question.CreateDate = DateTime.Today;
+
                 _questionService.Add(question);
 
                 await _hubContext.Clients.Group(AppUserDefaults.AdministratorsRoleName).AddQuestionChange(question);
@@ -105,7 +167,7 @@ namespace MainSite.Controllers
         [HttpPost("deleteQuestion")]
         public async Task<ActionResult> DeleteQuestionAsync(string questionId)
         {
-            var question = _questionService.GetQuestionById(questionId);
+            var question = _questionService.GetQuestionById(questionId, true);
             if (question == null)
             {
                 throw new ArgumentNullException(questionId);

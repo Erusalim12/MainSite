@@ -1,9 +1,13 @@
 ﻿<template>
-  <div class="card_birthday">
-    <div v-if="users && users.length" class="card-panel">
+  <div v-if="birthdays && birthdays.length" class="card_birthday">
+    <div class="card-panel">
       <div class="card_birthday-title bold">C днём рождения!</div>
       <div class="card_birthday-content">
-        <div class="card_birthday-content_description" v-for="item in users" :key="item.Id">
+        <div
+          class="card_birthday-content_description"
+          v-for="item in birthdays"
+          :key="item.Id"
+        >
           <span class="fio">{{ item.FIO }}</span>
           <span class="subdivision">{{ getSubDivision(item) }}</span>
         </div>
@@ -13,100 +17,79 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { mapState } from 'vuex';
+import { mapState, mapActions } from "vuex";
 
-  export default {
-    data() {
-      return {
-        users: [],
-      };
-    },
-    methods: {
-      setUsers() {
-        axios('/api/ApiUsers/GetBirthdayUsers', {
-          method: 'GET',
-        }).then((responce) => {
-          this.users = responce.data;
-        });
-      },
-      getSubDivision(subDivision) {
-        if (typeof subDivision == 'undefined' || subDivision == null) return 'Подразделение';
+export default {
+  name: "ms-birthday",
+  computed: {
+    ...mapState("user", ["birthdays"]),
+  },
+  methods: {
+    ...mapActions("user", ["GET_BIRTHDAYS"]),
+    getSubDivision(subDivision) {
+      if (typeof subDivision == "undefined" || subDivision == null)
+        return "Подразделение";
 
-        return subDivision.DepartmentShortName !== ''
-          ? subDivision.DepartmentShortName
-          : subDivision.DepartmentFullName;
-      },
+      return subDivision.DepartmentShortName !== ""
+        ? subDivision.DepartmentShortName
+        : subDivision.DepartmentFullName;
     },
-    mounted() {
-      this.setUsers();
-    },
-  };
+  },
+  mounted() {
+    if (!this.birthdays.length) this.GET_BIRTHDAYS();
+  },
+};
 </script>
 
 <style lang="scss">
-  /*Оформление блока день рождение(birthday)*/
-  .card_birthday {
-    .card-panel {
-      margin-top: 0px;
-    }
+/*Оформление блока день рождение(birthday)*/
+.card_birthday {
+  .card-panel {
+    margin-top: 0px;
+  }
 
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 0;
-    transform: translateX(110%);
-    width: 25%;
-
-    @media (max-width: 900px) {
-      margin: 0.5rem 0 1rem 0;
-      transform: translateX(0px);
-      position: inherit;
+  &-title {
+    text-align: center;
+    color: #b12344;
+    padding-bottom: 5px;
+    @media (max-width: 1400px) {
+      text-align: center;
+      padding-bottom: 15px;
       width: 100%;
     }
+  }
 
-    &-title {
-      text-align: center;
-      color: #b12344;
-      padding-bottom: 5px;
-      @media (max-width: 1400px) {
-        text-align: center;
-        padding-bottom: 15px;
-        width: 100%;
-      }
+  &-content {
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    @media (max-width: 1400px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: inherit !important;
     }
-
-    &-content {
-      font-size: 14px;
+    &_description {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       @media (max-width: 1400px) {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: inherit !important;
+        padding: 5px;
       }
-      &_description {
-        display: flex;
-        flex-wrap: wrap;
+      .fio {
+        padding-right: 10px;
+        font-weight: 600;
+        /*flex-basis:70%;*/
         @media (max-width: 1400px) {
-          padding: 5px;
+          flex-basis: inherit;
         }
-        .fio {
-          padding-right: 10px;
-          font-weight: 600;
-          /*flex-basis:70%;*/
-          @media (max-width: 1400px) {
-            flex-basis: inherit;
-          }
-        }
-        .subdivision {
-          font-style: italic;
-          /*flex-basis:30%;*/
-          @media (max-width: 1400px) {
-            flex-basis: inherit;
-          }
+      }
+      .subdivision {
+        font-style: italic;
+        /*flex-basis:30%;*/
+        @media (max-width: 1400px) {
+          flex-basis: inherit;
         }
       }
     }
   }
+}
 </style>

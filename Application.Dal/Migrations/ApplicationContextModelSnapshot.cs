@@ -62,6 +62,28 @@ namespace Application.Dal.Migrations
                     b.ToTable("VisitiorCounter");
                 });
 
+            modelBuilder.Entity("Application.Dal.Domain.ExternalLinks.ExternalLink", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PathIcon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExternalLinks");
+                });
+
             modelBuilder.Entity("Application.Dal.Domain.FeedBack.Answer", b =>
                 {
                     b.Property<string>("Id")
@@ -71,6 +93,9 @@ namespace Application.Dal.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVisit")
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
@@ -94,8 +119,14 @@ namespace Application.Dal.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime?>("CreateDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -241,7 +272,8 @@ namespace Application.Dal.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastChangeAuthorFio")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("LastChangeAuthor");
 
                     b.Property<string>("LastChangeAuthorId")
                         .HasColumnType("nvarchar(max)");
@@ -411,43 +443,43 @@ namespace Application.Dal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "494c9101-ed51-4759-9eeb-3d8a162fd46a",
+                            Id = "873f2721-de42-466a-be4a-de0c7d0d20ec",
                             Name = "StoreFilesInDb",
                             Value = "false"
                         },
                         new
                         {
-                            Id = "6fa94d80-813e-42ce-a105-6c732916e155",
+                            Id = "1e75e157-6fc6-4cd5-b583-e401a61ca9b7",
                             Name = "Application.Icon",
                             Value = "/images/layout_icons/header.png"
                         },
                         new
                         {
-                            Id = "ecfac765-3e27-4947-998d-df044267811d",
+                            Id = "4ac5c864-8d59-4b6a-97b7-7ed749458326",
                             Name = "Application.Name",
                             Value = ""
                         },
                         new
                         {
-                            Id = "6ddcf279-3609-4bde-8b1a-03071010a788",
+                            Id = "783bb945-a4f2-4911-a270-05217a58fafd",
                             Name = "Application.Copy",
                             Value = ""
                         },
                         new
                         {
-                            Id = "fec5e22e-3daa-4aa8-ba49-9437c93d401e",
+                            Id = "d9a22e30-44fa-4d31-abe5-8708fc7534a4",
                             Name = "BirthdayPath",
                             Value = "http://localhost:50510/api/People/Birthdate?skip=0&take=10"
                         },
                         new
                         {
-                            Id = "c8cbd4bb-806c-4795-8faf-f73c96457ba2",
+                            Id = "7bd75f28-05b5-438d-a816-dd99b9250e90",
                             Name = "Application.Header",
                             Value = "Main_Application"
                         },
                         new
                         {
-                            Id = "dbfaca9d-c8d4-4851-9ec8-4f9ea07028c3",
+                            Id = "f8091314-3ada-4b88-bdb6-0e424a51c1bd",
                             Name = "Page.PageSize",
                             Value = "3"
                         });

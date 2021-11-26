@@ -8,5 +8,7 @@ namespace Application.Services.FeedBack.Answers
     {
         IEnumerable<Answer> GetAll();
         void Add(Answer item);
+
+        void Update(Answer item);
     }
 }

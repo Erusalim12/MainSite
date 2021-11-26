@@ -28,6 +28,7 @@ using MainSite.Models.WebSocket.Hubs;
 using Application.Services.FeedBack.Answers;
 using Application.Services.FeedBack.Questions;
 using Application.Dal.Repositories;
+using Application.Services.ExternalLinks;
 
 namespace MainSite
 {
@@ -75,6 +76,7 @@ namespace MainSite
             services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
 
             services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<IExternalLinkService, ExternalLinkService>();
 
             services.AddTransient<INewsService, NewsService>();
             services.AddTransient<IBirthdayService, BirthdayService>();
