@@ -15,6 +15,7 @@ namespace MainSite.Controllers
         }
 
         [Route("links")]
+        [HttpGet]
         public JsonResult GetExternalLinks()
         {
             var model = _externalLinkService.GetAll();

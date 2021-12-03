@@ -26,6 +26,7 @@ namespace MainSite.Areas.Admin.Controllers
         }
 
         [Route("Admin/ExternalLinks")]
+        [HttpGet]
         public IActionResult Index()
         {
 #if RELEASE
