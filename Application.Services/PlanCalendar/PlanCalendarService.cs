@@ -1,4 +1,5 @@
 ﻿using Application.Dal;
+using Application.Dal.Domain.PlanCalendar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,44 +36,43 @@ namespace Application.Services.PlanCalendar
             return _planCalendarRepository.Get(itemId);        
         }
 
-        public IEnumerable<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForWeek()
+        public List<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForWeek()
         {
+            var currentDate = DateTime.Today;
 
-            return _planCalendarRepository.GetLast()?.Events.Where(a => IncludeDayInWeek(int.TryParse(a.Day, out int day), day));
-        }
+            int daysOffsetEnd = DayOfWeek.Saturday - currentDate.DayOfWeek;
+            int dayOffsetStart = currentDate.DayOfWeek - DayOfWeek.Monday;
 
-        private bool IncludeDayInWeek(bool isNumber, int day)
-        {
-            if(!isNumber) return false;
+            var startDate = currentDate.AddDays(dayOffsetStart * -1);
+            var endDate = currentDate.AddDays(daysOffsetEnd);
 
-            var nowDate = DateTime.Now;
+            List<EventCalendar> result = new List<EventCalendar>();
 
-            //var startDate = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day);
-
-            int daysOffsetStart = nowDate.DayOfWeek - DayOfWeek.Monday;
-            int daysOffsetEnd = DayOfWeek.Saturday - nowDate.DayOfWeek;
-
-            var endDate = nowDate.AddDays(daysOffsetEnd);
-            var startDate = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day - daysOffsetStart);
-
-            var dateToCheck = new DateTime(nowDate.Year, nowDate.Month, day);
-
-            if (dateToCheck >= startDate && dateToCheck <= endDate)
+            var i = 0;
+            var tempDate = endDate;
+            while (startDate != tempDate)
             {
-                return true;
+                if (i < -7)
+                {
+                    return null;
+                }
+                tempDate = endDate.AddDays(i);
+                i--;
+                var resTemp = _planCalendarRepository.GetPlanCanedraForEvents(tempDate.Month, tempDate.Year);
+                if (resTemp != null) result.AddRange(resTemp.Events.Where(e => TryParseDay(e.Day, tempDate.Day)).ToList());
             }
 
-            return false;
+            return result;
+
         }
 
-        private bool IsCorrectlyTime(string timeValue)
+         private bool TryParseDay(string dbDay, int dateDay)
         {
-            if(!String.IsNullOrWhiteSpace(timeValue))
-            {
-                return int.TryParse(timeValue[0].ToString(), out int num);
-            }
+            var isNumber = int.TryParse(dbDay, out int tryDay);
 
-            return false;
-        }
+            if(!isNumber || tryDay != dateDay) return false;
+
+            return true;
+        }    
     }
 }

@@ -8,6 +8,6 @@ namespace Application.Services.PlanCalendar
         void UpdatePlanCalendar(Dal.Domain.PlanCalendar.PlanCalendar item);
         void DeletePlanCalendar(Dal.Domain.PlanCalendar.PlanCalendar item);
         Dal.Domain.PlanCalendar.PlanCalendar GetPlanCalendar(string itemId);
-        IEnumerable<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForWeek();
+        List<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForWeek();
     }
 }

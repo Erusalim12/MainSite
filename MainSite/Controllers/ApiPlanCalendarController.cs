@@ -4,6 +4,7 @@ using MainSite.Areas.Admin.Factories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,39 +29,41 @@ namespace MainSite.Controllers
         public IActionResult GetPlanCalendar()
         {
             var collection = _planCalendarSevice.GetEventsForWeek();
+            var collectionFlaw = new List<object>();
 
             if (collection != null) {
-                var nowDate = DateTime.Now;
+                var nowDate = DateTime.Today;
                 var curDay = nowDate.Day;
 
                 int dayOffsetStart = nowDate.DayOfWeek - DayOfWeek.Monday;
                 int daysOffsetEnd = DayOfWeek.Saturday - nowDate.DayOfWeek;
 
                 for(var i= curDay - dayOffsetStart; i < curDay + daysOffsetEnd; i++)
-                {
-                    
-                    if (i >=  curDay)
-                    {
-                        var date = nowDate.AddDays(i - curDay);
-                        if (date.Month != nowDate.Month) break;
-                    }
+                { 
+                    var date = nowDate.AddDays(i - curDay);
 
-                    if (!collection.Any(a => int.Parse(a.Day) == i ))
+                    if (!collection.Any(a => int.Parse(a.Day) == date.Day))
                     {
-                        collection.Append(new EventCalendar { 
-                            Day = i.ToString(),
-                            Time = ""
+                        collectionFlaw.Add(new  { 
+                            Day = date.Day.ToString(),
+                            Time = "",
+                            Date = date
                         });
                     }
                 }
 
-                var res = collection
-                    .ToLookup(z => z.Day)
-                    .OrderBy(w => int.Parse(w.Key))
-                    .Select(a => new { Day = a.Key, Events = a.Where(s => !String.IsNullOrWhiteSpace(s.Time)).ToList() });
+                var res = collection.Select(w => new
+                {
+                    w.Id,
+                    w.Location,
+                    w.Time,
+                    w.Name,
+                    w.Day,
+                    Date = DateTime.Parse($"{_planCalendarSevice.GetPlanCalendar(w.PlanCalendarId).Year},{_planCalendarSevice.GetPlanCalendar(w.PlanCalendarId).Month},{w.Day}")
+                });
 
-
-                return new JsonResult(res);
+                // Перенести в сервисы
+                return new JsonResult(res.Concat(collectionFlaw));
             }
 
             return new JsonResult(collection);

@@ -3,20 +3,21 @@
     <nav class="nav-header">
       <div class="container">
         <div class="nav-wrapper">
+          <div class="wrapper_backround">&nbsp;</div>
           <div class="valign-wrapper">
             <a
-              style="cursor: pointer"
+              style="cursor: pointer; z-index: 5; min-width: 300px"
               @click="routerPushMainView"
               class="valign-wrapper"
             >
               <img :src="GetApplicationIcon" width="50" height="50" />
               <span
-                class="bold"
                 style="
                   padding-left: 10px;
                   line-height: 15px;
                   margin-right: 13px;
                   font-size: 12px;
+                  color: yellow;
                 "
                 v-html="GetApplicationName"
               ></span>
@@ -29,8 +30,11 @@
               ><i class="material-icons">menu</i></a
             >
             <div class="hide-on-med-and-down col m12 s12 l9 headerMenu">
-              <div class="col l6 headerMenu-search">
-                <span class="bold">Поиск:</span>
+              <div class="imgLogo">
+                <div class="imgLogo__wrapper">&nbsp;</div>
+              </div>
+              <div class="headerMenu-search">
+                <span>Поиск:</span>
                 <input
                   v-model="searchText"
                   class="inputTextMainSite"
@@ -40,20 +44,18 @@
                   Найти
                 </button>
               </div>
-              <div class="valign-wrapper" style="justify-content: flex-end">
-                <span class="headerMenu-user__info">
-                  <router-link
-                    v-if="messageInfo"
-                    style="color: #b12344"
-                    title="Имеются непрочитанные сообщения"
-                    to="/feedback"
-                  >
-                    <i class="material-icons">message</i>
-                    {{ messageInfo }}
-                  </router-link>
-                  {{ currentUser.Name }}
-                </span>
-              </div>
+              <span class="headerMenu-user__info">
+                <router-link
+                  v-if="messageInfo"
+                  style="color: #b12344"
+                  title="Имеются непрочитанные сообщения"
+                  to="/feedback"
+                >
+                  <i class="material-icons">message</i>
+                  {{ messageInfo }}
+                </router-link>
+                {{ currentUser.Name }}
+              </span>
             </div>
           </div>
         </div>
@@ -147,6 +149,43 @@ export default {
 </script>
 
 <style lang="scss">
+.wrapper_backround {
+  position: absolute;
+  width: 109%;
+  transform: translateX(-4%);
+  z-index: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(128, 193, 255, 1) 20%,
+    rgba(129, 194, 255, 1) 80%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
+.imgLogo {
+  z-index: 0;
+  object-fit: contain;
+  position: absolute;
+  height: 64px;
+  background-image: url(/images/layout_icons/structure.jpg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 300px;
+  left: 20%;
+
+  &__wrapper {
+    background: linear-gradient(
+      90deg,
+      rgba(128, 193, 255, 1) 5%,
+      transparent 20%,
+      transparent 80%,
+      rgba(128, 193, 255, 1) 95%
+    );
+  }
+}
+
 .isActive {
   display: block;
 }
@@ -164,27 +203,35 @@ export default {
 }
 
 .headerMenu {
+  z-index: 1;
   padding: 0 !important;
 
   &-search {
     display: flex;
     align-items: center;
     padding-left: 0px !important;
-    margin-left: 0;
-
+    margin-left: auto;
+    width: 75%;
+    z-index: 1;
+    position: relative;
+    color: black;
     & > span {
       margin-right: 5px;
     }
 
     & > .inputTextMainSite {
-      margin-right: 5px;
+      margin-right: 10px !important;
+      background-color: white !important;
       max-width: calc(100% - 150px);
-      border-radius: 8px 0px 0px 8px !important;
-      border-right: none !important;
+      color: black !important;
     }
 
     & > .btn-default {
-      border-radius: 0px 8px 8px 0px !important;
+      color: black;
+      &:hover {
+        background-color: #64b5f6;
+        color: white;
+      }
     }
   }
 
@@ -196,9 +243,15 @@ export default {
 
   &-user {
     padding: 0;
+
     &__info {
       display: flex;
       font-size: 14px;
+      transform: translateX(110%);
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 34%;
       a {
         padding-right: 5px;
         display: flex;
