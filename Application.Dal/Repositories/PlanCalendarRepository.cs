@@ -1,6 +1,7 @@
 ﻿using Application.Dal.Domain.PlanCalendar;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Application.Dal
@@ -11,15 +12,18 @@ namespace Application.Dal
         {
 
         }
-        
-        public  PlanCalendar GetLast()
+
+        public IEnumerable<PlanCalendar> GetEventsForWeek()
         {
-            var currentDate = DateTime.Today;
             return _context.PlanCalendars
-                .OrderBy(c=>c.Year)
+                .OrderBy(c => c.Year)
                 .ThenBy(c => c.Month)
-                .Include(a => a.Events)
-                .LastOrDefault(s => s.Month == currentDate.Month && currentDate.Year == s.Year);
+                .Include(a => a.Events);
+        }
+
+        public PlanCalendar GetPlanCanedraForEvents(int month, int year)
+        {
+            return _context.PlanCalendars.Where(a => a.Month == month && a.Year == year).Include(w => w.Events).FirstOrDefault();
         }
     }
 }
