@@ -2,7 +2,7 @@
     Layout = "_Layout";
 }
 
-<div class="card card-panel col m3 s12">
+<div class="card card-panel col s12 m4 l3">
     <div class="card-content">
         <span class="card-title activator grey-text text-darken-4">
             Меню
@@ -11,7 +11,7 @@
         <p>@Html.ActionLink("Редактирование иерархии меню", "Index", "Menu")</p>
     </div>
 </div>
-<div class="card card-panel col m3 s12">
+<div class="card card-panel col s12 m4 l3">
     <div class="card-content">
         <span class="card-title activator grey-text text-darken-4">
             Роли
@@ -23,7 +23,7 @@
         <p> @Html.ActionLink("Установка ролей *", "InstallPermissions", "Security")</p>
     </div>
 </div>
-<div class="card card-panel col m3 s12">
+<div class="card card-panel col s12 m4 l3">
     <div class="card-content">
         <span class="card-title activator grey-text text-darken-4">
             Параметры приложения
@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<div class="card card-panel col m3 s12">
+<div class="card card-panel col s12 m4 l3">
     <div class="card-content">
         <span class="card-title activator grey-text text-darken-4">
             Внешние ресурсы
@@ -44,6 +44,10 @@
         <p> @Html.ActionLink("Перейти к списку", "Index", "ExternalLinks")</p>
     </div>
 </div>
+
+@await Component.InvokeAsync("CounterComponent")
+@await Component.InvokeAsync("DailyStaticsComponent")
+
 
 <script>
     var allElements = document.querySelectorAll('#mainBlock > div');

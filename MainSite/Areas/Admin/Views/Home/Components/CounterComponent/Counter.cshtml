@@ -1,0 +1,63 @@
+﻿@model MainSite.Areas.Admin.Models.Counters.CounterView
+
+    <div class="card card-panel col  s12 m4 l3 ">
+        <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">
+                Статистика
+            </span>
+            <ul class="collection striped">
+                <li class="collection-item">
+                    <span class="title">Сегодня (@Model.TodayDate.ToShortDateString()):</span>
+                    <span class="bold">
+                        @Model.TodayCount
+                    </span>
+                </li>
+                <li class="collection-item">
+                    <span class="title">Вчера:</span>
+                    <span class="bold">
+                        @Model.PrevDayCount
+                    </span>
+                </li>
+                <li class="collection-item">
+                    <span class="title">За 3 дня:</span>
+                    <span class="bold">
+                        @Model.ThreeDayCount
+                    </span>
+                </li>
+                <li class="collection-item">
+                    <span class="title">За текущую неделю: (с @Model.WeekDate.ToShortDateString())</span>
+
+                    <span class="bold">
+                        @Model.WeekCount
+                    </span>
+                </li>
+                <li class="collection-item">
+                    <span class="title">За прошлую неделю:</span>
+
+                    <span class="bold">
+                        @Model.PrevWeekCount
+                    </span>
+                </li>
+                <li class="collection-item">
+                    <span class="title">В этом месяце:</span>
+
+                    <span class="bold">
+                        @Model.CurrentMonthCount
+                    </span>
+                </li>
+                <li class="collection-item">
+                    <span class="title">В прошлом месяце:</span>
+
+                    <span class="bold">
+                        @Model.PrevMonthCount
+                    </span>
+                </li>
+                <li class="collection-item">
+                    <span class="title">Всего:</span>
+                    <span class="bold">
+                        @Model.TotalCount
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>

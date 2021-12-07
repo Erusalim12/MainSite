@@ -27,7 +27,7 @@ namespace Application.Services.BackgroundTask
             var service = scope.ServiceProvider.GetService<CountersService>();
 
             while (!stoppingToken.IsCancellationRequested)
-            {
+            { 
                 service.SaveCounters();
                 Console.WriteLine("Counters has been saved!");
                 await Task.Delay(interval, stoppingToken);

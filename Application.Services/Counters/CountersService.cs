@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Dal;
 using Application.Dal.Domain.Counters;
-using Microsoft.Extensions.Hosting;
 
 namespace Application.Services.Counters
 {
@@ -26,7 +23,7 @@ namespace Application.Services.Counters
         /// Возвращает новый экземпляр модели счетчиков
         /// </summary>
         /// <returns></returns>
-        public SimpleCounterModel GetCounter()
+        public static SimpleCounterModel GetCounter()
         {
             return new SimpleCounterModel(TodayUniqueUsers(), TotalUniqueUsers());
         }
@@ -34,7 +31,7 @@ namespace Application.Services.Counters
         /// возвращает список уникальных посетителей за сегодня
         /// </summary>
         /// <returns></returns>
-        private static int TodayUniqueUsers()
+        public static int TodayUniqueUsers()
         {
             return _todayCounter;
         }
@@ -43,7 +40,7 @@ namespace Application.Services.Counters
         /// возвращает общее количество уникальных поситителей
         /// </summary>
         /// <returns></returns>
-        private static int TotalUniqueUsers()
+        public static int TotalUniqueUsers()
         {
             return _totalCounter;
         }
@@ -52,6 +49,7 @@ namespace Application.Services.Counters
         /// </summary>
         public static void IncrementCounter()
         {
+
             DropTodayCounter();
             _totalCounter++;
             _todayCounter++;
@@ -76,23 +74,23 @@ namespace Application.Services.Counters
         public void SaveCounters()
         {
 
-            var storedData = _context.GetAll.FirstOrDefault();
-            if (storedData == null)
+            var data = _context.GetAll.FirstOrDefault(c => c.LastDate == DateTime.Today);
+            if (data != null)
             {
-                storedData = new VisitorsCounter();
-                storedData.LastDate = _currentDate;
-                storedData.TodayCount = _todayCounter;
-                storedData.TotalCount = _totalCounter;
+                data.TotalCount = _totalCounter;
+                data.TodayCount = _todayCounter;
 
-                _context.Add(storedData);
+                _context.Update(data);
                 return;
             }
-            storedData.LastDate = _currentDate;
-            storedData.TodayCount = _todayCounter;
-            storedData.TotalCount = _totalCounter;
+            var storedData = new VisitorsCounter
+            {
+                LastDate = _currentDate,
+                TodayCount = _todayCounter,
+                TotalCount = _totalCounter
+            };
 
-
-            _context.Update(storedData);
+            _context.Add(storedData);
         }
 
         /// <summary>
@@ -102,10 +100,14 @@ namespace Application.Services.Counters
         {
             var storedData = _context.GetAll.FirstOrDefault();
             if (storedData == null) return;
-             _todayCounter = storedData.TodayCount;
+            if (storedData.TodayCount > _todayCounter)
+                _todayCounter = storedData.TodayCount + _todayCounter;
+            if (storedData.TotalCount > _totalCounter)
+                _totalCounter = storedData.TotalCount + _totalCounter;
 
-            _totalCounter = storedData.TotalCount;
             _currentDate = storedData.LastDate;
+
+
             Console.WriteLine("visitor's counter was been loaded");
         }
     }

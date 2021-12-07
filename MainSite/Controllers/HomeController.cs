@@ -6,6 +6,8 @@ using MainSite.Models;
 using MainSite.ViewModels.News;
 using Newtonsoft.Json;
 using System.Linq;
+using Application.Dal;
+using Application.Dal.Domain.Counters;
 using Application.Dal.Domain.Menu;
 using Application.Services.Menu;
 using Application.Services.Files;
@@ -14,6 +16,7 @@ using MainSite.Areas.Admin.Factories;
 using MainSite.ViewModels.UI.Menu;
 using Application.Services.Users;
 using Application.Services.Utils;
+using MainSite.Filters;
 
 namespace MainSite.Controllers
 {
@@ -24,6 +27,7 @@ namespace MainSite.Controllers
         private readonly IPictureService _pictureService;
         private readonly IPermissionService _permissionService;
         private readonly ISecurityModelFactory _securityModelFactory;
+ 
         private readonly IUsersService _userService;
 
 
