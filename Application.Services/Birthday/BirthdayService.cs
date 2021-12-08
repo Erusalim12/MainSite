@@ -21,9 +21,10 @@ namespace Application.Services.Birthday
         }
         public IEnumerable<Birtday> GetTodayBirth()
         {
-            var today = DateTime.Today.Day;
-            var currentMonth = DateTime.Today.Month;
-            var collection = _birtdayRepository.GetAll.Where(c => c.Birth.Day == today && c.Birth.Month == currentMonth);
+            var today = DateTime.Today;
+            var tomorrow = DateTime.Today.AddDays(1);
+
+            var collection = _birtdayRepository.GetAll.Where(c => c.Birth.Day == today.Day && c.Birth.Month == today.Month || c.Birth.Day == tomorrow.Day && c.Birth.Month == tomorrow.Month);
 
             foreach (var birtday in collection)
             {

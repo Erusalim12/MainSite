@@ -22,6 +22,14 @@ export default {
 </script>
 
 <style lang="scss">
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: "HelveticaNeueCyr" !important;
+}
+
 .container {
   width: 70%;
 

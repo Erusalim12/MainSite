@@ -132,6 +132,7 @@ export default {
         &.active {
           background: rgba(0, 0, 0, 0.02);
           border-bottom: 2px solid #64b5f6;
+          padding-bottom: 8px;
         }
 
         &.active {

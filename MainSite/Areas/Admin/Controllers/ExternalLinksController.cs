@@ -119,5 +119,33 @@ namespace MainSite.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        [Route("Admin/ExternalLinks/OrderUpOrDown")]
+        public IActionResult OrderUpOrDown(string id, int delta)
+        {
+            var currentLink = _externalLinkService.Get(id);
+            var searchLink = _externalLinkService.GetAll().FirstOrDefault(s => s.Order == currentLink.Order + delta);
+
+            if(searchLink != null)
+            {
+                var curOder = currentLink.Order;
+                var searchOrder = searchLink.Order;
+
+                currentLink.Order = searchOrder;
+                searchLink.Order = curOder;
+
+                _externalLinkService.UpdateItem(currentLink);
+                _externalLinkService.UpdateItem(searchLink);
+            }
+            return RedirectToAction("Index", "ExternalLinks");
+        }
+
+        [HttpPost]
+        [Route("Admin/ExternalLinks/OrderDown")]
+        public IActionResult OrderDown(string id)
+        {
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
