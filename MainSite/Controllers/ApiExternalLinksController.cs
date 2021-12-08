@@ -1,5 +1,6 @@
 ﻿using Application.Services.ExternalLinks;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace MainSite.Controllers
 {
@@ -18,7 +19,7 @@ namespace MainSite.Controllers
         [HttpGet]
         public JsonResult GetExternalLinks()
         {
-            var model = _externalLinkService.GetAll();
+            var model = _externalLinkService.GetAll().OrderByDescending(a => a.Order);
             return new JsonResult(model);
         }
     }

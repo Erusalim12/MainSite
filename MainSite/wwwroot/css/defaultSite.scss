@@ -13,7 +13,7 @@ $fontDefaultAllSite: 18px;
 
   &:hover {
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       width: 100%;
@@ -40,11 +40,11 @@ $fontDefaultAllSite: 18px;
   }
 }
 
-@import 'fonts/font.scss';
+@import "fonts/font.scss";
 
 html {
   //font-family: 'Helvetica Neue' !important;
-  font-family: 'HelveticaNeueCyr' !important;
+  font-family: "HelveticaNeueCyr" !important;
 
   .container {
     @media (max-width: 900px) {
@@ -96,8 +96,8 @@ html {
 
     header {
       color: $otherTextColor;
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
-        0 1px 5px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
       transition: box-shadow 0.25s;
 
       #openMenu {
@@ -119,7 +119,7 @@ html {
     }
 
     footer {
-      position: fixed;
+      position: absolute;
       z-index: 50;
       bottom: 0;
       width: 100%;

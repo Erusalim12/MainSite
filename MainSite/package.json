@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev WATCH=true webpack --env.watch=true --progress --hide-modules",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "gulp_main": "gulp sass-main",
+    "gulp_admin": "gulp sass-admin"
   },
   "dependencies": {
     "@aspnet/signalr": "^1.0.27",

@@ -20,6 +20,7 @@ export default {
 
 <style lang="scss">
 .ms-right-panel {
+  width: 25%;
   position: absolute;
   right: 0;
   top: 0;
