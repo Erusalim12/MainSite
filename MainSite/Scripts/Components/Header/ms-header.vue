@@ -166,7 +166,7 @@ export default {
 header {
   box-shadow: none !important;
   .nav-header {
-    box-shadow: 0 0px 0px 0 black, 0 0px 0px 0px black, 0 0px 12px 0 black !important;
+    box-shadow: 0 0px 0px 0 black, 0 0px 0px 0px black, 0 0px 6px 0 black !important;
   }
 
   .header_name {
