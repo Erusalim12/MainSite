@@ -241,6 +241,11 @@ export default {
 }
 .card_news-description {
   font-size: 14px;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
 }
 .dropdownFiles a {
   display: inline-flex;

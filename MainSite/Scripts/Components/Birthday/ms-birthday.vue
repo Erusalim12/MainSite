@@ -2,16 +2,20 @@
   <div v-if="birthdays && birthdays.length" class="card_birthday">
     <div class="card-panel">
       <div class="card_birthday-title bold">C днём рождения!</div>
-      <div class="card_birthday-content">
+      <ms-birthday-info :list="birthdays[0]" title="сегодня" />
+      <hr />
+      <template v-if="birthdays[1]">
+        <template v-if="isShowInfo">
+          <ms-birthday-info :list="birthdays[1]" title="завтра" />
+        </template>
         <div
-          class="card_birthday-content_description"
-          v-for="item in birthdays"
-          :key="item.Id"
+          @click="onShowInfoTommorow"
+          class="card_birthday-title bold btnTomorrowBirthdays"
+          style="cursor: pointer"
         >
-          <span class="fio">{{ item.FIO }}</span>
-          <span class="subdivision">{{ getSubDivision(item) }}</span>
+          На завтра
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -19,20 +23,23 @@
 <script>
 import { mapState, mapActions } from "vuex";
 
+import msBirthdayInfo from "./ms-birthday-info.vue";
+
 export default {
   name: "ms-birthday",
+  components: { msBirthdayInfo },
+  data() {
+    return {
+      isShowInfo: false,
+    };
+  },
   computed: {
     ...mapState("user", ["birthdays"]),
   },
   methods: {
     ...mapActions("user", ["GET_BIRTHDAYS"]),
-    getSubDivision(subDivision) {
-      if (typeof subDivision == "undefined" || subDivision == null)
-        return "Подразделение";
-
-      return subDivision.DepartmentShortName !== ""
-        ? subDivision.DepartmentShortName
-        : subDivision.DepartmentFullName;
+    onShowInfoTommorow() {
+      this.isShowInfo = !this.isShowInfo;
     },
   },
   mounted() {
@@ -54,40 +61,17 @@ export default {
     padding-bottom: 5px;
     @media (max-width: 1400px) {
       text-align: center;
-      padding-bottom: 15px;
       width: 100%;
     }
-  }
 
-  &-content {
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    @media (max-width: 1400px) {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: inherit !important;
-    }
-    &_description {
-      display: flex;
-      flex-wrap: wrap;
-      @media (max-width: 1400px) {
-        padding: 5px;
-      }
-      .fio {
-        padding-right: 10px;
-        font-weight: 600;
-        /*flex-basis:70%;*/
-        @media (max-width: 1400px) {
-          flex-basis: inherit;
-        }
-      }
-      .subdivision {
-        font-style: italic;
-        /*flex-basis:30%;*/
-        @media (max-width: 1400px) {
-          flex-basis: inherit;
-        }
+    &.btnTomorrowBirthdays {
+      border: 1px solid #b12344;
+      border-radius: 8px;
+      padding: 5px;
+      margin: 10px 0px 10px 0px;
+      &:hover {
+        background-color: #b12344;
+        color: #fff;
       }
     }
   }

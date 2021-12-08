@@ -26,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.OrderByDescending(a => a.Order))
             {
             <tr>
                 <td>
@@ -46,8 +46,14 @@
                     @Html.DisplayFor(modelItem => item.Url)
                 </td>
                 <td>
-                    @Html.ActionLink("Обновить", "Create", "ExternalLinks", new { item.Id })
-                    @Html.ActionLink("Удалить", "Delete", "ExternalLinks", new { item.Id })
+                    <div style="margin-bottom:10px;">
+                        @Html.ActionLink("Вверх", "OrderUpOrDown", "ExternalLinks", new { id= item.Id, delta = 1 })
+                        @Html.ActionLink("Вниз", "OrderUpOrDown", "ExternalLinks", new { id = item.Id, delta = -1 })
+                    </div>
+                    <div>
+                        @Html.ActionLink("Обновить", "Create", "ExternalLinks", new { item.Id })
+                        @Html.ActionLink("Удалить", "Delete", "ExternalLinks", new { item.Id })
+                    </div>
                 </td>
             </tr>
             }

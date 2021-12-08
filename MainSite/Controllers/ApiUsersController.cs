@@ -5,6 +5,7 @@ using MainSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MainSite.Controllers
@@ -28,14 +29,23 @@ namespace MainSite.Controllers
 
         [Route("GetBirthdayUsers")]
         [HttpGet]
-        public string GetBirthdayUsers()
+        public JsonResult GetBirthdayUsers()
         {
             var model = _birthdayService.GetTodayBirth().ToList();
             if (model.Any())
             {
-                return JsonConvert.SerializeObject(model);
+                var arrayResult = new List<List<Application.Dal.Domain.Birthday.Birtday>>();
+
+                if(!model.Any(a => a.Birth.Day == DateTime.Today.Day)) {
+                    arrayResult.Add(new List<Application.Dal.Domain.Birthday.Birtday>());
+                }
+
+                var result = model.ToLookup(a => a.Birth.Day).OrderBy(w => w.Key).Select(x => x.ToList()).ToList();
+                arrayResult.AddRange(result);
+
+                return new JsonResult(arrayResult);
             }
-            return "[]";
+            return null;
         }
         [Route("InfoCurrentUser")]
         [HttpGet]

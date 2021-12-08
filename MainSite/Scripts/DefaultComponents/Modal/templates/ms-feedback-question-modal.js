@@ -41,14 +41,14 @@ export default {
             class="btn btn-defaultMainSite"
             onClick:prevent={this.cancel}
           >
-            отмена
+            Отмена
           </button>
           <span
             style="padding: 0px 30px;"
             class="btn btn-defaultMainSite"
             onClick:prevent={this.close}
           >
-            сохранить
+            Сохранить
           </span>
         </div>
       </MsModal>
