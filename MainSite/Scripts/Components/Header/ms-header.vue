@@ -11,16 +11,7 @@
               class="valign-wrapper"
             >
               <img :src="GetApplicationIcon" width="50" height="50" />
-              <span
-                style="
-                  padding-left: 10px;
-                  line-height: 15px;
-                  margin-right: 13px;
-                  font-size: 12px;
-                  color: yellow;
-                "
-                v-html="GetApplicationName"
-              ></span>
+              <span class="header_name" v-html="GetApplicationName"></span>
             </a>
             <a
               id="openMenu"
@@ -37,6 +28,7 @@
                 <span>Поиск:</span>
                 <input
                   v-model="searchText"
+                  v-on:keyup.enter="searchNews"
                   class="inputTextMainSite"
                   type="text"
                 />
@@ -45,14 +37,21 @@
                 </button>
               </div>
               <span class="headerMenu-user__info">
-                <router-link
-                  v-if="messageInfo"
-                  style="color: #b12344"
-                  title="Имеются непрочитанные сообщения"
-                  to="/feedback"
-                >
-                  <i class="material-icons">message</i>
-                  {{ messageInfo }}
+                <router-link style="color: #b12344" to="/feedback">
+                  <span v-if="messageInfo">
+                    <i
+                      class="material-icons"
+                      title="Имеются непрочитанные сообщения"
+                      >message</i
+                    >
+                    {{ messageInfo }}
+                  </span>
+                  <i
+                    class="material-icons"
+                    title="Сообщить о проблеме или высказать пожелание"
+                    v-else
+                    >contact_support</i
+                  >
                 </router-link>
                 {{ currentUser.Name }}
               </span>
@@ -164,98 +163,119 @@ export default {
   );
 }
 
-.imgLogo {
-  z-index: 0;
-  object-fit: contain;
-  position: absolute;
-  height: 64px;
-  background-image: url(/images/layout_icons/structure.jpg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 300px;
-  left: 20%;
-
-  &__wrapper {
-    background: linear-gradient(
-      90deg,
-      rgba(128, 193, 255, 1) 5%,
-      transparent 20%,
-      transparent 80%,
-      rgba(128, 193, 255, 1) 95%
-    );
+header {
+  box-shadow: none !important;
+  .nav-header {
+    box-shadow: 0 0px 0px 0 black, 0 0px 0px 0px black, 0 0px 12px 0 black !important;
   }
-}
 
-.isActive {
-  display: block;
-}
+  .header_name {
+    color: rgb(212, 234, 55);
+    text-shadow: 1px 0 0 #424242, -2px 0 0 #424242, 0 2px 0 #424242,
+      0 -2px 0 #424242, 1px 1px #424242, -1px -1px 0 #424242, 1px -1px 0 #424242,
+      -1px 1px 0 #424242;
+    padding-left: 10px;
+    line-height: 15px;
+    margin-right: 13px;
+    font-size: 12px;
+  }
 
-.secondMenu {
-  display: flex;
-  padding-left: 0px;
-  padding-right: 0px;
+  .imgLogo {
+    z-index: 0;
+    object-fit: contain;
+    position: absolute;
+    height: 64px;
+    background-image: url(/images/layout_icons/structure.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 300px;
+    left: 20%;
 
-  &:last-child {
+    &__wrapper {
+      background: linear-gradient(
+        90deg,
+        rgba(128, 193, 255, 1) 5%,
+        transparent 20%,
+        transparent 80%,
+        rgba(128, 193, 255, 1) 95%
+      );
+    }
+  }
+
+  .isActive {
+    display: block;
+  }
+
+  .secondMenu {
     display: flex;
-    align-items: center;
-    margin-left: auto;
-  }
-}
+    padding-left: 0px;
+    padding-right: 0px;
 
-.headerMenu {
-  z-index: 1;
-  padding: 0 !important;
-
-  &-search {
-    display: flex;
-    align-items: center;
-    padding-left: 0px !important;
-    margin-left: auto;
-    width: 75%;
-    z-index: 1;
-    position: relative;
-    color: black;
-    & > span {
-      margin-right: 5px;
-    }
-
-    & > .inputTextMainSite {
-      margin-right: 10px !important;
-      background-color: white !important;
-      max-width: calc(100% - 150px);
-      color: black !important;
-    }
-
-    & > .btn-default {
-      color: black;
-      &:hover {
-        background-color: #64b5f6;
-        color: white;
-      }
-    }
-  }
-
-  & > li {
     &:last-child {
+      display: flex;
+      align-items: center;
       margin-left: auto;
     }
   }
 
-  &-user {
-    padding: 0;
+  .headerMenu {
+    z-index: 1;
+    padding: 0 !important;
 
-    &__info {
+    &-search {
       display: flex;
-      font-size: 14px;
-      transform: translateX(110%);
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 34%;
-      a {
-        padding-right: 5px;
+      align-items: center;
+      padding-left: 0px !important;
+      margin-left: auto;
+      width: 75%;
+      z-index: 1;
+      position: relative;
+      color: black;
+      & > span {
+        margin-right: 5px;
+      }
+
+      & > .inputTextMainSite {
+        margin-right: 10px !important;
+        background-color: white !important;
+        max-width: calc(100% - 150px);
+        color: black !important;
+      }
+
+      & > .btn-default {
+        color: black;
+        &:hover {
+          background-color: #64b5f6;
+          color: white;
+        }
+      }
+    }
+
+    & > li {
+      &:last-child {
+        margin-left: auto;
+      }
+    }
+
+    &-user {
+      padding: 0;
+
+      &__info {
         display: flex;
-        align-items: baseline;
+        font-size: 14px;
+        transform: translateX(107%);
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 34%;
+        a {
+          padding-right: 5px;
+          display: flex;
+          span {
+            display: flex;
+            align-items: baseline;
+          }
+        }
       }
     }
   }

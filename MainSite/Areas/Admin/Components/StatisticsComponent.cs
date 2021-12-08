@@ -39,7 +39,7 @@ namespace MainSite.Areas.Admin.Components
                 PrevDayCount = data.FirstOrDefault(c => c.LastDate > DateTime.Now.Date.AddDays(-1)).TodayCount,
                 WeekCount = CurWeekCount(data),
                 ThreeDayCount = threeDay.Sum(c => c.TodayCount),
-                WeekDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek),
+                WeekDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek+1),
                 TodayDate = DateTime.Today,
                 ThreeDayDate = DateTime.Today.AddDays(-2),
                 PrevWeekCount = PrevWeekCount(data),
@@ -103,7 +103,7 @@ namespace MainSite.Areas.Admin.Components
                 modelData.Add(PrepareCounter(counter, prevconter));
                 prevconter = counter.TodayCount;
             }
-            return View("DailyStat", modelData);
+            return View("DailyStat", modelData.OrderByDescending(c=>c.date));
         }
 
         private DailyCounter PrepareCounter(VisitorsCounter counter, int prev = 0)
