@@ -1,30 +1,42 @@
 ﻿@model IEnumerable<MainSite.Areas.Admin.Models.Counters.DailyCounter>
+<style>
+    .dailyFlex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size:14px;
+    }
+
+    .dailyFlex i {
+        display:flex;
+    }
+</style>
 <div class="card card-panel col s12 m4 l3">
     <div class="card-content">
         <span class="card-title activator grey-text text-darken-4">
             Статистика по дням
         </span>
-        <ul>
+        <ul class="dailyFlex">
             @foreach (var item in Model)
             {
 
-                <li class="col xl6">@item.date.ToShortDateString()</li>
-                <li class="col center xl4 s2">@item.Count</li>
-                <li class="col xl2 s1">
+                <li>@item.date.ToShortDateString()</li>
+                <li>@item.Count</li>
+                <li>
                     @if (item.Trend != null)
                     {
                         if (item.Trend.GetValueOrDefault())
                         {
-                            <i class="material-icons medium  green-text accent-4 ">arrow_drop_up</i>
+                            <i class="material-icons green-text accent-4 ">arrow_drop_up</i>
                         }
                         else
                         {
-                            <i class="material-icons medium  red-text accent-4">arrow_drop_down</i>
+                            <i class="material-icons red-text accent-4">arrow_drop_down</i>
                         }
                     }
                     else
                     {
-                        <i class="material-icons medium  blue-grey-text darken-4">drag_handle</i>
+                        <i class="material-icons blue-grey-text darken-4">drag_handle</i>
                     }
                 </li>
 
