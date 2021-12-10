@@ -4,22 +4,22 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size:14px;
+        font-size: 14px;
     }
 
-    .dailyFlex i {
-        display:flex;
-    }
+        .dailyFlex i {
+            display: flex;
+        }
 </style>
 <div class="card card-panel col s12 m4 l3">
     <div class="card-content">
         <span class="card-title activator grey-text text-darken-4">
             Статистика по дням
         </span>
-        <ul class="dailyFlex">
-            @foreach (var item in Model)
-            {
 
+        @foreach (var item in Model)
+        {
+            <ul class="dailyFlex">
                 <li>@item.date.ToShortDateString()</li>
                 <li>@item.Count</li>
                 <li>
@@ -39,11 +39,10 @@
                         <i class="material-icons blue-grey-text darken-4">drag_handle</i>
                     }
                 </li>
+            </ul>
+        }
 
-            }
-        </ul>
 
     </div>
 </div>
 
-  

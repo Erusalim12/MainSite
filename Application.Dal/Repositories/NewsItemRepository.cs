@@ -84,7 +84,7 @@ namespace Application.Dal
 
             if (endDate != null && endDate != DateTime.MinValue)
             {
-                data = data.Where(d => d.CreatedDate >= endDate);
+                data = data.Where(d => d.CreatedDate < endDate);
             }
             if (pinnedNews != null && pinnedNews.Any())
             {

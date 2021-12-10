@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Application.Dal;
 using Application.Dal.Domain.Counters;
+using Application.Dal.Repositories.Infrastructure;
 using Application.Services.Counters;
+using Application.Services.News;
 using MainSite.Areas.Admin.Models.Counters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace MainSite.Areas.Admin.Components
 {
@@ -21,6 +24,7 @@ namespace MainSite.Areas.Admin.Components
         public IViewComponentResult Invoke()
         {
             var model = PrepareCountersData();
+            ViewBag.CardName = "Статистика пользователей";
             return View("Counter", model);
         }
 
@@ -39,7 +43,7 @@ namespace MainSite.Areas.Admin.Components
                 PrevDayCount = data.FirstOrDefault(c => c.LastDate > DateTime.Now.Date.AddDays(-1)).TodayCount,
                 WeekCount = CurWeekCount(data),
                 ThreeDayCount = threeDay.Sum(c => c.TodayCount),
-                WeekDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek+1),
+                WeekDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1),
                 TodayDate = DateTime.Today,
                 ThreeDayDate = DateTime.Today.AddDays(-2),
                 PrevWeekCount = PrevWeekCount(data),
@@ -103,7 +107,7 @@ namespace MainSite.Areas.Admin.Components
                 modelData.Add(PrepareCounter(counter, prevconter));
                 prevconter = counter.TodayCount;
             }
-            return View("DailyStat", modelData.OrderByDescending(c=>c.date));
+            return View("DailyStat", modelData.OrderByDescending(c => c.date));
         }
 
         private DailyCounter PrepareCounter(VisitorsCounter counter, int prev = 0)
@@ -119,4 +123,114 @@ namespace MainSite.Areas.Admin.Components
         }
 
     }
+
+
+    public class NewsGenerationStatisticsComponent : ViewComponent
+    {
+        private readonly INewsService _newsService;
+
+        public NewsGenerationStatisticsComponent(INewsService newsService)
+        {
+            _newsService = newsService;
+        }
+
+        public IViewComponentResult Invoke()
+        {
+            var model = PrepareCountersData();
+            ViewBag.CardName = "Статистика сообщений";
+            return View("/Areas/Admin/Views/Home/Components/CounterComponent/Counter.cshtml", model);
+        }
+
+        public CounterView PrepareCountersData()
+        {
+
+            var data = _newsService.GetNewsItem(new FilterNewsItemParameters());
+
+
+
+            var model = new CounterView
+            {
+                WeekDate = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + 1),
+                TodayDate = DateTime.Today,
+                ThreeDayDate = DateTime.Today.AddDays(-2),
+
+                TodayCount = _newsService.GetNewsItem(TodayFilter())?.Count() ?? 0,//сегодня
+                PrevDayCount = _newsService.GetNewsItem(DayBeforeFilter())?.Count() ?? 0,//вчера
+
+                WeekCount = _newsService.GetNewsItem(CurWeekFilter())?.Count() ?? 0,//тек. неледя
+                PrevWeekCount = _newsService.GetNewsItem(PrevWeekFilter())?.Count() ?? 0,//-неделя
+
+                CurrentMonthCount = _newsService.GetNewsItem(CurrentMonthFilter())?.Count() ?? 0,//тек. месяц
+                PrevMonthCount = _newsService.GetNewsItem(PrevMonthFilter())?.Count() ?? 0,//-месяц
+
+                TotalCount = _newsService.GetNewsItem(TotalFilter())?.Count() ?? 0,//ИТОГО
+            };
+
+
+            return model;
+        }
+
+        private FilterNewsItemParameters TotalFilter()
+        {
+            return new FilterNewsItemParameters
+            {
+                StartDate = DateTime.MinValue
+            };
+        }
+
+        private FilterNewsItemParameters TodayFilter()
+        {
+            return new FilterNewsItemParameters { StartDate = DateTime.Today.Date };
+        }
+
+        private FilterNewsItemParameters DayBeforeFilter()
+        {
+            return new FilterNewsItemParameters { StartDate = DateTime.Today.AddDays(-1).Date, EndDate = DateTime.Today };
+        }
+        private FilterNewsItemParameters CurWeekFilter()
+        {
+            var currData = (int)DateTime.Today.DayOfWeek;
+            var currWeekStart = DateTime.Today.AddDays(-currData);
+            return new FilterNewsItemParameters
+            {
+                StartDate = currWeekStart
+            };
+        }
+
+        private FilterNewsItemParameters PrevWeekFilter()
+        {
+            var currData = (int)DateTime.Today.DayOfWeek;
+            var prevWeekstart = DateTime.Today.AddDays(-currData).AddDays(-7);
+            var prevWeekEnd = DateTime.Today.AddDays(-currData);
+            return
+                new FilterNewsItemParameters
+                {
+                    StartDate = prevWeekstart,
+                    EndDate = prevWeekEnd
+                };
+        }
+
+        private FilterNewsItemParameters CurrentMonthFilter()
+        {
+            var currMonthStart = DateTime.Today.AddDays(-DateTime.Today.Day);
+            return new FilterNewsItemParameters { StartDate = currMonthStart };
+        }
+
+        private FilterNewsItemParameters PrevMonthFilter()
+        {
+            var prevMonth = DateTime.Today.AddMonths(-1);
+            var prevMonthEnd = DateTime.Today.AddDays(-(DateTime.Today.Day));
+            var prevmonthFirstDay = prevMonth.AddDays(-prevMonth.Day);//первое число прошлого месяца
+            //return datamodel.Where(c => c.LastDate > prevmonthFirstDay && c.LastDate <= prevMonthEnd)
+            //    .Sum(c => c.TodayCount);
+            return new FilterNewsItemParameters
+            {
+                StartDate = prevmonthFirstDay,
+                EndDate = prevMonthEnd
+            };
+        }
+
+
+    }
+
 }
