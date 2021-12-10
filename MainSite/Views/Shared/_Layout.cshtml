@@ -11,17 +11,13 @@
     <link rel="stylesheet" href="~/css/mainSite.css" />
 </head>
 <body class="row">
+    @RenderBody()
     <div id="vueRootComponent">
-
         <ms-header></ms-header>
         <div class="container">
-            <div class="col m12 s12 l3" id="menuBlock">
-                @*<div class="secondMenuBlock"></div>*@
-                @await Html.PartialAsync("Menu")
-            </div>
-             @RenderBody()
+            <ms-menu></ms-menu>
+            <ms-main-wrapper></ms-main-wrapper>
         </div>
-
         <ms-footer></ms-footer>
     </div>
     <script src="~/css/materialize/js/materialize.js"></script>
