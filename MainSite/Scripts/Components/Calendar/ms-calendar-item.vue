@@ -3,16 +3,18 @@
     <div v-if="!events.length" class="text-center" style="color: #b12344">
       Информация отсутствует
     </div>
-    <div
-      class="ms-calendar-description-event"
-      v-for="event in getEventsOrderByTime()"
-      :event="event"
-      :key="event.id"
-    >
-      <div class="event-time">{{ event.time }}</div>
-      <div class="event-name">{{ event.name }}</div>
-      <div class="event-location">{{ event.location }}</div>
-    </div>
+    <transition-group name="list" tag="div">
+      <div
+        class="ms-calendar-description-event"
+        v-for="event in getEventsOrderByTime()"
+        :event="event"
+        :key="event.id"
+      >
+        <div class="event-time">{{ event.time }}</div>
+        <div class="event-name">{{ event.name }}</div>
+        <div class="event-location">{{ event.location }}</div>
+      </div>
+    </transition-group>
   </div>
 </template>
 
@@ -26,6 +28,11 @@ export default {
         return [];
       },
     },
+  },
+  data() {
+    return {
+      showEvents: true,
+    };
   },
   methods: {
     getEventsOrderByTime() {
@@ -53,11 +60,40 @@ export default {
           return result;
         });
     },
+    beforeEnter(el) {
+      el.style.opacity = 0;
+      el.style.maxHeight = 0;
+    },
+    enter(el, done) {
+      gsap.to(el, {
+        opacity: 1,
+        maxHeight: "1000px",
+        delay: 0.15,
+        onComplete: done,
+      });
+    },
+    leave(el, done) {
+      gsap.to(el, {
+        opacity: 0,
+        maxHeight: 0,
+        delay: 0.15,
+        onComplete: done,
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss">
+.list-enter-active {
+  transition: all 0.6s ease;
+}
+.list-enter,
+.list-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
 .ms-calendar_item {
   margin-top: 30px;
 

@@ -45,13 +45,44 @@
     </div>
 </div>
 
-@await Component.InvokeAsync("CounterComponent")
-@await Component.InvokeAsync("DailyStaticsComponent")
+<div class="card card-panel col s12 m4 l3">
+    <div class="card-content">
+        <span class="card-title activator grey-text text-darken-4">
+            Статистика
+        </span>
+        <p>
+            <a class="dropdown-trigger" data-target='dropdown1'>Статистика пользователей</a>
+            <div id='dropdown1' class='dropdown-content' style="max-height:400px;overflow-x:hidden;">
+                @await Component.InvokeAsync("CounterComponent")
+            </div>
+        </p>
+        <p>
+            <a class="dropdown-trigger" data-target='dropdown2'>Статистика по дням</a>
+            <div id='dropdown2' class='dropdown-content' style="max-height: 400px;overflow-x: hidden;">
+                @await Component.InvokeAsync("DailyStaticsComponent")
+            </div>
+        </p>
+        <p>
+            <a class="dropdown-trigger" data-target='dropdown3'>Статистика сообщений</a>
+            <div id='dropdown3' class='dropdown-content' style="max-height: 400px;overflow-x: hidden;">
+                @await Component.InvokeAsync("NewsGenerationStatisticsComponent")
+            </div>
+        </p>
+    </div>
+</div>
+@*@await Component.InvokeAsync("CounterComponent")
+    @await Component.InvokeAsync("DailyStaticsComponent")
 
-@await Component.InvokeAsync("NewsGenerationStatisticsComponent")
+    @await Component.InvokeAsync("NewsGenerationStatisticsComponent")
+*@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.dropdown-trigger');
+        var instances = M.Dropdown.init(elems, {});
+    });
+
     var allElements = document.querySelectorAll('#mainBlock > div');
     var maxHeight = allElements[0].offsetHeight;
 
