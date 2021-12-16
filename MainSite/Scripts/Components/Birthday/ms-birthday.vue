@@ -5,15 +5,16 @@
       <ms-birthday-info :list="birthdays[0]" title="сегодня" />
       <hr />
       <template v-if="birthdays[1]">
-        <template v-if="isShowInfo">
-          <ms-birthday-info :list="birthdays[1]" title="завтра" />
-        </template>
-        <div
-          @click="onShowInfoTommorow"
-          class="card_birthday-title bold btnTomorrowBirthdays"
-          style="cursor: pointer"
-        >
-          На завтра
+        <transition name="fade">
+          <template v-if="isShowInfo">
+            <ms-birthday-info :list="birthdays[1]" title="завтра" />
+          </template>
+        </transition>
+        <div style="text-align: center">
+          <div @click="onShowInfoTommorow" class="btnTomorrowBirthdays">
+            <span>{{ titleBtnBirthdays }}</span>
+            <span class="material-icons">{{ titleKeyboard }}</span>
+          </div>
         </div>
       </template>
     </div>
@@ -35,6 +36,12 @@ export default {
   },
   computed: {
     ...mapState("user", ["birthdays"]),
+    titleKeyboard() {
+      return this.isShowInfo ? "keyboard_arrow_up" : "keyboard_arrow_down";
+    },
+    titleBtnBirthdays() {
+      return this.isShowInfo ? "Cвернуть" : "Развернуть";
+    },
   },
   methods: {
     ...mapActions("user", ["GET_BIRTHDAYS"]),
@@ -48,7 +55,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /*Оформление блока день рождение(birthday)*/
 .card_birthday {
   .card-panel {
@@ -56,6 +63,7 @@ export default {
   }
 
   &-title {
+    cursor: pointer;
     text-align: center;
     color: #b12344;
     padding-bottom: 5px;
@@ -63,17 +71,30 @@ export default {
       text-align: center;
       width: 100%;
     }
+  }
 
-    &.btnTomorrowBirthdays {
-      border: 1px solid #b12344;
-      border-radius: 8px;
-      padding: 5px;
-      margin: 10px 0px 10px 0px;
-      &:hover {
-        background-color: #b12344;
-        color: #fff;
-      }
+  .btnTomorrowBirthdays {
+    display: inline-flex;
+    align-items: center;
+    * {
+      font-size: 12px;
+      cursor: pointer;
     }
+    padding: 2px;
+    margin: 10px 0px 10px 0px;
+    color: #64b5f6;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.6s ease;
+    max-height: 700px;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+    max-height: 0px;
   }
 }
 </style>

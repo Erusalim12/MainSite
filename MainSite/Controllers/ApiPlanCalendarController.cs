@@ -68,5 +68,30 @@ namespace MainSite.Controllers
 
             return new JsonResult(collection);
         }
+
+        [Route("getPlanCalendarForMonth")]
+        [HttpGet]
+        public IActionResult GetPlanCalendarForMonth()
+        {
+            var collection = _planCalendarSevice.GetEventsForMonth();
+
+            if (collection != null)
+            {
+                var res = collection.Select(w => new
+                {
+                    w.Id,
+                    w.Location,
+                    w.Time,
+                    w.Name,
+                    w.Day,
+                    Date = DateTime.Parse($"{_planCalendarSevice.GetPlanCalendar(w.PlanCalendarId).Year},{_planCalendarSevice.GetPlanCalendar(w.PlanCalendarId).Month},{w.Day}")
+                });
+
+                // Перенести в сервисы
+                return new JsonResult(res);
+            }
+
+            return new JsonResult(collection);
+        }
     }
 }

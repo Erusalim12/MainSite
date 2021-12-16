@@ -66,6 +66,14 @@ namespace Application.Services.PlanCalendar
 
         }
 
+        public List<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForMonth()
+        {
+            var currentDate = DateTime.Today;
+
+            return _planCalendarRepository.GetPlanCanedraForEvents(currentDate.Month, currentDate.Year).Events.Where(e => int.TryParse(e.Day, out var tesult)).ToList();
+
+        }
+
          private bool TryParseDay(string dbDay, int dateDay)
         {
             var isNumber = int.TryParse(dbDay, out int tryDay);

@@ -9,5 +9,6 @@ namespace Application.Services.PlanCalendar
         void DeletePlanCalendar(Dal.Domain.PlanCalendar.PlanCalendar item);
         Dal.Domain.PlanCalendar.PlanCalendar GetPlanCalendar(string itemId);
         List<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForWeek();
+        List<Dal.Domain.PlanCalendar.EventCalendar> GetEventsForMonth();
     }
 }
