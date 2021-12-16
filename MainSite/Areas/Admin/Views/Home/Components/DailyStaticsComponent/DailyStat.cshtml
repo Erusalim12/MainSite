@@ -1,4 +1,7 @@
-﻿@model IEnumerable<MainSite.Areas.Admin.Models.Counters.DailyCounter>
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<MainSite.Areas.Admin.Models.Counters.DailyCounter>
 <style>
     .dailyFlex {
         display: flex;
@@ -7,42 +10,40 @@
         font-size: 14px;
     }
 
+        .dailyFlex li {
+            min-height: auto;
+        }
+
         .dailyFlex i {
             display: flex;
         }
 </style>
-<div class="card card-panel col s12 m4 l3">
-    <div class="card-content">
-        <span class="card-title activator grey-text text-darken-4">
-            Статистика по дням
-        </span>
-
-        @foreach (var item in Model)
-        {
-            <ul class="dailyFlex">
-                <li>@item.date.ToShortDateString()</li>
-                <li>@item.Count</li>
-                <li>
-                    @if (item.Trend != null)
+<div class="card-content">
+    @foreach (var item in Model)
+    {
+        <ul class="dailyFlex">
+            <li>@item.date.ToShortDateString()</li>
+            <li>@item.Count</li>
+            <li>
+                @if (item.Trend != null)
+                {
+                    if (item.Trend.GetValueOrDefault())
                     {
-                        if (item.Trend.GetValueOrDefault())
-                        {
-                            <i class="material-icons green-text accent-4 ">arrow_drop_up</i>
-                        }
-                        else
-                        {
-                            <i class="material-icons red-text accent-4">arrow_drop_down</i>
-                        }
+                        <i class="material-icons green-text accent-4 ">arrow_drop_up</i>
                     }
                     else
                     {
-                        <i class="material-icons blue-grey-text darken-4">drag_handle</i>
+                        <i class="material-icons red-text accent-4">arrow_drop_down</i>
                     }
-                </li>
-            </ul>
-        }
+                }
+                else
+                {
+                    <i class="material-icons blue-grey-text darken-4">drag_handle</i>
+                }
+            </li>
+        </ul>
+    }
 
 
-    </div>
 </div>
 
