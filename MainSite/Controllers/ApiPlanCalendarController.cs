@@ -69,26 +69,24 @@ namespace MainSite.Controllers
             return new JsonResult(collection);
         }
 
-        [Route("getPlanCalendarForMonth")]
+        [Route("getPlanCalendarByYearAndMonth")]
         [HttpGet]
-        public IActionResult GetPlanCalendarForMonth()
+        public IActionResult GetPlanCalendarByYearAndMonth(int year, int month)
         {
-            var collection = _planCalendarSevice.GetEventsForMonth();
+            var collection = _planCalendarSevice.GetEventsByYearAndMonth(year, month);
 
             if (collection != null)
             {
-                var res = collection.Select(w => new
+                return new JsonResult(collection.Select(w => new
                 {
                     w.Id,
                     w.Location,
                     w.Time,
                     w.Name,
                     w.Day,
+                    w.Leader,
                     Date = DateTime.Parse($"{_planCalendarSevice.GetPlanCalendar(w.PlanCalendarId).Year},{_planCalendarSevice.GetPlanCalendar(w.PlanCalendarId).Month},{w.Day}")
-                });
-
-                // Перенести в сервисы
-                return new JsonResult(res);
+                }));
             }
 
             return new JsonResult(collection);
