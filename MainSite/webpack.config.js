@@ -8,8 +8,8 @@ var publicPath = '../bundle/'; // public path to modify asset urls. eg: '../bund
 var bundleExportPath = './wwwroot/bundle/'; // directory to export build files
 
 var jsEntries = {
-  admin: ['babel-polyfill', './Scripts/Components/App/index.js'],
-  app: ['babel-polyfill', './Scripts/Admin/App/index.js'],
+  app: ['babel-polyfill', './Scripts/Components/App/index.js'],
+  admin: ['babel-polyfill', './Scripts/Admin/App/index.js'],
 }; // listing to compile
 
 // We search for js files inside basePath folder and make those as entries
