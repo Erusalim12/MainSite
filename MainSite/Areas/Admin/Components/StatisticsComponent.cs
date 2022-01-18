@@ -107,7 +107,7 @@ namespace MainSite.Areas.Admin.Components
                 modelData.Add(PrepareCounter(counter, prevconter));
                 prevconter = counter.TodayCount;
             }
-            return View("DailyStat", modelData.OrderByDescending(c => c.date));
+            return View("DailyStat", modelData.Distinct().OrderByDescending(c => c.date));
         }
 
         private DailyCounter PrepareCounter(VisitorsCounter counter, int prev = 0)
@@ -124,7 +124,7 @@ namespace MainSite.Areas.Admin.Components
 
     }
 
-
+    //нарастающий счетчик 
     public class NewsGenerationStatisticsComponent : ViewComponent
     {
         private readonly INewsService _newsService;
