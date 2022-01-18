@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="~/css/mainSite.css" />
 </head>
 <body class="row">
-     @RenderBody()
+
+    @RenderBody()
     <div id="vueRootComponent">
         <ms-header></ms-header>
         <div class="container">
@@ -21,7 +22,7 @@
         <ms-footer></ms-footer>
     </div>
     <script src="~/css/materialize/js/materialize.js"></script>
-    <script src="~/bundle/App.js"></script>
+    <script src="~/bundle/app.bundle.js"></script>
     <script src="~/scripts/onReadyState.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
