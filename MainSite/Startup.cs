@@ -29,6 +29,8 @@ using Application.Services.FeedBack.Answers;
 using Application.Services.FeedBack.Questions;
 using Application.Dal.Repositories;
 using Application.Services.ExternalLinks;
+using Application.Dal.Rasp;
+using Application.Services.Schedule;
 
 namespace MainSite
 {
@@ -53,7 +55,9 @@ namespace MainSite
 
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(connection));
-
+            //база данных с расписанием
+            services.AddDbContext<RaspContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("RaspDb")));
             services.AddControllersWithViews();
             services.AddAuthentication(HttpSysDefaults.AuthenticationScheme);
 
@@ -88,6 +92,8 @@ namespace MainSite
             services.AddTransient<ISecurityModelFactory, SecurityModelFactory>();
             services.AddTransient<IUserRoleModelFactory, UserRoleModelFactory>();
             services.AddTransient<IUserModelFactory, UserModelFactory>();
+            services.AddTransient<IScheduleService, ScheduleService>();
+
 
             services.AddTransient<PlanCalendarRepository>();
             services.AddTransient<NewsItemRepository>();
