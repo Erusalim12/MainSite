@@ -12,6 +12,8 @@ import msCategoryItemCreate from '../Components/Category/ms-category-item_create
 import msFeedBack from '../Components/FeedBack/ms-feedback.vue';
 import msChatAdmin from '../Components/FeedBack/ms-chat-admin.vue';
 
+import msSchedule from '../Components/Schedule/ms-schedule.vue';
+
 Vue.use(Router);
 
 let router = new Router({
@@ -47,6 +49,12 @@ let router = new Router({
       name: 'adminChat',
       component: msChatAdmin,
       props: false,
+    },    
+    {
+      path: '/Schedule/ForCursants',
+      name: 'schedule',
+      component: msSchedule,
+      props:true
     },
     {
       path: '/category',

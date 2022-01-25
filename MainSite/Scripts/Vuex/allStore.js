@@ -8,11 +8,15 @@ import planCalendarStore from "../Vuex/PlanCalendarStore/store";
 import preLoaderStore from "../Vuex/PreLoaderStore/store";
 import externalLinksStore from "../Vuex/ExternalLinksStore/store";
 import feedBackStore from "../Vuex/FeedBack/store";
+import scheduleStore from "../Vuex/ScheduleStore/store";
+ 
+
 
 Vue.use(Vuex);
 
 let store = new Vuex.Store({
   modules: {
+    schedule: scheduleStore,
     menu: menuStore,
     news: newsStore,
     settings: settingsStore,
@@ -20,7 +24,7 @@ let store = new Vuex.Store({
     planCalendar: planCalendarStore,
     preLoader: preLoaderStore,
     externalLinks: externalLinksStore,
-    feedBack: feedBackStore,
+    feedBack: feedBackStore,  
   },
 });
 
