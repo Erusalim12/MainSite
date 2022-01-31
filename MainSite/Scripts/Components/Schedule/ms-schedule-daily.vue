@@ -59,6 +59,9 @@ export default {
 
 
 <style>
+.ms-schedule-daily{
+    min-height: 100%;
+}
 .daily {
   display: flex;
   align-items: flex-start;
@@ -72,6 +75,9 @@ export default {
   transition: all 500ms;
   margin: auto;
 }
+/* .card.daily{
+  min-height: 100%;
+} */
 .row{
   margin: 0;
 }

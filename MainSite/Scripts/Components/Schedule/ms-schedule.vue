@@ -1,6 +1,6 @@
 <template>
-  <div class="ms-schedule "> 
-    <h6 class="ms-schedule-header">{{ GET_SCHEDULE.header }}</h6>
+  <div class="ms-schedule center" style="position: relative"> 
+    <h6 class="ms-schedule-header" style="position: relative">{{ GET_SCHEDULE.header }}</h6>
   
       <ms-schedule-daily
         v-for="daily in GET_SCHEDULE.day"
@@ -48,7 +48,6 @@ export default {
 
 <style>
 .ms-schedule {
-  position: relative;
    display: flex;
     max-width: 900px;
     margin: 0 auto;
