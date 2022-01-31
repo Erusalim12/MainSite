@@ -31,9 +31,6 @@ namespace MainSite.Models.EducationSchedule
 
         public List<DailyPlan> DailyList { get; set; }
 
-
-
-
         public class DailyPlan
         {
             public DateTime Date { get; set; }
@@ -51,16 +48,6 @@ namespace MainSite.Models.EducationSchedule
                 /// Номер пары
                 /// </summary>
                 public int Number { get; set; }
-                /// <summary>
-                /// Флаг текущей пары
-                /// </summary>
-                public bool IsCurrent { get; set; }
-
-                /// <summary>
-                /// Пара будет следующей
-                /// </summary>
-                public bool WasNext { get; set; }
-
                 /// <summary>
                 /// Наименование предмета
                 /// </summary>
@@ -84,8 +71,14 @@ namespace MainSite.Models.EducationSchedule
                 /// Номер группы
                 /// </summary>
                 public string GroupNum { get; set; }
+
+                public string Theme { get; set; }
+                public string LectionNum { get; set; }
             }
         }
+
+
+
     }
 }
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace MainSite.Controllers
@@ -36,17 +37,20 @@ namespace MainSite.Controllers
             {
                 var arrayResult = new List<List<Application.Dal.Domain.Birthday.Birtday>>();
 
-                if(!model.Any(a => a.Birth.Day == DateTime.Today.Day)) {
+                if (!model.Any(a => a.Birth.Day == DateTime.Today.Day))
+                {
                     arrayResult.Add(new List<Application.Dal.Domain.Birthday.Birtday>());
                 }
 
-                var result = model.ToLookup(a => a.Birth.Day).OrderBy(w => w.Key).Select(x => x.ToList()).ToList();
+                var result = model.ToLookup(a => GetCurrentBirthdayDate(a.Birth)).OrderBy(w => w.Key).Select(x => x.ToList()).ToList();
                 arrayResult.AddRange(result);
 
                 return new JsonResult(arrayResult);
             }
             return null;
         }
+
+
         [Route("InfoCurrentUser")]
         [HttpGet]
         public string GetInfoCurrentUser()
@@ -75,5 +79,17 @@ namespace MainSite.Controllers
 
             return result;
         }
+
+
+
+        /// <summary>
+        /// Формирует корректные даты дней рождения в текущем году, исходя из даты рождения сотрудника
+        /// </summary>
+        /// <param name="birthDate"></param>
+        /// <returns></returns>
+        [NonAction]
+        private DateTime GetCurrentBirthdayDate(DateTime birthDate) =>
+            DateTime.Parse($"{DateTime.Today.Year}.{birthDate.Month}.{birthDate.Day}", new CultureInfo("ru-RU"));
+
     }
 }

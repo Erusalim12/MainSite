@@ -48,11 +48,11 @@ namespace Application.Services.Schedule
             return weeklist;
         }
         /// <summary>
-        /// Возвращает расписание на указанную дату
+        /// Возвращает расписание  на указанную дату
         /// </summary>
-        /// <param name="date"></param>
-        /// <param name="facultet"></param>
-        /// <param name="cource"></param>
+        /// <param name="date">дата</param>
+        /// <param name="facultet">Факультет</param>
+        /// <param name="cource">Курс</param>
         /// <returns></returns>
         private IEnumerable<Dal.Rasp.Domain.Schedule> GetDailyRasp(string date, int facultet, int cource)
         {

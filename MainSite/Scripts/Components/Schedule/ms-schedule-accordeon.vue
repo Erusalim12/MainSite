@@ -1,5 +1,5 @@
 <template>
-  <div class="ms-schedule-accordeon">
+  <div    class="ms-schedule-accordeon">
     <ul class="collapsible">
       <li v-for="Facultet in facultets" :key="Facultet.Name">
         <div class="collapsible-header btn btn-default">
@@ -112,21 +112,17 @@ export default {
   },
 
   computed:{           
-... mapState('schedule',['selectedFacultet']),
+ 
   },
 
-  methods: {
-     ...mapActions("schedule", ["GET_SELECTED_FACULTET"]),
-        //  ...mapMutations("schedule",['SET_SELECTED_FACULTET']),
+  methods: { 
+     ...mapActions("schedule", ["GET_SCHEDULE_FROM_API"]),    
     loaddata:function(values){//получили значение факультета и курса, передать расписанию
-       this.GET_SELECTED_FACULTET(values);
+       this.GET_SCHEDULE_FROM_API(values)
       console.log("Cource: "+ values.Cource + " Facultet: "+ values.Facultet);
     }
   },
-  mutations:{
-
-    
-  },
+ 
 
 
   mounted() {

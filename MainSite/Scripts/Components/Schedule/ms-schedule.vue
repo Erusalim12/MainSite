@@ -1,14 +1,13 @@
 <template>
-  <div class="ms-schedule" style="position: relative">
-    <p>Расписание курсантов</p>
-
-    <ms-schedule-daily
-      v-for="daily in rasp"
-      :key="daily.day"
-      :dailyRasp="daily"
-      @sendDataToParent="showchildValInconsole"
-    />
-    {{updateResults}}
+  <div class="ms-schedule "> 
+    <h6 class="ms-schedule-header">{{ GET_SCHEDULE.header }}</h6>
+  
+      <ms-schedule-daily
+        v-for="daily in GET_SCHEDULE.day"
+        :key="daily.date"
+        :dailyRasp="daily"
+       
+      /> 
     <ms-schedule-menu />
   </div>
 </template>
@@ -16,7 +15,7 @@
 <script>
 import MsScheduleMenu from "./ms-schedule-menu.vue";
 import MsScheduleDaily from "./ms-schedule-daily.vue";
-import { mapActions,mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "ms-schedule",
@@ -29,41 +28,36 @@ export default {
     //неперсональные данные компонента - те что приходят из родителя
   },
   data() {
-      rasp :{};
     //персональные данные компонента
     return {};
   },
   computed: {
     //вычисляемые данные компонента
-      ...mapGetters("schedule",['GET_SCHEDULE']),
-      
-   
-
+    ...mapGetters("schedule", ["GET_SCHEDULE"]),
   },
   methods: {
     //методы, обработчики событий
-      ...mapActions("schedule", ["GET_SCHEDULE_FROM_API"]),
-      ...mapMutations("schedule",['SET_SELECTED_FACULTET'])
-
-    ,
-      updateResults: function(){
-       this.rasp = this.GET_SCHEDULE;
-     }
+    ...mapActions("schedule", ["GET_SCHEDULE_FROM_API"]),
   },
- 
+
   mounted() {
-   // this.GET_SCHEDULE_FROM_API();
+    // срабатывает при полной загрузке компонента
   },
 };
 </script>
 
-<style scoped lang="scss">
+<style>
 .ms-schedule {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 900px;
-  margin: 0 auto;
-  flex-direction: column;
+  position: relative;
+   display: flex;
+    max-width: 900px;
+    margin: 0 auto;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 12;
+    flex-wrap: wrap;
+    align-content: stretch;
+    align-items: stretch;
+
 }
 </style>

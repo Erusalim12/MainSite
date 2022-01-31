@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Application.Dal.Rasp.Domain;
-using Application.Services.Schedule;
-using MainSite.Models.EducationSchedule;
+﻿using System; 
+using System.Globalization;
+using System.Linq; 
+using Application.Services.Schedule; 
 using Microsoft.AspNetCore.Mvc;
- 
+
 
 namespace MainSite.Controllers
 {
@@ -16,67 +15,87 @@ namespace MainSite.Controllers
             _scheduleService = scheduleService;
         }
 
-        // GET: Rasp
-        public ActionResult Index()
-        {
-
-            return View();
-        }
-        
         public ActionResult ForCursants(int facultetNum, int courseNum, int addWeeks = 0)
         {
             //получили предметы на указанную неделю
             var weeklyList = _scheduleService.GetScheduleForCursants(facultetNum, courseNum, addWeeks);
-            //отобрать предметы для текущего факультета -> курса
-            //смаппить в модель
-            //отобразить на представлении
-            var model = new WeeklyScheduleModel { CourceNum = courseNum, FacultetNum = facultetNum };
-            foreach (var day in weeklyList.Keys)//проходим по всем дням недели
+            var model = new
             {
-                if (weeklyList.TryGetValue(day, out IEnumerable<Schedule> dayList))
+                CourceNum = courseNum,
+                FacultetNum = facultetNum,
+                Header = FormatHeader(facultetNum, courseNum, weeklyList.Keys.First(), weeklyList.Keys.Last()),
+
+                day = weeklyList.Select(daily => new
                 {
-                    var predmets = new List<WeeklyScheduleModel.DailyPlan.Lesson>();
-                    foreach (var schedule in dayList)
+                    date = daily.Key,
+                    CurrentDay = daily.Key == DateTime.Today.Date,
+
+
+                    //Проходим по всем урокам в дне, не учитывая учебные группы
+                    lessons = daily.Value.Select(predmet => new   //проходит по всем группам, 
                     {
-                        predmets.Add(new WeeklyScheduleModel.DailyPlan.Lesson
-                        {
-                            Number = schedule.NumLesson,
-                            EducationRoom = schedule.SchLocation,
-                            GroupNum = schedule.Group,
-                            PredmetName =  schedule.NameLesson,
-                            TeacherFio =  "Преподаватель не найден",
-                            Type = "вид занятия",
-                            IsCurrent = IsCurrent(schedule.NumLesson,day),
-                            WasNext = IsNext(schedule.NumLesson,day)
-                        });
-                    }
-                    model.DailyList.Add(new WeeklyScheduleModel.DailyPlan
-                    {
-                        Date = day,
-                        CurrentDay = day.Date == DateTime.Today.Date,
-                        lessons =  predmets
-                    });
-                }
-            }
+                        lessonNumber = predmet.NumLesson,
+                        number = predmet.NumLesson,
+                        predmetName = predmet.NameLesson,
+                        teacherFio = predmet.TeacherFio?? "teacher!",
+                        educationRoom = predmet.SchLocation,
+                        type = predmet.Type??"!",
+                        theme = predmet.Theme??"0",
+                        lectionNum = predmet.LectionNum??"0"
+                        
+                    })
+                        .GroupBy(d => d.lessonNumber)//находим уникальные (без учета групп)
+                        .Select(s => new
+                        { //формируем новый тип, в котором будут учтены все необхоимые поля, в т.ч. группы
+                            lessonNumber = s.Key,
+                            time = FormatEducationTime(s.Key),
+                            predmets = s.Select(s1 => new
+                            {
+                                predmetName = s1.predmetName,
+                                teacherFio = s1.teacherFio ,
+                                educationRoom = s1.educationRoom,
+                                type = s1.type ,
+                                theme = s1.theme,
+                                lectionNum = s1.lectionNum
+                            }).Distinct().Select(s2 => new
+                            { //формируем новый тип, в котором будут учтены все необхоимые поля, в т.ч. группы
+                                predmetName = s2.predmetName,
+                                teacherFio = s2.teacherFio,
+                                educationRoom = s2.educationRoom,
+                                type = s2.type,
+                                theme = s2.theme,
+                                lectionNum = s2.lectionNum,
+                                groups = daily.Value.Where(c => c.SchLocation == s2.educationRoom && c.NumLesson == s.Key).Select(s => s.Group).Distinct()
+                            })
+
+                        })
+                })
+            };
             return Json(model);
-
         }
-        /// <summary>
-        /// Возвращает значение, является ли пара текущей
-        /// </summary>
-        /// <param name="num"></param>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        private bool IsCurrent(int num, DateTime date)
+
+        [NonAction]
+        private string FormatEducationTime(int number)
         {
-            if (date.Date != DateTime.Today.Date) return false;
-            return false;
+            string tempate = "{0}-я пара занятий ({1})";
+            if (number == 1)
+                return string.Format(tempate, number, "9:00-10:30");
+            if (number == 2)
+                return string.Format(tempate, number, "10:45-12:15");
+            if (number == 3)
+                return string.Format(tempate, number, "12:30-14:00");
 
+            return string.Format(tempate, number, "");
         }
-        private bool IsNext(int num, DateTime date)
+
+        [NonAction]
+        private string FormatHeader(int facultetNum, int courceNum, DateTime startDate, DateTime endDate)
         {
-            return false;
-        }
+            string template = "Расписание учебных занятий {0} курса {1} факультета c {2} по {3} {4} года";
 
+            return string.Format(template, courceNum, facultetNum,
+                   startDate.ToString("dd MMMM ", CultureInfo.CurrentCulture),
+                   endDate.ToString("dd MMMM ", CultureInfo.CurrentCulture), startDate.Year);
+        }
     }
 }
