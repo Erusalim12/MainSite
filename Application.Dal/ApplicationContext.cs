@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using Application.Dal.Domain.Birthday;
 using Application.Dal.Domain.Counters;
 using Application.Dal.Domain.ExternalLinks;
@@ -15,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Dal
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContext : DbContext 
     {
          
         public DbSet<MenuItem> MenuItems { get; set; }
@@ -49,7 +48,7 @@ namespace Application.Dal
         /// </summary>
         public DbSet<PermissionRecordUserRoleMapping> PRURM { get; set; }
 
-        public ApplicationContext(DbContextOptions options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
             //Database.EnsureCreated();

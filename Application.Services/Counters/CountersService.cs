@@ -89,8 +89,8 @@ namespace Application.Services.Counters
                 TodayCount = _todayCounter,
                 TotalCount = _totalCounter
             };
-
             _context.Add(storedData);
+            
         }
 
         /// <summary>

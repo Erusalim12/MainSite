@@ -22,4 +22,8 @@
 		<PackageReference Include="System.Security.AccessControl" Version="5.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Domain\EducationSchedule\" />
+	</ItemGroup>
+
 </Project>

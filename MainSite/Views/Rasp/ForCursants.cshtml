@@ -1,0 +1,41 @@
+﻿@model MainSite.Models.EducationSchedule.WeeklyScheduleModel
+@{ 
+//Layout = null;
+}
+<div class="container">
+    <h2>@Model.Header</h2> <!-- Диапазон расписания -->
+
+    <div class="row">
+
+        @foreach (var item in Model.DailyList.OrderBy(c => c.Date))
+        {
+
+            <div class="col-4 @(item.CurrentDay?"Current":"")  ">
+                <h4 class="center">@item.Date.ToShortDateString()</h4>
+                @foreach (var para in item.lessons.OrderBy(c => c.Number).GroupBy(c => c.Number))
+                {
+                    <h5 class="center">@(para.Key)-я пара</h5>
+                    foreach (var p1 in para.GroupBy(c => c.PredmetName))@*предметы сгруппированы по парам*@
+                    {
+                        <div class="circle-clipper">
+                            @foreach (var predmet in p1)
+                            {
+                                <div>
+                                    <div class="row">
+                                        <div class="col-1">@predmet.GroupNum</div>
+                                        <div class="col-3">@predmet.PredmetName</div>
+                                        <div class="col-1">@predmet.EducationRoom</div>
+                                        <div class="col-1">@predmet.Type</div>
+                                        <div class="col-2">@predmet.EducationRoom</div>
+                                        <div class="col-4">@predmet.TeacherFio</div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
